@@ -20,26 +20,25 @@ import PageHeader from '../components/Projects/PageHeader';
 // }));
 // lg: '70%', md: '90%'
 
+// styles
+const rootBox = {
+  width: '95%',
+  margin: 'auto',
+  // maxHeight: '70h',
+  height: '70vh',
+};
+const innerBox = {
+  // maxHeight: '70vh',
+  height: '78vh',
+  width: '100%',
+  margin: 'auto',
+  display: 'flex',
+  // // gridTemplateColumns: '30% 70%',
+  justifyContent: 'space-around',
+  // backgroundColor: '#fdfdff',
+  backgroundColor: 'red',
+};
 export default function Projects() {
-  // styles
-  const rootBox = {
-    width: '95%',
-    margin: 'auto',
-    // maxHeight: '70h',
-    height: '70vh',
-  };
-  const innerBox = {
-    // maxHeight: '70vh',
-    height: '78vh',
-    width: '100%',
-    margin: 'auto',
-    display: 'flex',
-    // // gridTemplateColumns: '30% 70%',
-    justifyContent: 'space-around',
-    // backgroundColor: '#fdfdff',
-    backgroundColor: 'red',
-  };
-
   return (
     <Box component="div" sx={rootBox}>
       <CssBaseline />
