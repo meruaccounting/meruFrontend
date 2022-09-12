@@ -57,6 +57,7 @@ const Main = () => {
     setRow([...example]);
   }, []);
 
+  
   // filter project as per user search
   const filterProject = (projectName) => {
     if (projectName === '') {
@@ -97,12 +98,13 @@ const Main = () => {
         {/* -----------------------------------------------------------------------------------
         Client Name components
         --------------------------------------------------------------------------------- */}
-        <Box>
+        <Box sx={{width:"70%"}}>
           {editClientName ? (
             <TextField
               id="client-Name"
               label="Client Name"
               variant="outlined"
+              fullWidth
               value={clientName}
               onChange={(event) => setClientName(event.target.value)}
               onBlur={() => setEditClientName(false)}
