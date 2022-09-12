@@ -2,17 +2,18 @@
 import React, { useState } from 'react';
 
 // MaterialUi Components
-import { TextField } from '@mui/material';
+import { TextField, Box } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Search = ({ sendDataToParent, frequent, labelName, fullWidth }) => {
   // store
   const [data, setData] = useState('');
-  
+
   // to store the data that user put in search bar
   const handleChange = (event) => {
     setData(event.target.value);
-    if(frequent){
-      sendDataToParent(event.target.value)
+    if (frequent) {
+      sendDataToParent(event.target.value);
     }
   };
 
@@ -26,15 +27,20 @@ const Search = ({ sendDataToParent, frequent, labelName, fullWidth }) => {
 
   // components
   return (
-    <TextField
-      id="outlined-basic"
-      label={labelName}
-      variant="outlined"
-      onChange={handleChange}
-      onKeyDown={sendData}
-      value={data}
-      fullWidth = {fullWidth}
-    />
+    <Box sx={{ m: 1 }}>
+      <TextField
+        id="outlined-basic"
+        label={labelName}
+        variant="outlined"
+        onChange={handleChange}
+        onKeyDown={sendData}
+        value={data}
+        fullWidth={fullWidth}
+        InputProps={{
+          endAdornment: <SearchIcon />,
+        }}
+      />
+    </Box>
   );
 };
 

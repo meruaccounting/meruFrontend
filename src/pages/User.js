@@ -1,43 +1,45 @@
 // react components
-import React from 'react';
+import React, { useState } from 'react';
 
 // material ui comppnents
-import { Container, Box, Typography } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 
 // user components
 import Sidebar from '../components/Clients/Sidebar';
 import Main from '../components/Clients/Main';
+import PageHeader from '../components/Projects/PageHeader';
 
 // -------------------------------------------------------------------------------------------------------
 
 // styles
-
-const User = () => {
-  return (
-    <Container sx={{}} disableGutters>
-      <Typography
-        variant="h3"
-        sx={{
-          color: '#637381',
-          fontSize: '1.5rem',
-          fontWeight: '700',
-        }}
-      >
-        CLIENTS
-      </Typography>
-      <Container sx={{ marginTop: 3 }} disableGutters>
-        <Box sx={{ display: 'flex', padding: 0, margin: 0 }}>
-          {/* -------- sidebar components--------- */}
-          
-          <Sidebar />
-          {/* ----------------------------
-          Right side component with full information
-          -----------------------------------*/}
-          <Main />
-        </Box>
-      </Container>
-    </Container>
-  );
+const rootBox = {
+  width: '95%',
+  margin: 'auto',
+  height: '70vh',
+};
+const innerBox = {
+  height: '78vh',
+  width: '100%',
+  display: 'flex',
+  // backgroundColor: '#fdfdff',
+  backgroundColor: 'red',
 };
 
-export default User;
+export default function User() {
+  const [clientId, setclientId] = useState(null);
+
+  return (
+    <Box sx={rootBox} disableGutters>
+      <CssBaseline />
+      <PageHeader title="Clients" />
+      <Box sx={innerBox}>
+        {/* -------- sidebar components--------- */}
+        <Sidebar setclientId={(id) => setclientId(id)} />
+        {/* ----------------------------
+          Right side component with full information
+          -----------------------------------*/}
+        <Main clientId={clientId} />
+      </Box>
+    </Box>
+  );
+}
