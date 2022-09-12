@@ -35,7 +35,7 @@ const columns = [
 
 // end of data
 
-const Main = () => {
+export default function Main() {
   // store
   const [displayDeleteIcon, setDisplayDeleteIcon] = useState(false);
   const [row, setRow] = useState([]);
@@ -172,6 +172,4 @@ const Main = () => {
       <AlertDialog sendToParent={handleResponseFromDialog} dialogStatus={openDialog} />
     </Container>
   );
-};
-
-export default Main;
+}

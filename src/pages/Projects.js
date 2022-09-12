@@ -1,51 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CssBaseline, Box } from '@mui/material';
 // import { makeStyles } from "@mui/styles";
 
 // components
 import Sidebar from '../components/Projects/Sidebar';
+import Main from '../components/Projects/Main';
 import PageHeader from '../components/Projects/PageHeader';
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     maxHeight: '70vh',
-//     height: '70vh',
-//     width: '100%',
-//     margin: 'auto',
-//     display: 'flex',
-//     gridTemplateColumns: '30% 70%',
-//     justifyContent: 'space-around',
-//     backgroundColor: '#fdfdff',
-//   },
-// }));
-// lg: '70%', md: '90%'
-
+// styles
+const rootBox = {
+  width: '95%',
+  margin: 'auto',
+};
+const innerBox = {
+  height: '78vh',
+  width: '100%',
+  display: 'flex',
+  // backgroundColor: '#fdfdff',
+  backgroundColor: 'red',
+};
 export default function Projects() {
-  // styles
-  const rootBox = {
-    width: '95%',
-    margin: 'auto',
-    // maxHeight: '70h',
-    height: '70vh',
-  };
-  const innerBox = {
-    // maxHeight: '70vh',
-    height: '78vh',
-    width: '100%',
-    margin: 'auto',
-    display: 'flex',
-    // // gridTemplateColumns: '30% 70%',
-    justifyContent: 'space-around',
-    // backgroundColor: '#fdfdff',
-    backgroundColor: 'red',
-  };
+  const [projectId, setprojectId] = useState(null);
 
   return (
     <Box component="div" sx={rootBox}>
       <CssBaseline />
       <PageHeader title="Projects" />
       <Box sx={innerBox}>
-        <Sidebar />
+        <Sidebar setprojectId={(id) => setprojectId(id)} />
+        <Main projectId={projectId} />
       </Box>
     </Box>
   );

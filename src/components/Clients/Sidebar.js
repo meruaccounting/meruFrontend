@@ -2,27 +2,29 @@
 import React, { useState } from 'react';
 
 // material ui
-import {
-  Container,
-  Box,
-  List,
-  ListItemText,
-  ListSubheader,
-  ListItem,
-  Paper,
-  Divider,
-  ListItemButton,
-  TextField,
-  Button,
-} from '@mui/material';
+import { Container, Box, List, ListItemText, Paper, ListItemButton, TextField, Button } from '@mui/material';
 
 // Own components
 import Search from '../Search';
+import AddClient from './AddClient';
 
-const Sidebar = () => {
-  
-  
-    // store
+// styles
+const rootPaper = {
+  overflow: 'hidden',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+};
+const listBoxLoader = {
+  margin: 'auto',
+  display: 'flex',
+  flexGrow: '1',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+export default function Sidebar() {
+  // store
   const [OriginalList, setOriginalList] = useState([
     'Prashant',
     'Ravi',
@@ -82,29 +84,24 @@ const Sidebar = () => {
   const sendNewProjectRequest = () => {};
 
   return (
-    <Container sx={{ width: '30%' }} disableGutters>
-      {/* search component */}
-      <Search sendDataToParent={getDataFromSearch} frequent labelName={"Search Client"} fullWidth />
-      {/* -------------------------------------------------------------List component -------------------------------------------------------------------------------- */}
-      <Paper style={{ maxHeight: '50vh', overflow: 'auto' }}>
-        <List component="nav" aria-label="Client List">
-          {clientNames.map((ele, index) => (
-            <ListItemButton selected={selectListIndex === index} onClick={() => handleSelectedIndex(index)}>
-              <ListItemText primary={ele} />
-            </ListItemButton>
-          ))}
-        </List>
-      </Paper>
+    <Container sx={{ width: '30%', m: 1, mr: 0.5 }} disableGutters>
+      <Paper component="div" elevation={3} sx={rootPaper}>
+        {/* search component */}
+        <Search sendDataToParent={getDataFromSearch} frequent labelName={'Search Client'} fullWidth />
+        {/* -------------------------------------------------------------List component -------------------------------------------------------------------------------- */}
+        <Paper style={{ flexGrow: 1, overflow: 'auto' }}>
+          <List component="nav" aria-label="Client List">
+            {clientNames.map((ele, index) => (
+              <ListItemButton selected={selectListIndex === index} onClick={() => handleSelectedIndex(index)}>
+                <ListItemText primary={ele} />
+              </ListItemButton>
+            ))}
+          </List>
+        </Paper>
 
-      {/* -------------------------------------------------------------------------------------------New project add components------------------------------------------------------ */}
-      <Box sx={{ marginTop: 3, margin: 'auto' }}>
-        <TextField label="Client Name" value={projectName} onChange={handleProjectName} fullWidth/>
-        <Button variant="contained" sx={{ width: '90%', marginTop: 1 }}>
-          Add New Client
-        </Button>
-      </Box>
+        {/* -------------------------------------------------------------------------------------------New project add components------------------------------------------------------ */}
+        <AddClient />
+      </Paper>
     </Container>
   );
-};
-
-export default Sidebar;
+}
