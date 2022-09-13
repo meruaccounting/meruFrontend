@@ -21,8 +21,8 @@ const innerBox = {
   height: '78vh',
   width: '100%',
   display: 'flex',
-  // backgroundColor: '#fdfdff',
-  backgroundColor: 'red',
+  backgroundColor: '#fdfdff',
+  // backgroundColor: 'red',
 };
 
 export default function User() {
@@ -34,7 +34,7 @@ export default function User() {
       <PageHeader title="Clients" />
       <Box sx={innerBox}>
         {/* -------- sidebar components--------- */}
-        <Sidebar setclientId={(id) => setclientId(id)} />
+        <Sidebar setclientId={(id) => setclientId(id)}/>
         {/* ----------------------------
           Right side component with full information
           -----------------------------------*/}

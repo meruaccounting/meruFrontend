@@ -5,7 +5,7 @@ const useStore = create((set) => ({
     clients: [],
     loader: true,
   },
-
+  
   setClients: (clients, loader) =>
     set(() => ({
       clients: {
@@ -13,7 +13,6 @@ const useStore = create((set) => ({
         loader,
       },
     })),
-
   //   removePokemon: (id) =>
   //     set((state) => ({
   //       pokemons: state.pokemons.filter((pokemon) => pokemon.id !== id),

@@ -59,7 +59,7 @@ export default function AddClient() {
         sx={{ mt: 1 }}
         onClick={handleSubmit}
       >
-        Add Project
+        Add Client
       </LoadingButton>
     </Box>
   );
