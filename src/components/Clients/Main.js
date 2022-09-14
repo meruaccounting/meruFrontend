@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // OWN components
 import Search from '../Search';
 import ClientInfo from './ClientInfo';
-import { getClientByIdApi } from './apiCalls';
+
 
 // Columns name for table header
 const columns = [
@@ -42,26 +42,9 @@ export default function Main({ clientId }) {
   const [clientInfo, setClientInfo] = useState({});
 
   // to fill data in datagrid and set clientName and other things
-  const setClientProjects = async (Id) => {
-    if (Id)
-      try {
-        const clientProjects = await getClientByIdApi(Id);
-        if (typeof clientProjects === 'object') {
-          setClientInfo({
-            id: clientProjects._id,
-            name: clientProjects.name,
-            createdAt: clientProjects.createdAt,
-            createdBy: clientProjects.createdBy,
-          });
-        }
-        console.log(clientProjects);
-      } catch (error) {
-        console.log(error);
-      }
-  };
+ 
 
   useEffect(() => {
-    setClientProjects(clientId);
     // const example = [
     //   { id: 'Project1', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
     //   { id: 'Project2', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
@@ -101,13 +84,6 @@ export default function Main({ clientId }) {
   };
 
   return (
-    <Container sx={{ width: '70%', paddingX: 2 }} disableGutters>
-      {/*  ----------------------------------------------------------
-    to display client Information 
-   ------------------------------------------------------------- */}
-      <ClientInfo clientInfo={clientInfo} />
-
-      {/* ------------------------------------------------- Project list ------------------------------------------------------ */}
       <Box sx={{ marginTop: 4 }}>
         <Search labelName={'Search Project'} sendDataToParent={filterProject} frequent />
         {/* --------------------------------------------------------------------------
@@ -142,6 +118,5 @@ export default function Main({ clientId }) {
           </div>
         </Paper>
       </Box>
-    </Container>
   );
 }

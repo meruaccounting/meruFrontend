@@ -23,7 +23,7 @@ const rootPaper = {
 //   justifyContent: 'center',
 // };
 
-export default function Sidebar({ setclientId }) {
+export default function Sidebar({ setclientId, change}) {
   // store
   const [originalClientNames, setOriginalClientNames] = useState([]);
   const [clientNames, setClientNames] = useState([]);
@@ -49,7 +49,7 @@ export default function Sidebar({ setclientId }) {
   };
   useEffect(() => {
     makeClientList();
-  }, []);
+  }, [change]);
 
   // to filter data in clientName as per user search
   const filterClients = (clientName) => {

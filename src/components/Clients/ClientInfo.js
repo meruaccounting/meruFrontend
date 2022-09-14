@@ -1,14 +1,22 @@
+// react components
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+// mui library
 import { Box } from '@mui/system';
-import { TextField, Paper, Typography, Tooltip, Button } from '@mui/material';
+import { TextField, Paper, Typography, Tooltip, Button, Alert, Collapse, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
 
+// own components
 import AlertDialog from './AlertDialog';
+import { getClientByIdApi, updateClientName } from './apiCalls';
 
-const ClientInfo = ({ clientInfo }) => {
+const ClientInfo = ({ clientId, setClientId }) => {
+  // store
+  const [warning, setWarning] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
   const [name, setName] = useState('No Clients');
   const [nameTextField, setNameTextField] = useState('No Clients');
   const [editName, setEditName] = useState(false);
@@ -27,37 +35,83 @@ const ClientInfo = ({ clientInfo }) => {
     return `${day}/${month}/${year}`;
   };
 
+  // to get data from backed
+  const setClientInfo = async (Id) => {
+    if (Id)
+      try {
+        const clientProjects = await getClientByIdApi(Id);
+        if (typeof clientProjects === 'object') {
+          setName(clientProjects.name);
+          setProjectDate(formatDate(clientProjects.createdAt));
+          setCreatedBy(clientProjects.createdBy);
+          setNameTextField(clientProjects.name);
+        }
+        console.log(clientProjects);
+      } catch (error) {
+        console.log(error);
+      }
+  };
+
+  // To rerender whenever id changes i.e. when user switche client
   useEffect(() => {
-    if (clientInfo.createdAt) {
-      setName(clientInfo.name);
-      setNameTextField(clientInfo.name);
-      setProjectDate(formatDate(clientInfo.createdAt));
-    //   setCreatedBy(clientInfo.createdBy);
+    setClientInfo(clientId);
+  }, [clientId]);
+
+  const sendNewName = async (name) => {
+    const newNameRes = await updateClientName(clientId, name);
+    if (typeof newNameRes === 'object') {
+      setName(nameTextField);
+      setClientId(clientId);
+    } else {
+      setWarning(true);
+      setWarningMessage(newNameRes);
     }
-  }, [clientInfo]);
+  };
 
   // Edit client Name
   const handleUserName = () => {
     setEditName(false);
-    setName(nameTextField);
+    if (name !== nameTextField) {
+      sendNewName(nameTextField);
+    }
   };
 
   // handleResponse From dialog to delete project or not
   const handleResponseFromDialog = (res) => {
     setOpenDialog(false);
-    console.log(res);
   };
   return (
     <Paper>
+      {/* alert for warning message */}
+      <Collapse in={warning}>
+        <Alert
+         severity="error"
+          action={
+            <IconButton
+              aria-label="warning"
+              size="small"
+              onClick={() => {
+                setWarning(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          {warningMessage}
+        </Alert>
+      </Collapse>
+
       {/* ---------------------------------------------------------
       Assign Project Heading
     ------------------------------------------------------------*/}
       <Box>
-        {/* -----------------------------------------------------------------------------------
-        Client Name components
-    --------------------------------------------------------------------------------- */}
         {editName ? (
           <Box>
+            {/* ----------------------------------------------------------------------
+            User Name change Components
+           ------------------------------------------------------------------------- */}
             <TextField
               id="client-Name"
               label="Client Name"
@@ -73,6 +127,9 @@ const ClientInfo = ({ clientInfo }) => {
           </Box>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            {/* -----------------------------------------------------------------------------------
+          Client Name components
+      --------------------------------------------------------------------------------- */}
             <Box>
               <Typography variant="h3">{name}</Typography>
             </Box>

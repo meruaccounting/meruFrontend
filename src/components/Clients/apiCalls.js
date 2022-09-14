@@ -1,4 +1,4 @@
-import { FormControlUnstyledContext } from '@mui/base';
+//  global ui
 import axios from 'axios';
 
 const config = {
@@ -14,8 +14,8 @@ export const getClientApi = async () => {
     if (res.data && res.status === (200 || 201)) {
       return res.data.data;
     }
-    // res.message 
-    return 'Error Occured while fetching clients';
+    // res.message
+    return res.data;
   } catch (error) {
     return 'Error Occured while fetching clients';
   }
@@ -28,15 +28,34 @@ export const getClientByIdApi = async (clientId) => {
     if (res.data && res.status === (200 || 201)) {
       return res.data.data;
     }
-    return 'Error Occured while fetching clients';
+    return res.data;
   } catch (error) {
-    return 'Error Occured while fetching clients';
+    return 'Error Occured while fetching client information';
   }
 };
-
 
 // To Edit client Name
 
 export const updateClientName = async (clientId, clientName) => {
-    // what to send 
-}
+  try {
+    const res = await axios.patch(`http://localhost:8000/client/${clientId}`, { name: clientName }, config);
+    if (res.data && res.status === (200 || 201)) return res.data.data;
+    return res.data;
+  } catch (error) {
+    return 'Error Occured while updating clients';
+  }
+};
+
+//  To delete client
+
+export const deleteClient = async (clientId) => {
+  try {
+    const res = await axios.delete(`http://localhost:8000/client/${clientId}`, config);
+    if(res.data && res.status === (200 || 202)){
+      return res.data.data
+    }
+    return res.data;
+  } catch (error) {
+    return 'Error Occured while deleting clients';
+  }
+};
