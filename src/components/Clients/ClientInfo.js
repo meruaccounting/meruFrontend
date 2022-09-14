@@ -81,7 +81,7 @@ const ClientInfo = ({ clientId, setClientId }) => {
     setOpenDialog(false);
   };
   return (
-    <Paper>
+    <Paper sx={{mt:1}}>
       {/* alert for warning message */}
       <Collapse in={warning}>
         <Alert
