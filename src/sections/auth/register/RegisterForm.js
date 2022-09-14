@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,9 @@ export default function RegisterForm() {
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password is too short - should be 8 chars minimum.'),
   });
 
   const defaultValues = {
@@ -42,8 +45,18 @@ export default function RegisterForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
-    navigate('/dashboard', { replace: true });
+  const onSubmit = async (data) => {
+    // axios call
+    try {
+      axios.post('/register', { ...data, role: 'employee' }).then((res) => {
+        console.log(res);
+        navigate('/login', { replace: true });
+      });
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      }
+    }
   };
 
   return (

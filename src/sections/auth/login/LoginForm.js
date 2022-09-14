@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -39,8 +40,21 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     navigate('/dashboard', { replace: true });
+    axios
+      .post('/login', data)
+      .then((res) => {
+        console.log(res);
+        if (res.data.status === 'success') {
+          localStorage.setItem('Bearer Token', res.data.token);
+          localStorage.setItem('ud', JSON.stringify(res.data.user));
+          navigate('/dashboard/projects', { replace: true });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

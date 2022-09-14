@@ -50,8 +50,10 @@ export default function Sidebar({ setprojectId }) {
   // fetch the data
   useEffect(() => {
     axios.get(`http://localhost:8000/project/byClients`, config).then((res) => {
-      setClients(res.data.data, false);
-      setfilteredData(res.data.data);
+      if (res.status === 200) {
+        setClients(res.data.data, false);
+        setfilteredData(res.data.data);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
