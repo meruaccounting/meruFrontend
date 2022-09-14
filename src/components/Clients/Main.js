@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 
 // material ui components
 import { Container, Box } from '@mui/system';
-import { Button, Typography, Paper, TextField } from '@mui/material';
+import { Button, Paper, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 // OWN components
 import Search from '../Search';
-import AlertDialog from './AlertDialog';
+import ClientInfo from './ClientInfo';
+
 
 // Columns name for table header
 const columns = [
@@ -28,34 +28,33 @@ const columns = [
     field: 'TotalHours',
     headerName: 'Total Hours',
     width: 130,
-    // valueGetter: (params) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
 ];
 
 // end of data
 
-export default function Main() {
+export default function Main({ clientId }) {
   // store
   const [displayDeleteIcon, setDisplayDeleteIcon] = useState(false);
   const [row, setRow] = useState([]);
   const [orginalRow, setOrginalRow] = useState([]);
   const [deleteRowIds, setDeleteRowIds] = useState([]);
-  const [clientName, setClientName] = useState('Client Name');
-  const [editClientName, setEditClientName] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [clientInfo, setClientInfo] = useState({});
+
+  // to fill data in datagrid and set clientName and other things
+ 
 
   useEffect(() => {
-    const example = [
-      { id: 'Project1', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
-      { id: 'Project2', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
-      { id: 'Project3', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
-      { id: 'Project4', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
-      { id: 'Project5', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
-    ];
-    setOrginalRow([...example]);
-    setRow([...example]);
-  }, []);
+    // const example = [
+    //   { id: 'Project1', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
+    //   { id: 'Project2', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
+    //   { id: 'Project3', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
+    //   { id: 'Project4', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
+    //   { id: 'Project5', ProjectHours: '20hrs', InternalHours: '10hrs', ProjectMembers: 10, TotalHours: '10hrs' },
+    // ];
+    // setOrginalRow([...example]);
+    // setRow([...example]);
+  }, [clientId]);
 
   // filter project as per user search
   const filterProject = (projectName) => {
@@ -84,72 +83,26 @@ export default function Main() {
     setRow([...newRow]);
   };
 
-  // handleResponse From dialog to delete project or not
-  const handleResponseFromDialog = (res) => {
-    setOpenDialog(false);
-    console.log(res);
-  };
-
   return (
-    <Container sx={{ width: '70%', paddingX: 2 }} disableGutters>
-      {/* ------------------------------ heading and delete tags ------------------------------------------------------------------------*/}
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        {/* -----------------------------------------------------------------------------------
-        Client Name components
-        --------------------------------------------------------------------------------- */}
-        <Box>
-          {editClientName ? (
-            <TextField
-              id="client-Name"
-              label="Client Name"
-              variant="outlined"
-              value={clientName}
-              onChange={(event) => setClientName(event.target.value)}
-              onBlur={() => setEditClientName(false)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') setEditClientName(false);
-              }}
-            />
-          ) : (
-            <Typography variant="h3">{clientName}</Typography>
-          )}
-        </Box>
-        <Box>
-          <Button onClick={() => setEditClientName(true)}>
-            <EditIcon color="action" />
-          </Button>
-          <Button onClick={() => setOpenDialog(true)}>
-            <DeleteIcon color="action" />
-          </Button>
-        </Box>
-      </Box>
-
-      {/* ---------------------------------------------------------
-      Assign Project Heading
-      ------------------------------------------------------------*/}
-      <Typography sx={{ color: 'green', marginTop: 2, fontWeight: 'bold' }}>Assign Projects</Typography>
-
-      {/* ----------------------------------------------- Create date and creator name -------------------------------------------------------- */}
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 2 }}>
-        <Box>
-          <Typography variant="h6">Created On: {'03/02/2000'}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="h6">Created By: {'QWERTY'}</Typography>
-        </Box>
-      </Box>
-
-      {/* ------------------------------------------------- Project list ------------------------------------------------------ */}
       <Box sx={{ marginTop: 4 }}>
         <Search labelName={'Search Project'} sendDataToParent={filterProject} frequent />
         {/* --------------------------------------------------------------------------
         Delete icon is here
       -----------------------------------------------------------------------------*/}
         {displayDeleteIcon && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', backgroundColor: 'rgba(32, 101, 209, 0.16)' }}>
-            <Button onClick={deleteProjects}>
-              <DeleteIcon color="action" />
-            </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              backgroundColor: 'rgba(32, 101, 209, 0.16)',
+              marginTop: 1,
+            }}
+          >
+            <Tooltip title="Delete Choosen Project">
+              <Button onClick={deleteProjects}>
+                <DeleteIcon color="action" />
+              </Button>
+            </Tooltip>
           </Box>
         )}
         <Paper style={{ maxHeight: '40vh', overflow: 'auto', marginTop: 2 }}>
@@ -165,9 +118,5 @@ export default function Main() {
           </div>
         </Paper>
       </Box>
-
-      {/* Dialog box components */}
-      <AlertDialog sendToParent={handleResponseFromDialog} dialogStatus={openDialog} />
-    </Container>
   );
 }
