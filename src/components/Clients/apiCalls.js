@@ -1,16 +1,11 @@
 //  global ui
 import axios from 'axios';
 
-const config = {
-  headers: {
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTZkZDcyZWIzYmQ5MzIyN2RhMGI5YiIsImlhdCI6MTY2MjY2NTY4OCwiZXhwIjoxNjY1MjU3Njg4fQ.V6Wg6QsqTEsZ1OQOOAIdiWLFkuDwS-qnopef1i9MiUI`,
-  },
-};
 
 //  To Get all client from backend
 export const getClientApi = async () => {
   try {
-    const res = await axios.get('http://localhost:8000/client/', config);
+    const res = await axios.get('/client');
     if (res.data && res.status === (200 || 201)) {
       return res.data.data;
     }
@@ -24,7 +19,7 @@ export const getClientApi = async () => {
 // To get Info about client via his/her id
 export const getClientByIdApi = async (clientId) => {
   try {
-    const res = await axios.get(`http://localhost:8000/client/${clientId}`, config);
+    const res = await axios.get(`/client/${clientId}`);
     if (res.data && res.status === (200 || 201)) {
       return res.data.data;
     }
@@ -38,7 +33,7 @@ export const getClientByIdApi = async (clientId) => {
 
 export const updateClientName = async (clientId, clientName) => {
   try {
-    const res = await axios.patch(`http://localhost:8000/client/${clientId}`, { name: clientName }, config);
+    const res = await axios.patch(`/client/${clientId}`, { name: clientName });
     if (res.data && res.status === (200 || 201)) return res.data.data;
     return res.data;
   } catch (error) {
@@ -50,7 +45,7 @@ export const updateClientName = async (clientId, clientName) => {
 
 export const deleteClient = async (clientId) => {
   try {
-    const res = await axios.delete(`http://localhost:8000/client/${clientId}`, config);
+    const res = await axios.delete(`/client/${clientId}`);
     if(res.data && res.status === (200 || 202)){
       return res.data.data
     }
@@ -59,3 +54,16 @@ export const deleteClient = async (clientId) => {
     return 'Error Occured while deleting clients';
   }
 };
+
+
+export const addNewClient = async(name) => {
+  try {
+    const res = await axios.post('/client', {name});
+    if(res.data && res.status === (200 || 201)){
+      return res.data.data
+      }
+      return res.data;
+  } catch (error) {
+    return 'Error Occured while creating clients';
+  }
+}

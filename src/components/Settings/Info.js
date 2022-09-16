@@ -2,7 +2,9 @@ import React from 'react'
 
 // mui components
 import { Container, Typography } from '@mui/material'
-const Info = ({}) => {
+
+
+const Info = () => {
   return (
     <div>Info</div>
   )

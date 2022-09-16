@@ -1,5 +1,5 @@
 // react and other popular library
-import React from 'react'
+import React, {useState} from 'react'
 
 // mui library
 import {Box, Container, CssBaseline} from "@mui/material"
@@ -25,14 +25,15 @@ const innerBox = {
 
 
 const Setting = () => {
+  const [settingMsg, setSettingMsg] = useState(null);
   return (
     <Box sx={rootBox} disableGutters>
       <CssBaseline />
       <PageHeader title="Settings" />
       <Box sx={innerBox}>
-      <Sidebar/>
+      <Sidebar setMsg = {(msg) => {setSettingMsg(msg)}}/>
       <Container sx={{ width: '70%', paddingX: 2 }} disableGutters>
-        <Info/>
+        <Info msg= {settingMsg}/>
         </Container>
       </Box>
     </Box>

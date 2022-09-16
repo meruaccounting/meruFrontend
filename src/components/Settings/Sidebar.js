@@ -47,7 +47,7 @@ const SideBarData = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({setMsg}) => {
   const [selectListIndex, setSelectListIndex] = useState(0);
 
   const handleSelectedIndex = (index) => {

@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 // own components
 import AlertDialog from './AlertDialog';
-import { getClientByIdApi, updateClientName } from './apiCalls';
+import { getClientByIdApi, updateClientName, deleteClient } from './apiCalls';
 
 const ClientInfo = ({ clientId, setClientId }) => {
   // store
@@ -64,6 +64,7 @@ const ClientInfo = ({ clientId, setClientId }) => {
       setClientId(clientId);
     } else {
       setWarning(true);
+      setNameTextField(name);
       setWarningMessage(newNameRes);
     }
   };
@@ -71,21 +72,31 @@ const ClientInfo = ({ clientId, setClientId }) => {
   // Edit client Name
   const handleUserName = () => {
     setEditName(false);
-    if (name !== nameTextField) {
+    if (name !== nameTextField && nameTextField !== '') {
       sendNewName(nameTextField);
     }
   };
 
   // handleResponse From dialog to delete project or not
-  const handleResponseFromDialog = (res) => {
+  const handleResponseFromDialog = async (res) => {
     setOpenDialog(false);
+    try {
+      if (res === true) {
+        const user = await deleteClient(clientId);
+        if (user) {
+          setClientId(null);
+        }
+      }
+    } catch (error) {
+      console.log('error is handled here');
+    }
   };
   return (
-    <Paper sx={{mt:1}}>
+    <Paper sx={{ mt: 1 }}>
       {/* alert for warning message */}
       <Collapse in={warning}>
         <Alert
-         severity="error"
+          severity="error"
           action={
             <IconButton
               aria-label="warning"
@@ -113,8 +124,9 @@ const ClientInfo = ({ clientId, setClientId }) => {
             User Name change Components
            ------------------------------------------------------------------------- */}
             <TextField
+              error={nameTextField === ''}
               id="client-Name"
-              label="Client Name"
+              label={nameTextField === '' ? 'Error' : 'Client Name'}
               variant="outlined"
               fullWidth
               value={nameTextField}
