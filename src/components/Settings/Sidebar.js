@@ -1,5 +1,5 @@
 // react and other library
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // mui library
 import { Container, Paper, List, ListItemText, ListItemButton } from '@mui/material';
@@ -18,7 +18,7 @@ const SideBarData = [
   },
   { title: 'Apps And Url Tracking', desc: 'Track what application your team  members use and what website they visit' },
   {
-    title: 'weekly Time Limit',
+    title: 'Weekly Time Limit',
     desc: 'Number of hours your employees are allowed to work. The tracking will stop when the limit is reached.The time zone for the time limit is always UTC',
   },
   {
@@ -47,11 +47,19 @@ const SideBarData = [
   },
 ];
 
-const Sidebar = ({setMsg}) => {
+const Sidebar = ({ setMsg }) => {
+  // store
   const [selectListIndex, setSelectListIndex] = useState(0);
 
+  // onload setMast to first content
+  useEffect(() => {
+    setMsg({ ...SideBarData[0], selectedIndex: 0 });
+  }, []);
+
+  // this is to handle callback from side bar
   const handleSelectedIndex = (index) => {
     setSelectListIndex(index);
+    setMsg({ ...SideBarData[index], selectedIndex: index });
   };
   return (
     <Container sx={{ width: '30%', m: 1, mr: 0.5 }} disableGutters>

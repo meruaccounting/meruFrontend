@@ -22,7 +22,7 @@ const navConfig = [
     icon: getIcon('eva:shopping-bag-fill'),
   },
   {
-    title: 'setting',
+    title: 'settings',
     path: '/dashboard/setting',
     icon: getIcon('ant-design:setting-filled'),
   },
