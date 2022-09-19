@@ -67,11 +67,7 @@ const ClientInfo = ({ clientId, setClientId }) => {
   };
 
   // handleResponse From dialog to delete project or not
-<<<<<<< HEAD
-  const handleResponseFromDialog = () => {
-=======
   const handleResponseFromDialog = async (res) => {
->>>>>>> e37b066db16845d7a04899a4f722ae87e184f04d
     setOpenDialog(false);
     try {
       if (res === true) {
