@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NoProjectSelected from './NoProjectSelected';
 import ChangeClient from './ChangeClient';
 import ChangeProjectLeader from './ChangeProjectLeader';
+import ChangeBudget from './ChangeBudget';
 
 //---------------------------------------------------------------
 
@@ -53,9 +54,9 @@ export default function Main({ projectId }) {
   // fetch the data
   useEffect(() => {
     if (!projectId) return;
-    axios
-      .get(`http://localhost:8000/project/${projectId}`, config)
-      .then((res) => setproject({ project: res.data.data, loader: false }));
+    axios.get(`http://localhost:8000/project/${projectId}`, config).then((res) => {
+      setproject({ project: res.data.data, loader: false });
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
@@ -88,9 +89,12 @@ export default function Main({ projectId }) {
               />
               <Divider sx={{ mt: 0.5 }} />
 
-              {/* change client and project Leader///////////////// */}
-              <ChangeClient project={project} />
-              <ChangeProjectLeader project={project} />
+              {/* change client and project Leader and Budget///////////////// */}
+              <Container disableGutters sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <ChangeClient project={project} />
+                <ChangeProjectLeader project={project} />
+                <ChangeBudget project={project} />
+              </Container>
             </Box>
           )}
         </Paper>
