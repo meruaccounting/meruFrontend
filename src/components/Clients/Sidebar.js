@@ -99,7 +99,7 @@ export default function Sidebar({ setclientId, change}) {
                   onClick={() => handleSelectedIndex(index)}
                   key={index}
                 >
-                  <ListItemText primary={ele.name} />
+                  <ListItemText primary={ele.name} sx={{color: selectListIndex === index ? "blue":""}}/>
                 </ListItemButton>
               ))}
             </List>

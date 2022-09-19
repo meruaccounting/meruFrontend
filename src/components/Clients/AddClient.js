@@ -7,6 +7,7 @@ import { Box, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // components
+import { addNewClient } from './apiCalls';
 
 // store
 // import useStore from '../../store/store';
@@ -28,8 +29,16 @@ export default function AddClient() {
       sethelperText('Enter a Value');
       seterror(true);
     } else {
-      // call api here
-      console.log('call api to add and refresh list');
+      try {
+        setloading(true);
+        const res = await addNewClient(value);
+        if(res){
+          console.log(res);
+          setloading(false);
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   };
 
