@@ -1,14 +1,15 @@
 // react components
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // material ui comppnents
-import { Box, CssBaseline, Container, Typography } from '@mui/material';
+import { Box, CssBaseline, Container } from '@mui/material';
 
 // user components
 import Sidebar from '../components/Clients/Sidebar';
 import Main from '../components/Clients/Main';
 import ClientInfo from '../components/Clients/ClientInfo';
 import PageHeader from '../components/Projects/PageHeader';
+import NoClientSelected from '../components/Clients/NoClientSelected';
 
 // -------------------------------------------------------------------------------------------------------
 
@@ -27,7 +28,6 @@ const innerBox = {
 };
 
 export default function User() {
-
   // store
   const [clientId, setclientId] = useState(null);
   const [isChange, setIsChange] = useState(false);
@@ -36,7 +36,7 @@ export default function User() {
   const callBackFucntion = (id) => {
     setclientId(id);
     setIsChange(!isChange);
-  }
+  };
 
   return (
     <Box sx={rootBox} disableGutters>
@@ -44,7 +44,7 @@ export default function User() {
       <PageHeader title="Clients" />
       <Box sx={innerBox}>
         {/* -------- sidebar components--------- */}
-        <Sidebar setclientId={callBackFucntion} change = {isChange} />
+        <Sidebar setclientId={callBackFucntion} change={isChange} />
         {/* ----------------------------
           Right side component with full information
           -----------------------------------*/}
@@ -53,18 +53,11 @@ export default function User() {
             {/*  ----------------------------------------------------------
               to display client Information 
             ------------------------------------------------------------- */}
-            <ClientInfo clientId={clientId} setClientId={callBackFucntion}/>
+            <ClientInfo clientId={clientId} setClientId={callBackFucntion} />
             <Main clientId={clientId} />
           </Container>
         ) : (
-          <Container
-            sx={{ width: '70%', padding: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
-            disableGutters
-          >
-            <Typography sx={{ marginTop: 2, fontWeight: 'bold' }} variant="h3">
-              NO CLIENT SELECTED
-            </Typography>
-          </Container>
+          <NoClientSelected />
         )}
       </Box>
     </Box>

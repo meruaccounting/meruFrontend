@@ -2,14 +2,13 @@
 import React, { useEffect, useState } from 'react';
 
 // material ui components
-import { Container, Box } from '@mui/system';
+import { Box } from '@mui/system';
 import { Button, Paper, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // OWN components
 import Search from '../Search';
-import ClientInfo from './ClientInfo';
 
 
 // Columns name for table header
@@ -39,7 +38,6 @@ export default function Main({ clientId }) {
   const [row, setRow] = useState([]);
   const [orginalRow, setOrginalRow] = useState([]);
   const [deleteRowIds, setDeleteRowIds] = useState([]);
-  const [clientInfo, setClientInfo] = useState({});
 
   // to fill data in datagrid and set clientName and other things
  
