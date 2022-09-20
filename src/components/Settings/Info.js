@@ -17,7 +17,7 @@ const Info = ({ msg }) => {
     Heading and Defination
     -------------------------------------------------------------------------------- */}
       <Typography variant="h3">{title}</Typography>
-      <Typography sx={{backgroundColor:"rgb(200, 220, 253)", px:1, py:2}}>{desc}</Typography>
+      <Typography sx={{backgroundColor:"success.main", px:1, py:2}}>{desc}</Typography>
     </Container>
   );
 };
