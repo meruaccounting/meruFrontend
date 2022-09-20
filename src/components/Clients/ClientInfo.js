@@ -1,6 +1,7 @@
 // react components
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 // mui library
 import { Box } from '@mui/system';
@@ -24,29 +25,17 @@ const ClientInfo = ({ clientId, setClientId }) => {
   const [projectDate, setProjectDate] = useState('dd/mm/yyyy');
   const [openDialog, setOpenDialog] = useState(false);
 
-  // for fomating date as per need
-  const formatDate = (time) => {
-    const date = new Date(time);
-    let day = date.getDate();
-    if (day <= 9) day = `0${day}`;
-    let month = date.getMonth() + 1;
-    if (month <= 9) month = `0${month}`;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  // to get data from backed
+  // to get data from backend
   const setClientInfo = async (Id) => {
     if (Id)
       try {
         const clientProjects = await getClientByIdApi(Id);
         if (typeof clientProjects === 'object') {
           setName(clientProjects.name);
-          setProjectDate(formatDate(clientProjects.createdAt));
-          setCreatedBy(clientProjects.createdBy);
+          setProjectDate(dayjs(clientProjects.createdAt).format('DD/MM/YYYY'));
+          setCreatedBy(clientProjects.createdBy.name);
           setNameTextField(clientProjects.name);
         }
-        console.log(clientProjects);
       } catch (error) {
         console.log(error);
       }

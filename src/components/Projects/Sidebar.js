@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // mui components
-import { Paper, Typography, CircularProgress, Box, TextField, CssBaseline } from '@mui/material';
+import { Paper, Typography, CircularProgress, Box, TextField } from '@mui/material';
 import { TreeItem, TreeView } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -32,6 +32,7 @@ const listBoxLoader = {
   alignItems: 'center',
   justifyContent: 'center',
 };
+
 export default function Sidebar({ setprojectId }) {
   // store
   // original clients from the store and its set fn
@@ -40,16 +41,9 @@ export default function Sidebar({ setprojectId }) {
   // filtered after handlesearch
   const [filteredData, setfilteredData] = useState([]);
 
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTZkZDcyZWIzYmQ5MzIyN2RhMGI5YiIsImlhdCI6MTY2MjY2NTY4OCwiZXhwIjoxNjY1MjU3Njg4fQ.V6Wg6QsqTEsZ1OQOOAIdiWLFkuDwS-qnopef1i9MiUI`,
-    },
-  };
-  // store
-
   // fetch the data
   useEffect(() => {
-    axios.get(`http://localhost:8000/project/byClients`, config).then((res) => {
+    axios.get(`/project/byClients`).then((res) => {
       if (res.status === 200) {
         setClients(res.data.data, false);
         setfilteredData(res.data.data);
@@ -57,6 +51,11 @@ export default function Sidebar({ setprojectId }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // setfiltereddata every time clients changes
+  useEffect(() => {
+    setfilteredData(clients.clients);
+  }, [clients]);
 
   const handleSearch = (e) => {
     // convert input text to lower case
@@ -159,7 +158,7 @@ export default function Sidebar({ setprojectId }) {
           )}
 
           {/* -------------------------------------------------------------------------------------------New project add components------------------------------------------------------ */}
-          <AddProject setfilteredData={(data) => setfilteredData(data)} />
+          <AddProject />
         </Paper>
       </Container>
     </>

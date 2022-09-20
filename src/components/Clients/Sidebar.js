@@ -8,6 +8,12 @@ import { Container, List, ListItemText, Paper, ListItemButton, CircularProgress 
 import Search from '../Search';
 import AddClient from './AddClient';
 import { getClientApi } from './apiCalls';
+
+// store
+import useStore from '../../store/store';
+
+//-------------------------------------------------------------------------------------------------------------------
+
 // styles
 const rootPaper = {
   overflow: 'hidden',
@@ -23,8 +29,11 @@ const rootPaper = {
 //   justifyContent: 'center',
 // };
 
-export default function Sidebar({ setclientId, change}) {
+export default function Sidebar({ setclientId, change }) {
   // store
+  // original clients from the store and its set fn
+  const clients = useStore((state) => state.clients);
+  const setClients = useStore((state) => state.setClients);
   const [originalClientNames, setOriginalClientNames] = useState([]);
   const [clientNames, setClientNames] = useState([]);
   const [selectListIndex, setSelectListIndex] = useState(0);
@@ -34,6 +43,8 @@ export default function Sidebar({ setclientId, change}) {
   const makeClientList = async () => {
     try {
       const clientData = await getClientApi();
+      setClients(clientData);
+      console.log(clientData);
       if (Array.isArray(clientData)) {
         const clientArr = clientData.map((ele) => ({ name: ele.name, Id: ele._id }));
         // setting data as {name, Id} for client
@@ -68,7 +79,7 @@ export default function Sidebar({ setclientId, change}) {
   //   to get the data from search components
   const getDataFromSearch = (valueSearched) => {
     // callto filterclient arrow funtion
-    console.log("here")
+    console.log('here');
     filterClients(valueSearched);
   };
 
@@ -87,8 +98,10 @@ export default function Sidebar({ setclientId, change}) {
         <Search sendDataToParent={getDataFromSearch} frequent labelName={'Search Client'} fullWidth />
         {/* -------------------------------------------------------------List component -------------------------------------------------------------------------------- */}
         {isLoadingData ? (
-           <Paper style={{ flexGrow: 1, overflow: 'auto', justifyContent:"center", display:"flex", alignItems:"center"}}>
-          <CircularProgress />
+          <Paper
+            style={{ flexGrow: 1, overflow: 'auto', justifyContent: 'center', display: 'flex', alignItems: 'center' }}
+          >
+            <CircularProgress />
           </Paper>
         ) : (
           <Paper style={{ flexGrow: 1, overflow: 'auto' }}>
@@ -99,7 +112,7 @@ export default function Sidebar({ setclientId, change}) {
                   onClick={() => handleSelectedIndex(index)}
                   key={index}
                 >
-                  <ListItemText primary={ele.name} sx={{color: selectListIndex === index ? "blue":""}}/>
+                  <ListItemText primary={ele.name} sx={{ color: selectListIndex === index ? 'blue' : '' }} />
                 </ListItemButton>
               ))}
             </List>

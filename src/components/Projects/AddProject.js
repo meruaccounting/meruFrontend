@@ -14,7 +14,7 @@ import useStore from '../../store/store';
 
 // store
 
-export default function AddProject({ setfilteredData }) {
+export default function AddProject() {
   // store
   // to call and set clients again when new added
   const setClients = useStore((state) => state.setClients);
@@ -22,11 +22,6 @@ export default function AddProject({ setfilteredData }) {
   const [helperText, sethelperText] = useState('');
   const [error, seterror] = useState(false);
   const [loading, setloading] = useState(false);
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTZkZDcyZWIzYmQ5MzIyN2RhMGI5YiIsImlhdCI6MTY2MjY2NTY4OCwiZXhwIjoxNjY1MjU3Njg4fQ.V6Wg6QsqTEsZ1OQOOAIdiWLFkuDwS-qnopef1i9MiUI`,
-    },
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,13 +33,12 @@ export default function AddProject({ setfilteredData }) {
       setloading(true);
       // call api here
       try {
-        axios.post(`http://localhost:8000/project`, { name: value }, config).then((res) => {
+        axios.post(`/project`, { name: value }).then((res) => {
           setloading(false);
           setvalue('');
           if (res.status === 201) {
-            axios.get(`http://localhost:8000/project/byClients`, config).then((res) => {
+            axios.get(`/project/byClients`).then((res) => {
               setClients(res.data.data, false);
-              setfilteredData(res.data.data);
             });
           }
         });
