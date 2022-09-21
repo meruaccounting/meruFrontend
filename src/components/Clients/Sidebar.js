@@ -36,7 +36,7 @@ const listBoxLoader = {
 export default function Sidebar({ setclientId }) {
   // store
   // original clients from the store and its set fn
-  // const clients = useStore((state) => state.clients);
+  const clients = useStore((state) => state.clients);
   const setClients = useStore((state) => state.setClients);
   // filtered after handlesearch
   const [filteredData, setfilteredData] = useState([]);
