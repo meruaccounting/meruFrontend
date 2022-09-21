@@ -9,7 +9,7 @@ import Iconify from './Iconify';
 
 // ----------------------------------------------------------------------
 
-const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
+const ListItemStyle = styled((props) => <ListItemButton {...props} />)(({ theme }) => ({
   ...theme.typography.body2,
   height: 48,
   position: 'relative',

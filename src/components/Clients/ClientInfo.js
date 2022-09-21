@@ -1,153 +1,114 @@
 // react components
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 // mui library
 import { Box } from '@mui/system';
-import { TextField, Paper, Typography, Tooltip, Button, Alert, Collapse, IconButton } from '@mui/material';
+import { Typography, Tooltip, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import CloseIcon from '@mui/icons-material/Close';
 
 // own components
-import AlertDialog from './AlertDialog';
-import { getClientByIdApi, updateClientName, deleteClient } from './apiCalls';
 
-const ClientInfo = ({ clientId, setClientId }) => {
+// store
+import useStore from '../../store/clientStore';
+
+// ------------------------------------------------------------------
+
+// styles
+const input = {
+  marginTop: '8px',
+  color: '#000',
+  width: 'fit-content',
+  wordWrap: 'break-word',
+  height: '35px',
+  fontSize: '30px',
+  fontWeight: 'bold',
+  border: 'none',
+  background: '#fff',
+  transition: 'width 0.4s ease-in-out',
+  '& :focus': { width: '100%' },
+};
+
+export default function ClientInfo({ client, setclientId }) {
   // store
-  const [warning, setWarning] = useState(false);
-  const [warningMessage, setWarningMessage] = useState('');
-  const [name, setName] = useState('No Clients');
-  const [nameTextField, setNameTextField] = useState('No Clients');
-  const [editName, setEditName] = useState(false);
-  const [createdBy, setCreatedBy] = useState('creatorName');
-  const [projectDate, setProjectDate] = useState('dd/mm/yyyy');
-  const [openDialog, setOpenDialog] = useState(false);
+  const setClients = useStore((state) => state.setClients);
+  const [name, setName] = useState(client.client.name);
 
-  // to get data from backend
-  const setClientInfo = async (Id) => {
-    if (Id)
-      try {
-        const clientProjects = await getClientByIdApi(Id);
-        if (typeof clientProjects === 'object') {
-          setName(clientProjects.name);
-          setProjectDate(dayjs(clientProjects.createdAt).format('DD/MM/YYYY'));
-          setCreatedBy(clientProjects.createdBy.name);
-          setNameTextField(clientProjects.name);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-  };
+  // to make the form focused
+  const inputRef = useRef();
 
-  // To rerender whenever id changes i.e. when user switche client
   useEffect(() => {
-    setClientInfo(clientId);
-  }, [clientId]);
+    setName(client.client.name);
+  }, [client]);
 
-  const sendNewName = async (name) => {
-    const newNameRes = await updateClientName(clientId, name);
-    if (typeof newNameRes === 'object') {
-      setName(nameTextField);
-      setClientId(clientId);
-    } else {
-      setWarning(true);
-      setNameTextField(name);
-      setWarningMessage(newNameRes);
-    }
-  };
-
-  // Edit client Name
-  const handleUserName = () => {
-    setEditName(false);
-    if (name !== nameTextField && nameTextField !== '') {
-      sendNewName(nameTextField);
-    }
-  };
-
-  // handleResponse From dialog to delete project or not
-  const handleResponseFromDialog = async (res) => {
-    setOpenDialog(false);
+  // del client, set clientId to null, refresh sidebar clients(store)
+  const handleDelete = () => {
     try {
-      if (res === true) {
-        const user = await deleteClient(clientId);
-        if (user) {
-          setClientId(null);
-        }
-      }
+      axios.delete(`/client/${client.client._id}`).then((res) => {
+        console.log(res);
+        axios.get(`/client`).then((res) => {
+          setClients(res.data.data, false);
+        });
+        setclientId(null);
+      });
     } catch (error) {
-      console.log('error is handled here');
+      console.log(error);
     }
   };
-  return (
-    <Paper sx={{ mt: 1 }}>
-      {/* alert for warning message */}
-      <Collapse in={warning}>
-        <Alert
-          severity="error"
-          action={
-            <IconButton
-              aria-label="warning"
-              size="small"
-              onClick={() => {
-                setWarning(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          {warningMessage}
-        </Alert>
-      </Collapse>
 
-      {/* ---------------------------------------------------------
-      Assign Project Heading
-    ------------------------------------------------------------*/}
+  // edit name, refresh clients in sidebar and change local state of name
+  const handleEditSubmit = (e) => {
+    try {
+      e.preventDefault();
+      axios.patch(`/client/${client.client._id}`, { name }).then((res) => {
+        console.log(res);
+        axios.get(`/client`).then((res) => {
+          setClients(res.data.data, false);
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <>
       <Box>
-        {editName ? (
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          {/* Client Name components */}
+          <form
+            onBlur={(e) => {
+              handleEditSubmit(e);
+              inputRef.current.blur();
+            }}
+            onSubmit={handleEditSubmit}
+            style={{ display: 'inline' }}
+          >
+            <input ref={inputRef} onChange={(e) => setName(e.target.value)} type="text" style={input} value={name} />
+          </form>
+
+          {/* edit and del buttons */}
           <Box>
-            {/* ----------------------------------------------------------------------
-            User Name change Components
-           ------------------------------------------------------------------------- */}
-            <TextField
-              error={nameTextField === ''}
-              id="client-Name"
-              label={nameTextField === '' ? 'Error' : 'Client Name'}
-              variant="outlined"
-              fullWidth
-              value={nameTextField}
-              onChange={(event) => setNameTextField(event.target.value)}
-              onBlur={handleUserName}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') handleUserName();
-              }}
-            />
+            <Tooltip title="Edit Client">
+              <Button>
+                <EditIcon
+                  onClick={() => {
+                    inputRef.current.focus();
+                  }}
+                  color="action"
+                />
+              </Button>
+            </Tooltip>
+            <Tooltip onClick={handleDelete} title="Delete Client">
+              <Button>
+                <DeleteIcon color="action" />
+              </Button>
+            </Tooltip>
           </Box>
-        ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-            {/* -----------------------------------------------------------------------------------
-          Client Name components
-      --------------------------------------------------------------------------------- */}
-            <Box>
-              <Typography variant="h3">{name}</Typography>
-            </Box>
-            <Box>
-              <Tooltip title="Edit Client">
-                <Button onClick={() => setEditName(true)}>
-                  <EditIcon color="action" />
-                </Button>
-              </Tooltip>
-              <Tooltip title="Delete Client">
-                <Button onClick={() => setOpenDialog(true)}>
-                  <DeleteIcon color="action" />
-                </Button>
-              </Tooltip>
-            </Box>
-          </Box>
-        )}
+        </Box>
       </Box>
       {/* ------------------------------ heading and delete tags ------------------------------------------------------------------------*/}
       <Typography sx={{ marginTop: 2, fontWeight: 'bold' }}>
@@ -159,16 +120,12 @@ const ClientInfo = ({ clientId, setClientId }) => {
       {/* ----------------------------------------------- Create date and creator name -------------------------------------------------------- */}
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 2 }}>
         <Box>
-          <Typography variant="h6">Created On: {projectDate}</Typography>
+          <Typography variant="h6">Created On: {dayjs(client.client.createdAt).format('DD/MM/YYYY')}</Typography>
         </Box>
         <Box>
-          <Typography variant="h6">Created By: {createdBy}</Typography>
+          <Typography variant="h6">Created By: {client.client.createdBy.name}</Typography>
         </Box>
       </Box>
-      {/* Dialog box components */}
-      <AlertDialog sendToParent={handleResponseFromDialog} dialogStatus={openDialog} />
-    </Paper>
+    </>
   );
-};
-
-export default ClientInfo;
+}

@@ -45,25 +45,19 @@ const rootPaper = {
 
 export default function Main({ projectId }) {
   const [project, setproject] = useState({ project: {}, loader: true });
-  const config = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZTZkZDcyZWIzYmQ5MzIyN2RhMGI5YiIsImlhdCI6MTY2MjY2NTY4OCwiZXhwIjoxNjY1MjU3Njg4fQ.V6Wg6QsqTEsZ1OQOOAIdiWLFkuDwS-qnopef1i9MiUI`,
-    },
-  };
 
   // fetch the data
   useEffect(() => {
     if (!projectId) return;
-    axios.get(`http://localhost:8000/project/${projectId}`, config).then((res) => {
+    axios.get(`project/${projectId}`).then((res) => {
       setproject({ project: res.data.data, loader: false });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
-  return !projectId ? (
-    // No project selected
-    <NoProjectSelected />
-  ) : (
+  if (!projectId) return <NoProjectSelected />;
+
+  return (
     <>
       <Container sx={{ width: '70%', m: 1, ml: 0.5 }} disableGutters>
         <Paper component="div" elevation={3} sx={rootPaper}>
@@ -72,8 +66,8 @@ export default function Main({ projectId }) {
               <CircularProgress />
             </Box>
           ) : (
-            // Name Component ///////////////////////////////////
             <Box sx={{ m: 1 }}>
+              {/* Name compoent ///////////////////////// */}
               <TextField
                 fullWidth
                 label="Name"

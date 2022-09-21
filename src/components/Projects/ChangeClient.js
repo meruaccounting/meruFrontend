@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // store
-import useStore from '../../store/store';
+import useStore from '../../store/projectStore';
 
 export default function ChangeClient({ project }) {
   // for changing options

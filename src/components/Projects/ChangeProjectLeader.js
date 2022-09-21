@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // mui components
-import { TextField, Autocomplete, InputAdornment, Box } from '@mui/material';
+import { TextField, InputAdornment, Box } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

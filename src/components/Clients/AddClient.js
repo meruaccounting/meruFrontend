@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-/* eslint-disable consistent-return */
-// import axios from 'axios';
+import axios from 'axios';
 
 // mui components
 import { Box, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
-// components
-import { addNewClient } from './apiCalls';
-
 // store
-// import useStore from '../../store/store';
+import useStore from '../../store/clientStore';
 
 //-------------------------------------------------------------------------------------------------------------------
 
 // store
 
 export default function AddClient() {
+  const setClients = useStore((state) => state.setClients);
   const [value, setvalue] = useState('');
   const [helperText, sethelperText] = useState('');
   const [error, seterror] = useState(false);
@@ -29,15 +26,22 @@ export default function AddClient() {
       sethelperText('Enter a Value');
       seterror(true);
     } else {
+      setloading(true);
+      // call api here
       try {
-        setloading(true);
-        const res = await addNewClient(value);
-        if(res){
-          console.log(res);
+        axios.post(`/client`, { name: value }).then((res) => {
           setloading(false);
-        }
+          setvalue('');
+          console.log(res);
+          if (res.status === 200) {
+            axios.get(`/client`).then((res) => {
+              setClients(res.data.data, false);
+            });
+          }
+        });
+        setloading(false);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   };
@@ -47,7 +51,6 @@ export default function AddClient() {
       sx={{ m: 1 }}
       onBlur={() => {
         seterror(false);
-        console.log('error');
       }}
     >
       <TextField
@@ -63,7 +66,7 @@ export default function AddClient() {
         fullWidth
         type="submit"
         loading={loading}
-        loadingPosition="end"
+        // loadingPosition="end"
         variant="contained"
         sx={{ mt: 1 }}
         onClick={handleSubmit}
