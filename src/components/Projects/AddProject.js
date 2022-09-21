@@ -8,7 +8,7 @@ import { LoadingButton } from '@mui/lab';
 // components
 
 // store
-import useStore from '../../store/store';
+import useStore from '../../store/projectStore';
 
 //-------------------------------------------------------------------------------------------------------------------
 

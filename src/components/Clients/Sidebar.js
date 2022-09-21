@@ -1,16 +1,20 @@
-// react components
-import React, { useEffect, useState } from 'react';
+/* eslint-disable consistent-return */
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// material ui
-import { Container, List, ListItemText, Paper, ListItemButton, CircularProgress } from '@mui/material';
+// mui components
+import { Paper, Typography, CircularProgress, Box, TextField } from '@mui/material';
+import { TreeItem, TreeView } from '@mui/lab';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import SearchIcon from '@mui/icons-material/Search';
+import { Container } from '@mui/system';
 
-// Own components
-import Search from '../Search';
+// components
 import AddClient from './AddClient';
-import { getClientApi } from './apiCalls';
 
 // store
-import useStore from '../../store/store';
+import useStore from '../../store/clientStore';
 
 //-------------------------------------------------------------------------------------------------------------------
 
@@ -21,118 +25,120 @@ const rootPaper = {
   display: 'flex',
   flexDirection: 'column',
 };
-// const listBoxLoader = {
-//   margin: 'auto',
-//   display: 'flex',
-//   flexGrow: '1',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-// };
+const listBoxLoader = {
+  margin: 'auto',
+  display: 'flex',
+  flexGrow: '1',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
 
-export default function Sidebar({ setclientId, change }) {
+export default function Sidebar({ setclientId }) {
   // store
   // original clients from the store and its set fn
   // const clients = useStore((state) => state.clients);
   const setClients = useStore((state) => state.setClients);
-  const [originalClientNames, setOriginalClientNames] = useState([]);
-  const [clientNames, setClientNames] = useState([]);
-  const [selectListIndex, setSelectListIndex] = useState(0);
-  const [isLoadingData, setIsLoadingData] = useState(true);
+  // filtered after handlesearch
+  const [filteredData, setfilteredData] = useState([]);
 
-  // to set data in clientNames and ori
-  const makeClientList = async () => {
-    try {
-      const clientData = await getClientApi();
-      setClients(clientData);
-      console.log(clientData);
-      if (Array.isArray(clientData)) {
-        const clientArr = clientData.map((ele) => ({ name: ele.name, Id: ele._id }));
-        // setting data as {name, Id} for client
-        setClientNames([...clientArr]);
-        setOriginalClientNames([...clientArr]);
-        setIsLoadingData(false);
-      } else {
-        console.log('IF error is not returned');
-      }
-    } catch (error) {
-      console.log('Need to do something with error');
-    }
-  };
+  // fetch the data
   useEffect(() => {
-    makeClientList();
-  }, [change]);
+    axios.get(`/client`).then((res) => {
+      if (res.status === 200) {
+        setClients(res.data.data, false);
+        setfilteredData(res.data.data);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // to filter data in clientName as per user search
-  const filterClients = (clientName) => {
-    if (clientName === '') {
-      setClientNames([...originalClientNames]);
-    } else {
-      const filteredClients = clientNames.filter((client) => {
-        const filterExpression = new RegExp(clientName, 'i');
-        if (client.name.search(filterExpression) === -1) return false;
-        return true;
-      });
-      setClientNames([...filteredClients]);
-    }
-  };
+  // setfiltereddata every time clients changes
+  useEffect(() => {
+    setfilteredData(clients.clients);
+  }, [clients]);
 
-  //   to get the data from search components
-  const getDataFromSearch = (valueSearched) => {
-    // callto filterclient arrow funtion
-    console.log('here');
-    filterClients(valueSearched);
-  };
-
-  //   to set selectListindex to current selected element in index
-  // this function will also call callback as selction changes
-  const handleSelectedIndex = (number) => {
-    setSelectListIndex(number);
-    // callback call
-    setclientId(clientNames[number].Id);
+  const handleSearch = (e) => {
+    // convert input text to lower case
+    const lowerCase = e.target.value.toLowerCase();
+    const data = clients.clients.filter((client) => {
+      // if no input the return the original
+      if (lowerCase === '') {
+        setfilteredData(client);
+        return client;
+      }
+      // return the item which contains the user input
+      return client.name ? client.name.toLowerCase().includes(lowerCase) : client.name;
+    });
+    setfilteredData(data);
   };
 
   return (
-    <Container sx={{ width: '30%', m: 1, mr: 0.5 }} disableGutters>
-      <Paper component="div" elevation={3} sx={rootPaper}>
-        {/* search component */}
-        <Search sendDataToParent={getDataFromSearch} frequent labelName={'Search Client'} fullWidth />
-        {/* -------------------------------------------------------------List component -------------------------------------------------------------------------------- */}
-        {isLoadingData ? (
-          <Paper
-            style={{ flexGrow: 1, overflow: 'auto', justifyContent: 'center', display: 'flex', alignItems: 'center' }}
-          >
-            <CircularProgress />
-          </Paper>
-        ) : (
-          <Paper style={{ flexGrow: 1, overflow: 'auto' }}>
-            <List component="nav" aria-label="Client List">
-              {clientNames.map((ele, index) => (
-                <ListItemButton
-                  selected={selectListIndex === index}
-                  onClick={() => handleSelectedIndex(index)}
-                  key={index}
-                >
-                  <ListItemText primary={ele.name} sx={{ color: selectListIndex === index ? 'blue' : '' }} />
-                </ListItemButton>
-              ))}
-            </List>
-          </Paper>
-        )}
+    <>
+      <Container sx={{ width: '30%', m: 1, mr: 0.5 }} disableGutters>
+        <Paper component="div" elevation={3} sx={rootPaper}>
+          {/* search component */}
+          <Box sx={{ m: 1 }}>
+            <TextField
+              InputProps={{
+                endAdornment: <SearchIcon />,
+              }}
+              onChange={handleSearch}
+              label="Search"
+              fullWidth
+            />
+          </Box>
 
-        {/* -------------------------------------------------------------------------------------------New project add components------------------------------------------------------ */}
-        <AddClient />
-      </Paper>
-    </Container>
+          {/* -------------------------------------------------------------TreeView component -------------------------------------------------------------------------------- */}
+          {clients.loader ? (
+            <CircularProgress sx={listBoxLoader} />
+          ) : (
+            <Box
+              component="div"
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                flexGrow: '1',
+                alignItems: 'flex-start',
+                overflowY: 'auto',
+              }}
+            >
+              <TreeView
+                aria-label="Clients Treeview"
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+                sx={{
+                  flexGrow: 1,
+                  overflowY: 'auto',
+                  width: '100%',
+                }}
+              >
+                {filteredData.length
+                  ? filteredData.map((client) => (
+                      <TreeItem
+                        onClick={() => setclientId(client._id)}
+                        nodeId={(client._id ? client._id : 1).toString()}
+                        label={
+                          <Typography
+                            sx={{
+                              color: '#637381',
+                              fontSize: '1.5rem',
+                              fontWeight: '700',
+                            }}
+                          >
+                            {client._id ? client.name : 'No Client'}
+                          </Typography>
+                        }
+                        key={client._id}
+                      />
+                    ))
+                  : 'noclients'}
+              </TreeView>
+            </Box>
+          )}
+          {/* Add Client */}
+          <AddClient />
+        </Paper>
+      </Container>
+    </>
   );
 }
-
-// 'Prashant',
-// 'Ravi',
-// 'Kamal',
-// 'Rohit',
-// 'vipin',
-// 'ajay',
-// 'sanjay',
-// 'xyz',
-// 'hdd',
-// 'dfjd',

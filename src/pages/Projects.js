@@ -27,6 +27,7 @@ export default function Projects() {
       <CssBaseline />
       <PageHeader title="Projects" />
       <Box sx={innerBox}>
+        {/* -------- sidebar components--------- */}
         <Sidebar setprojectId={(id) => setprojectId(id)} />
         <Main projectId={projectId} />
       </Box>

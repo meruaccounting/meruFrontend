@@ -2,7 +2,7 @@
 import React from 'react';
 
 // mui components
-import { Container} from '@mui/system';
+import { Container } from '@mui/system';
 import { Typography } from '@mui/material';
 
 const IndividaulInfo = () => 

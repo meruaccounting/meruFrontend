@@ -14,7 +14,7 @@ import { Container } from '@mui/system';
 import AddProject from './AddProject';
 
 // store
-import useStore from '../../store/store';
+import useStore from '../../store/projectStore';
 
 //-------------------------------------------------------------------------------------------------------------------
 
