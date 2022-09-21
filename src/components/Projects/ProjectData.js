@@ -4,6 +4,7 @@ import React, { useState} from 'react';
 import { Paper, Box, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
+import AddMemeber from './AddMemeber';
 
 
 const columns = [
@@ -56,9 +57,11 @@ const ProjectData = () => {
       };
 
   return (
-    <Box sx={{ mt: 4 }}>
-        <Box sx={{ m: 1 }}>
+    <Box sx={{ mt: 2 }}>
+        <Box sx={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+            <AddMemeber/>
           <TextField
+          sx={{ml: 2}}
             InputProps={{
               endAdornment: <SearchIcon />,
             }}

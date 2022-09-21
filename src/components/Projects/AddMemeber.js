@@ -14,7 +14,7 @@ const AddMemeber = () => {
   return (
     <>
       {addMember ? (
-        <Container disableGutters sx={{  borderTop: '1px solid', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Container disableGutters sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Autocomplete
             multiple
             limitTags={2}
@@ -29,7 +29,7 @@ const AddMemeber = () => {
         </Container>
       ) : (
         <Container
-          sx={{ borderTop: '1px solid', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+          sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           disableGutters
         >
           <Typography variant="h4">
