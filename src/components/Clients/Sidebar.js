@@ -32,7 +32,7 @@ const rootPaper = {
 export default function Sidebar({ setclientId, change }) {
   // store
   // original clients from the store and its set fn
-  const clients = useStore((state) => state.clients);
+  // const clients = useStore((state) => state.clients);
   const setClients = useStore((state) => state.setClients);
   const [originalClientNames, setOriginalClientNames] = useState([]);
   const [clientNames, setClientNames] = useState([]);
