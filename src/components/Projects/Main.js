@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // mui components
-import { TextField, Divider, Container, CircularProgress, Paper, Typography, Box } from '@mui/material';
+import { TextField, Divider, Container, CircularProgress, Paper, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -11,23 +11,24 @@ import NoProjectSelected from './NoProjectSelected';
 import ChangeClient from './ChangeClient';
 import ChangeProjectLeader from './ChangeProjectLeader';
 import ChangeBudget from './ChangeBudget';
+import ProjectData from './ProjectData';
 
 //---------------------------------------------------------------
 
 // style
-const input = {
-  color: '#000',
-  width: 'fit-content',
-  maxWidth: '50%',
-  wordWrap: 'break-word',
-  height: '30px',
-  fontSize: '30px',
-  fontWeight: 'bold',
-  border: 'none',
-  background: '#fff',
-  transition: 'width 0.4s ease-in-out',
-  '& :focus': { width: '100%' },
-};
+// const input = {
+//   color: '#000',
+//   width: 'fit-content',
+//   maxWidth: '50%',
+//   wordWrap: 'break-word',
+//   height: '30px',
+//   fontSize: '30px',
+//   fontWeight: 'bold',
+//   border: 'none',
+//   background: '#fff',
+//   transition: 'width 0.4s ease-in-out',
+//   '& :focus': { width: '100%' },
+// };
 const mainLoader = {
   height: '100%',
   margin: 'auto',
@@ -88,6 +89,7 @@ export default function Main({ projectId }) {
                 <ChangeClient project={project} />
                 <ChangeProjectLeader project={project} />
                 <ChangeBudget project={project} />
+                <ProjectData/>
               </Container>
             </Box>
           )}

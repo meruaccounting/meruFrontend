@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 
 // mui library
-import { Container, Paper, List, ListItemText, ListItemButton } from '@mui/material';
+import { Container, Paper, List, ListItemText, ListItemButton, Typography } from '@mui/material';
 
 const rootPaper = {
-  overflow: 'hidden',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  overflow:"auto"
 };
 
 const SideBarData = [
@@ -54,13 +54,15 @@ const Sidebar = ({ setMsg }) => {
   // onload setMast to first content
   useEffect(() => {
     setMsg({ ...SideBarData[0], selectedIndex: 0 });
-  }, []);
+  }, [setMsg]);
 
   // this is to handle callback from side bar
   const handleSelectedIndex = (index) => {
     setSelectListIndex(index);
     setMsg({ ...SideBarData[index], selectedIndex: index });
   };
+
+
   return (
     <Container sx={{ width: '30%', m: 1, mr: 0.5 }} disableGutters>
       {/* --------------------------------------------------------------------
@@ -75,8 +77,9 @@ const Sidebar = ({ setMsg }) => {
                 handleSelectedIndex(index);
               }}
               key={index}
+              sx={{borderRight:selectListIndex === index?"solid":"none"}}
             >
-              <ListItemText primary={ele.title} sx={{ color: selectListIndex === index ? 'blue' : '' }} />
+              <ListItemText primary={<Typography sx={{fontWeight:"bold", fontSize:20}}>{ele.title}</Typography>}/>
             </ListItemButton>
           ))}
         </List>

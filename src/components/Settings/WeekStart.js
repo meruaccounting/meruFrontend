@@ -5,7 +5,6 @@ import React, {useState} from 'react';
 import { Box } from '@mui/system';
 // own library
 import IndividaulInfo from './IndividaulInfo';
-import Option from './Option';
 import SearchField from './SearchField';
 import WeekDay from './WeekDay';
 
