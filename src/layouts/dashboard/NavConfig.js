@@ -42,6 +42,11 @@ const navConfig = [
     icon: getIcon('eva:alert-triangle-fill'),
   },
   {
+    title: 'Teams',
+    path: '/dashboard/team',
+    icon: getIcon('fluent:people-team-20-filled'),
+  },
+  {
     title: 'Projects',
     path: '/dashboard/projects',
     icon: getIcon('eva:alert-triangle-fill'),

@@ -11,7 +11,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import Projects from './pages/Projects';
-
+import Team from './pages/Team';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -24,6 +24,7 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'setting', element: <Setting /> },
+        { path: 'team', element: <Team/> },
         { path: 'projects', element: <Projects /> },
       ],
     },
