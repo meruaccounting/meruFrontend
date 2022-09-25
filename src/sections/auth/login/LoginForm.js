@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, IconButton, InputAdornment } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, Snackbar } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
+import { useSnackbar } from 'notistack';
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
 
@@ -18,6 +19,9 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  // snackbar
+  const { enqueueSnackbar } = useSnackbar();
+  // snackbar
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -41,19 +45,16 @@ export default function LoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
-    navigate('/dashboard', { replace: true });
     axios
       .post('/login', data)
       .then((res) => {
-        console.log(res);
-        if (res.data.status === 'success') {
-          localStorage.setItem('Bearer Token', res.data.token);
-          localStorage.setItem('ud', JSON.stringify(res.data.user));
-          navigate('/dashboard/projects', { replace: true });
-        }
+        localStorage.setItem('Bearer Token', res.data.token);
+        localStorage.setItem('ud', JSON.stringify(res.data.user));
+        navigate('/dashboard/projects', { replace: true });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
+        enqueueSnackbar(err.response.data.message, { variant: 'error' });
       });
   };
 

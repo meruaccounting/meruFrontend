@@ -2,39 +2,53 @@
 import React, { useState } from 'react';
 
 // mui components
-import { Container, Autocomplete, TextField, Typography, IconButton, Button } from '@mui/material';
+import { Container, Checkbox, Autocomplete, TextField, Typography, IconButton, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 // own components
 
-const AddMemeber = () => {
+export default function AddMember() {
   // store
   const [addMember, setAddMember] = useState(false);
+  // get list for memebers from teams store
+
+  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
+  const handleAddMembers = () => {
+    setAddMember(false);
+  };
 
   return (
     <>
       {addMember ? (
-        <Container disableGutters sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Container disableGutters sx={{ display: 'flex', alignItems: 'center' }}>
           <Autocomplete
             multiple
             limitTags={2}
-            id="multiple-limit-tags"
+            disableCloseOnSelect
             options={top100Films}
             getOptionLabel={(option) => option.title}
-            defaultValue={[top100Films[13], top100Films[12], top100Films[11]]}
-            renderInput={(params) => <TextField {...params} label="limitTags" placeholder="Favorites" />}
-            sx={{ width: '100%', my: 2 }}
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+                {option.title}
+              </li>
+            )}
+            renderInput={(params) => <TextField {...params} label="Employees" placeholder="Employees" />}
+            sx={{ width: '50%' }}
           />
-          <Button variant="contained" color="success" sx={{height:50}} onClick={()=> setAddMember(false)}>Add Members</Button>
+          <Button variant="contained" sx={{ height: 50, m: 1 }} onClick={handleAddMembers}>
+            Add
+          </Button>
         </Container>
       ) : (
-        <Container
-          sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-          disableGutters
-        >
+        <Container sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} disableGutters>
           <Typography variant="h4">
             Project Members
-            <IconButton size="large" onClick={() => setAddMember(true)}>
+            <IconButton sx={{ ml: -0.5 }} onClick={() => setAddMember(true)}>
               <AddCircleIcon fontSize="large" />
             </IconButton>
           </Typography>
@@ -42,9 +56,7 @@ const AddMemeber = () => {
       )}
     </>
   );
-};
-
-export default AddMemeber;
+}
 
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },

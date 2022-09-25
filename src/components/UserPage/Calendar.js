@@ -1,0 +1,351 @@
+// import React, {useState} from 'react';
+// import dayjs from 'dayjs';
+
+// // mui
+// import { Box, Tooltip } from '@mui/material/Box';
+// import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+// import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+// import './calendar.css';
+
+// export default function Calendar ({date}) {
+
+// const [showYearTable, setshowYearTable] = useState(false)
+// const [showMonthTable, setshowMonthTable] = useState(false)
+// const [showdateTable, setshowDateTable] = useState(false)
+// const [dateObject, setdateObject] = useState(dayjs())
+// const [allmonths, setallmonths] = useState(dayjs.months())
+// const [selectedDay, setselectedDay] = useState(null)
+
+//  const weekdayshort = dayjs.weekdaysShort();
+
+//   const daysInMonth = () => {
+//     return dateObject.daysInMonth();
+//   };
+//   const year = () => {
+//     return dateObject.format('Y');
+//   };
+//   const currentDay = () => {
+//     return date;
+//   };
+//   const firstDayOfMonth = () => {
+//     let dateObject = dateObject;
+//     let firstDay = dayjs(dateObject).startOf('month').format('d'); // Day of week 0...1..5...6
+//     return firstDay;
+//   };
+//   const month = () => {
+//     return dateObject.format('MMMM');
+//   };
+//   const showMonth = (e, month) => {
+
+// setshowMonthTable(!showMonthTable)
+// setshowDateTable(!showDateTable)
+
+//   };
+//   const setMonth = (month) => {
+//     let monthNo = allmonths.indexOf(month);
+//     let dateObject = Object.assign({}, dateObject);
+//     dateObject = dayjs(dateObject).dayjs('month', monthNo);
+
+// setdateObject(dateObject)
+//     setshowMonthTable(!showMonthTable)
+//     setshowDateTable(!showDateTable)
+
+//   };
+// //   ----------------
+//   const MonthList = (props) => {
+//     let months = [];
+//     props.data.map((data) => {
+//       months.push(
+//         <td
+//           key={data}
+//           className="calendar-month"
+//           onClick={(e) => {
+//             this.setMonth(data);
+//           }}
+//         >
+//           <span>{data}</span>
+//         </td>
+//       );
+//     });
+//     let rows = [];
+//     let cells = [];
+
+//     months.forEach((row, i) => {
+//       cells.push(row);
+//     });
+//     rows.push(cells);
+//     let monthlist = rows.map((d, i) => {
+//       return <tr key={i}>{d}</tr>;
+//     });
+
+//     return (
+//       <table className="calendar-month">
+//         <thead>
+//           <tr>
+//             <th colSpan="100%">Select a Month</th>
+//           </tr>
+//         </thead>
+//         <tbody>{monthlist}</tbody>
+//       </table>
+//     );
+//   };
+//   showYearTable = (e) => {
+
+//     setshowYearTable(!showMonthTable)
+//     setshowDateTable(!showDateTable)
+
+//   };
+
+//   onPrev = () => {
+//     let curr = '';
+//     if (showYearTable === true) {
+//       curr = 'year';
+//     } else {
+//       curr = 'month';
+//     }
+//     setdateObj(dateObject.subtract(1, curr))
+
+//   };
+// //    ---------------------------------------------------------------------------------------------------
+//   onNext = () => {
+//     let curr = '';
+//     if (showYearTable === true) {
+//       curr = 'year';
+//     } else {
+//       curr = 'month';
+//     }
+//     this.setState({
+//       dateObject: this.state.dateObject.add(1, curr),
+//     });
+//   };
+//   setYear = (year) => {
+//     // alert(year)
+//     let dateObject = Object.assign({}, this.state.dateObject);
+//     dateObject = moment(dateObject).set('year', year);
+//     this.setState({
+//       dateObject: dateObject,
+//       showMonthTable: !this.state.showMonthTable,
+//       showYearTable: !this.state.showYearTable,
+//     });
+//   };
+//   onYearChange = (e) => {
+//     this.setYear(e.target.value);
+//   };
+//   getDates(startDate, stopDate) {
+//     var dateArray = [];
+//     var currentDate = moment(startDate);
+//     var stopDate = moment(stopDate);
+//     while (currentDate <= stopDate) {
+//       dateArray.push(moment(currentDate).format('YYYY'));
+//       currentDate = moment(currentDate).add(1, 'year');
+//     }
+//     return dateArray;
+//   }
+//   YearTable = (props) => {
+//     let months = [];
+//     let nextten = moment().set('year', props).add('year', 12).format('Y');
+
+//     let tenyear = this.getDates(props, nextten);
+
+//     tenyear.map((data) => {
+//       months.push(
+//         <td
+//           key={data}
+//           className="calendar-month"
+//           onClick={(e) => {
+//             this.setYear(data);
+//           }}
+//         >
+//           <span>{data}</span>
+//         </td>
+//       );
+//     });
+//     let rows = [];
+//     let cells = [];
+
+//     months.forEach((row, i) => {
+//       cells.push(row);
+//     });
+//     rows.push(cells);
+//     let yearlist = rows.map((d, i) => {
+//       return <tr key={i}>{d}</tr>;
+//     });
+
+//     return (
+//       <table className="calendar-month">
+//         <thead>
+//           <tr>
+//             <th colSpan="100%">Select a Year</th>
+//           </tr>
+//         </thead>
+//         <tbody>{yearlist}</tbody>
+//       </table>
+//     );
+//   };
+//   onDayClick = (e, d) => {
+//     let dateObject = Object.assign({}, this.state.dateObject);
+//     dateObject = moment(dateObject).set('date', d);
+//     this.setState({
+//       selectedDay: d,
+//       dateObject: dateObject,
+//     });
+//     this.props.setDate(dateObject.format('DD/MM/YYYY'));
+//     this.props.setDateObj(dateObject);
+//   };
+//   getHours = (d) => {
+//     let date = `${d}/${this.state.dateObject.format('MM')}/${this.year()}`;
+//     let day = this.props.days?.filter((el) => {
+//       return el.date === date;
+//     })[0];
+//     return day;
+//   };
+//   render() {
+//     let dayofDate = [];
+//     for (let d = 1; d <= this.daysInMonth(); d++) {
+//       let currentDay = d === this.currentDay() ? 'today' : '';
+//       dayofDate.push(
+//         <th key={d} className={`calendar-day ${currentDay}`}>
+//           {moment(`${this.year()}-${this.month()}-${d}`, 'YYYY-MMMM-DD').format('dddd').slice(0, 3)}
+//         </th>
+//       );
+//     }
+//     let daysInMonth = [];
+//     let trackingData = [];
+//     for (let d = 1; d <= this.daysInMonth(); d++) {
+//       let currentDay = d == this.currentDay() ? 'today' : '';
+//       daysInMonth.push(
+//         <Tooltip
+//           title={`${this.getHours(d) ? (this.getHours(d).dailyHours / (60 * 60)).toFixed(2) : 0} Hrs`}
+//           arrow
+//           followCursor
+//           placement="top"
+//         >
+//           <td
+//             key={d}
+//             className={`calendar-day ${currentDay}`}
+//             onClick={(e) => {
+//               this.onDayClick(e, d);
+//             }}
+//             style={{
+//               borderWidth: '0 1px 0 1px',
+//               borderStyle: 'solid',
+//               borderColor: '#C4CDD5',
+//             }}
+//           >
+//             <span>{d}</span>
+//           </td>
+//         </Tooltip>
+//       );
+//       trackingData.push(
+//         <td
+//           className="hoursCells"
+//           key={d}
+//           style={{
+//             borderWidth: '0 1px 0 1px',
+//             borderStyle: 'solid',
+//             borderColor: '#C4CDD5',
+//             height: '15px',
+//             pointerEvents: 'none',
+//           }}
+//         >
+//           {this.getHours(d) && (
+//             <div
+//               style={{
+//                 height: '100%',
+//                 width: `${
+//                   (this.getHours(d).dailyHours / (60 * 60 * 5)) * 100 >= 100
+//                     ? 100
+//                     : (this.getHours(d).dailyHours / (60 * 60 * 5)) * 100
+//                 }%`,
+//                 backgroundColor: '#007B55',
+//               }}
+//             ></div>
+//           )}
+//         </td>
+//       );
+//     }
+//     let dayOfDateRow = [];
+//     let dayOfDateCells = [];
+//     var totalSlots = [...daysInMonth];
+//     let rows = [];
+//     dayofDate.forEach((row, i) => {
+//       dayOfDateCells.push(row);
+//       if (i === totalSlots.length - 1) {
+//         dayOfDateRow.push(dayOfDateCells);
+//       }
+//     });
+//     let weekdayshortname = dayOfDateRow.map((d, i) => {
+//       return <tr key={i}>{d}</tr>;
+//     });
+//     let cells = [];
+
+//     totalSlots.forEach((row, i) => {
+//       cells.push(row);
+//       if (i === totalSlots.length - 1) {
+//         rows.push(cells);
+//       }
+//     });
+
+//     let daysinmonth = rows.map((d, i) => {
+//       return <tr key={i}>{d}</tr>;
+//     });
+
+//     return (
+//       <div className="tail-datetime-calendar">
+//         <Box
+//           className="calendar-navi"
+//           sx={{
+//             backgroundColor: 'primary.main',
+//             '@media (max-width: 800px)': {
+//               width: '100%',
+//             },
+//           }}
+//         >
+//           <span
+//             onClick={(e) => {
+//               this.onPrev();
+//             }}
+//             className="calendar-button button-prev"
+//           >
+//             <ArrowLeftIcon />
+//           </span>
+//           {!this.state.showMonthTable && (
+//             <span
+//               onClick={(e) => {
+//                 this.showMonth();
+//               }}
+//               className="calendar-label"
+//             >
+//               {this.month()}
+//             </span>
+//           )}
+//           <span className="calendar-label" onClick={(e) => this.showYearTable()}>
+//             {this.year()}
+//           </span>
+//           <span
+//             onClick={(e) => {
+//               this.onNext();
+//             }}
+//             className="calendar-button button-next"
+//           >
+//             <ArrowRightIcon />
+//           </span>
+//         </Box>
+//         <div className="calendar-date">{this.state.showYearTable && <this.YearTable props={this.year()} />}</div>
+//         <div className="calendar-date">{this.state.showMonthTable && <this.MonthList data={moment.months()} />}</div>
+
+//         {this.state.showDateTable && (
+//           <div className="calendar-date">
+//             <table className="calendar-day">
+//               <thead>{weekdayshortname}</thead>
+//               <tbody>
+//                 {daysinmonth}
+//                 <tr>{trackingData.map((e) => e)}</tr>
+//               </tbody>
+//             </table>
+//           </div>
+//         )}
+//       </div>
+//     );
+//   }
+// }

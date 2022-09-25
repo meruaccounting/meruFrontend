@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import Projects from './pages/Projects';
+import UserPage from './pages/UserPage';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ export default function Router() {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { path: 'app', element: <DashboardApp /> },
+        { path: 'app', element: <UserPage /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'setting', element: <Setting /> },

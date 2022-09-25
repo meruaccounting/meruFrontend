@@ -5,15 +5,14 @@ import axios from 'axios';
 import { Paper, Box, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
+import AddMember from './AddMember';
 
-// OWN components
-
-//-------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------
 
 const columns = [
   {
     field: 'name',
-    headerName: 'Project',
+    headerName: 'Employee',
     width: 150,
   },
   {
@@ -33,17 +32,17 @@ const columns = [
   },
 ];
 
-export default function ClientTime({ clientId }) {
+export default function ProjectTime({ projectId }) {
   const [rows, setrows] = useState([]);
   const [filteredRows, setfilteredRows] = useState([]);
 
-  useEffect(() => {
-    axios.get(`/client/getTime/${clientId}`).then((res) => {
-      console.log(res.data.data);
-      setrows(res.data.data.projectTime);
-      setfilteredRows(res.data.data.projectTime);
-    });
-  }, [clientId]);
+  // useEffect(() => {
+  //   axios.get(`/project/getTime/${projectId}`).then((res) => {
+  //     console.log(res.data.data);
+  //     setrows(res.data.data.employeeTime);
+  //     setfilteredRows(res.data.data.employeeTIme);
+  //   });
+  // }, [projectId]);
 
   // filter project as per user search
   const handleSearch = (e) => {
@@ -63,8 +62,11 @@ export default function ClientTime({ clientId }) {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Box sx={{ m: 1 }}>
+      <Box sx={{ m: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <AddMember />
+        {/* search box */}
         <TextField
+          sx={{ ml: 2, width: 400 }}
           InputProps={{
             endAdornment: <SearchIcon />,
           }}
@@ -81,6 +83,8 @@ export default function ClientTime({ clientId }) {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
+          getRowId={columns.name}
+          checkboxSelection
         />
       </Paper>
     </Box>
