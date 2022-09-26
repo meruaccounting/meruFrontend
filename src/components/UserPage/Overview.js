@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 // mui
@@ -9,23 +8,22 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 // components
-import TotalHours from './totalHours';
-import MonthlyHours from './monthlyHours';
-import WeeklyHours from './weeklyHours';
-import TodayHours from './todayHours';
+import TotalHours from './TotalHours';
+import MonthlyHours from './MonthlyHours';
+import WeeklyHours from './WeeklyHours';
+import TodayHours from './TodayHours';
 
 // contexts
 
 export default function Overview({ date, activities }) {
   const [totalHours, settotalHours] = useState(0);
-  const [toadayHours, settodayHours] = useState(0);
+  const [todayHours, settodayHours] = useState(0);
   const [monthlyHours, setmonthlyHours] = useState(0);
   const [weeklyHours, setweeklyHours] = useState(0);
 
   const [value, setValue] = React.useState('1');
   const [apps, setApps] = React.useState([]);
   const [appsMap, setAppsMap] = React.useState([]);
-  const [todaysHours, setTodaysHours] = useState(0);
 
   // filter day selected day wise and internal and external
   useEffect(() => {
@@ -43,11 +41,11 @@ export default function Overview({ date, activities }) {
       const date2 = date;
       total += act.consumeTime;
       if (date1.toDateString() === date2.toDateString()) {
-        today = today + act.endTime - act.startTime;
+        today += act.endTime - act.startTime;
       } else if (dayjs(date1).isSame(date, 'week')) {
-        week = week + act.endTime - act.startTime;
+        week += act.endTime - act.startTime;
       } else if (dayjs(date1).isSame(date, 'month')) {
-        month = month + act.endTime - act.startTime;
+        month += act.endTime - act.startTime;
       }
     });
     settotalHours(total);
@@ -127,7 +125,7 @@ export default function Overview({ date, activities }) {
           justifyContent: 'space-evenly',
         }}
       >
-        <TodayHours Total={todaysHours} />
+        <TodayHours Total={todayHours} />
         <WeeklyHours Total={weeklyHours} />
         <MonthlyHours Total={monthlyHours} />
         <TotalHours Total={totalHours} />

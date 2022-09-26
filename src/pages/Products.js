@@ -2,9 +2,9 @@ import axios from 'axios';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // mui
 import {
+  Link,
   Card,
   Table,
   Stack,
@@ -24,7 +24,8 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
+// helpers
+import secondsToHms from '../helpers/secondsToHms';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +74,6 @@ export default function User() {
   const [userList, setuserList] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -105,22 +105,6 @@ export default function User() {
     setOrderBy(property);
   };
 
-  // handle click
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -146,7 +130,7 @@ export default function User() {
         <PageHeader title="Dashboard" />
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -166,9 +150,11 @@ export default function User() {
                       <TableRow hover key={_id} tabIndex={-1} role="checkbox">
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
+                            <Avatar sx={{ ml: 1, mr: -1 }} alt={name} />
+                            <Typography sx={{ cursor: 'pointer' }} variant="subtitle2" noWrap>
+                              <Link href={`/dashboard/timeline/${_id}`} underline="hover" color="inherit">
+                                {name}
+                              </Link>
                             </Typography>
                           </Stack>
                         </TableCell>
@@ -178,10 +164,10 @@ export default function User() {
                           </Label>
                         </TableCell>
                         <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{time.today}</TableCell>
-                        <TableCell align="left">{time.yesterday}</TableCell>
-                        <TableCell align="left">{time.weekly}</TableCell>
-                        <TableCell align="left">{time.monthly}</TableCell>
+                        <TableCell align="left">{secondsToHms(time.today)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time.yesterday)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time.weekly)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time.monthly)}</TableCell>
                       </TableRow>
                     );
                   })}
