@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Button, Container, Box, Checkbox, TextField, Autocomplete, Typography } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import {teamData} from "./seed"
+import { teamData } from './seed';
 import UserInfo from './UserInfo';
-
+import useStore from '../../store/teamStore';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -26,23 +27,35 @@ const names = [
 
 const Main = ({ teamId }) => {
   const [addMember, setAddMember] = useState(false);
+  const [teamInfo, setTeamInfo] = useState([]);
+  const [userName, setUserName] = useState([]);
+  
 
-  const [userName, setUserName] = useState([...names]);
+  const teams = useStore( state => state.teams.teams);
 
   const handleChange = (event, newValue) => {
     // console.log(newValue)
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    setAddMember(false)
-    // console.log(userName)
+    const res = await axios.patch("team/updateMember/", {teamId, employeeId: "needtoAllot"});
+    setAddMember(false);
+
   };
+
+  useEffect(() => {
+    const filteredData = teams.filter((ele) => {
+      return ele._id === teamId
+    })
+    setTeamInfo(...filteredData)
+  }, [teamId])
+  
 
   return (
     <Container disableGutters sx={{ py: 2 }}>
       <Box>
-        <Container>
+        <Container disableGutters>
           {addMember ? (
             <Autocomplete
               multiple
@@ -70,10 +83,11 @@ const Main = ({ teamId }) => {
           )}
         </Container>
 
-        <Container>
-          {teamData.data[0].members.map((ele) =><UserInfo userData={ele}/>)}
-            
-        </Container>
+        {teamInfo.length !== 0 ?<Container disableGutters>
+          {teamInfo.members.map((ele) => (
+            <UserInfo userData={ele} key={ele._id} />
+          ))}
+        </Container> : <Typography>NO DATA IS PRESENT</Typography>}
       </Box>
     </Container>
   );

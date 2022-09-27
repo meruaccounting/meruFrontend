@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // mui components
 import { Paper, Typography, CircularProgress, Box, TextField, Autocomplete, Grid, Checkbox } from '@mui/material';
+import { Container } from '@mui/system';
 import { TreeItem, TreeView, LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import { Container } from '@mui/system';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // own components
 import FloatingForm from './FloatingForm';
 
-// iconn constants
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+// store
+import useStore from '../../store/teamStore';
+
 // styles
 const rootPaper = {
   overflow: 'hidden',
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  pt: 1,
 };
 const listBoxLoader = {
   margin: 'auto',
@@ -34,38 +34,42 @@ const listBoxLoader = {
 };
 
 // temprary data
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 
 const Sidebar = ({ setTeamId }) => {
   // it will be used to get data from store
-  const team = {
-    loader: false,
-    team: [
-      { _id: 1, name: 'Team1' },
-      { _id: 2, name: 'Team2' },
-      { _id: 3, name: 'Team3' },
-      { _id: 4, name: 'Team4' },
-    ],
-  };
+  // const team = {
+  //   loader: false,
+  //   team: [
+  //     { _id: 1, name: 'Team1' },
+  //     { _id: 2, name: 'Team2' },
+  //     { _id: 3, name: 'Team3' },
+  //     { _id: 4, name: 'Team4' },
+  //   ],
+  // };
   // store
-  const [filteredData, setFilteredData] = useState([...team.team]);
-  const userName = names;
+  const team = useStore((state) => state.teams);
+  const setTeams = useStore((state) => state.setTeams);
 
-  // all user selected will be stored here
-  const handleChange = (event, newValue) => {
-    console.log(newValue);
+  const [filteredData, setFilteredData] = useState([]);
+  const [newTeamName, setNewTeamName] = useState('');
+  const [dataReached, setDataReached] = useState(true); // to set or unset loading button of add teams
+  // to fetch team data
+  const getTeams = async () => {
+    try {
+      const res = await axios.get('team/getTeam');
+      if (res.data && res.status === 200) {
+        setTeams(res.data.data, false);
+
+        setFilteredData(res.data.data.map((ele) => ({ _id: ele._id, name: ele.name })));
+      }
+    } catch (error) {
+      // need action to valid errors
+    }
   };
+
+  useEffect(() => {
+    getTeams();
+  }, []);
 
   // for searching teams
   const handleSearch = (e) => {
@@ -84,13 +88,32 @@ const Sidebar = ({ setTeamId }) => {
   };
 
   // to delete team
-  const handleDelete =  async(id) => {
-    // send request to delete 
-  }
+  const handleDelete = async (id) => {
+    // send request to delete
+    try {
+      const res = await axios.delete("team", {teamId: id})
+    } catch (error) {
+      // error action will be here
+      console.log(error);
+    }
 
-  //   to sent request to add members
+  };
+
+  //   to sent request to add Teams
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (newTeamName !== '')
+      try {
+        setDataReached(false);
+        const res = await axios.post('team/create', { name: newTeamName });
+        console.log(res);
+        if (res.data && res.status === 201) {
+          setDataReached(true);
+          getTeams();
+        }
+      } catch (error) {
+        // action when errot occurs
+      }
   };
 
   return (
@@ -104,30 +127,29 @@ const Sidebar = ({ setTeamId }) => {
                 endAdornment: <SearchIcon />,
               }}
               onChange={handleSearch}
-              label="Search Members"
+              label="Search Team"
               fullWidth
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <FloatingForm toolTip="Add Team" color="primary" icon={<AddIcon />}>
-              <Autocomplete
-                multiple
-                disableCloseOnSelect
-                limitTags={3}
-                id="multiple-limit-tags"
-                onChange={handleChange}
-                options={userName}
-                getOptionLabel={(option) => option}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
-                    {option}
-                  </li>
-                )}
-                renderInput={(params) => <TextField {...params} label="Users" placeholder="Users" />}
-                sx={{ my: 2, minWidth: '250px' }}
+              <TextField
+                label="Add new Team"
+                value={newTeamName}
+                onChange={(e) => {
+                  setNewTeamName(e.target.value);
+                }}
+                fullWidth
+                sx={{ mt: 2 }}
               />
-              <LoadingButton fullWidth type="submit" loading loadingPosition="end" variant="contained" sx={{ my: 1 }}>
+              <LoadingButton
+                fullWidth
+                loading={!dataReached}
+                loadingPosition="end"
+                variant="contained"
+                sx={{ my: 1 }}
+                onClick={handleSubmit}
+              >
                 Add Team
               </LoadingButton>
             </FloatingForm>
@@ -164,7 +186,7 @@ const Sidebar = ({ setTeamId }) => {
                       onClick={() => setTeamId(team._id)}
                       nodeId={(team._id ? team._id : 1).toString()}
                       label={
-                        <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }} >
+                        <Box sx={{ display: 'flex', alignItems: 'center', p: 0.5, pr: 0 }}>
                           <Typography
                             sx={{
                               color: '#637381',
@@ -175,7 +197,7 @@ const Sidebar = ({ setTeamId }) => {
                           >
                             {team._id ? team.name : 'No Teams'}
                           </Typography>
-                          <DeleteIcon onClick={() => handleDelete(team._id)}/>
+                          <DeleteIcon onClick={() => handleDelete(team._id)} />
                         </Box>
                       }
                       key={team._id}
@@ -191,3 +213,22 @@ const Sidebar = ({ setTeamId }) => {
 };
 
 export default Sidebar;
+
+/* <Autocomplete
+                multiple
+                disableCloseOnSelect
+                limitTags={3}
+                id="multiple-limit-tags"
+                onChange={handleChange}
+                options={userName}
+                getOptionLabel={(option) => option}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox icon={icon} checkedIcon={checkedIcon} style={{ marginRight: 8 }} checked={selected} />
+                    {option}
+                  </li>
+                )}
+                renderInput={(params) => <TextField {...params} label="Users" placeholder="Users" />}
+                sx={{ my: 2, minWidth: '250px' }}
+              /> 
+*/
