@@ -11,7 +11,7 @@ import NoProjectSelected from './NoProjectSelected';
 import ChangeClient from './ChangeClient';
 import ChangeProjectLeader from './ChangeProjectLeader';
 import ChangeBudget from './ChangeBudget';
-import ProjectData from './ProjectData';
+import ProjectTime from './ProjectTime';
 
 //---------------------------------------------------------------
 
@@ -89,7 +89,7 @@ export default function Main({ projectId }) {
                 <ChangeClient project={project} />
                 <ChangeProjectLeader project={project} />
                 <ChangeBudget project={project} />
-                <ProjectData/>
+                <ProjectTime projectId={projectId} />
               </Container>
             </Box>
           )}

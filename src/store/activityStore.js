@@ -1,15 +1,15 @@
 import create from 'zustand';
 
 const useStore = create((set) => ({
-  clients: {
-    clients: [],
+  activities: {
+    activities: [],
     loader: true,
   },
 
-  setClients: (clients, loader) =>
+  setActivities: (activities, loader) =>
     set((state) => ({
-      clients: {
-        clients,
+      activities: {
+        activities,
         loader,
       },
     })),
