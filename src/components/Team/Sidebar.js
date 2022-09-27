@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // mui components
-import { Paper, Typography, CircularProgress, Box, TextField, Autocomplete, Grid, Checkbox } from '@mui/material';
+import { Paper, Typography, CircularProgress, Box, TextField, Grid } from '@mui/material';
 import { Container } from '@mui/system';
 import { TreeItem, TreeView, LoadingButton } from '@mui/lab';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -16,6 +16,7 @@ import FloatingForm from './FloatingForm';
 
 // store
 import useStore from '../../store/teamStore';
+import IntergrationNotistack from './IntegrationNotistack';
 
 // styles
 const rootPaper = {
@@ -52,6 +53,7 @@ const Sidebar = ({ setTeamId }) => {
 
   const [filteredData, setFilteredData] = useState([]);
   const [newTeamName, setNewTeamName] = useState('');
+  const [snackBarMsg, setSnackBarMsg] = useState({message:null, status:"success"});
   const [dataReached, setDataReached] = useState(true); // to set or unset loading button of add teams
   // to fetch team data
   const getTeams = async () => {
@@ -70,6 +72,11 @@ const Sidebar = ({ setTeamId }) => {
   useEffect(() => {
     getTeams();
   }, []);
+
+  useEffect(() => {
+    const data = team.teams.map((ele) => ({ _id: ele._id, name: ele.name }));
+    setFilteredData(data);
+  }, [team]);
 
   // for searching teams
   const handleSearch = (e) => {
@@ -91,12 +98,17 @@ const Sidebar = ({ setTeamId }) => {
   const handleDelete = async (id) => {
     // send request to delete
     try {
-      const res = await axios.delete("team", {teamId: id})
+      const res = await axios.delete(`team/${id}`);
+      if (res.data && res.status === 202) {
+        const remainTeams = team.teams.filter((ele) => ele._id !== id);
+        setTeams(remainTeams, false);
+        setTeamId(null);
+        setSnackBarMsg({message: "Team deleted", status:"success"});
+      }
     } catch (error) {
-      // error action will be here
-      console.log(error);
+      // console.log(error);
+      setSnackBarMsg({message: "Can not delete Team", status:"error"});
     }
-
   };
 
   //   to sent request to add Teams
@@ -107,12 +119,15 @@ const Sidebar = ({ setTeamId }) => {
         setDataReached(false);
         const res = await axios.post('team/create', { name: newTeamName });
         console.log(res);
+        setDataReached(true);
         if (res.data && res.status === 201) {
           setDataReached(true);
+          setSnackBarMsg({message: "Team created successful", status:"success"});
           getTeams();
         }
       } catch (error) {
         // action when errot occurs
+        setSnackBarMsg({message: "No able to create new Team", status:"error"});
       }
   };
 
@@ -208,6 +223,7 @@ const Sidebar = ({ setTeamId }) => {
           </Box>
         )}
       </Paper>
+      <IntergrationNotistack message={snackBarMsg.message} status={snackBarMsg.status}  />
     </Container>
   );
 };
