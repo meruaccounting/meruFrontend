@@ -5,18 +5,22 @@ import { useParams } from 'react-router-dom';
 // mui
 import { CssBaseline, Box } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // store
 import useStore from '../store/activityStore';
 
 // components
 // eslint-disable-next-line no-unused-vars
-import Calendar from '../components/UserPage/Calendar';
+import Test from '../components/UserPage/Test';
+// import Calendar from '../components/UserPage/Calendar';
 import Overview from '../components/UserPage/Overview';
 import ScreenShots from '../components/UserPage/ScreenShots';
 import Timeline from '../components/UserPage/Timeline';
 import PageHeader from '../components/UserPage/PageHeader';
 import IntExt from '../components/UserPage/IntExt';
+import Page from '../components/Page';
 
 export default function UserPage() {
   // url params
@@ -28,7 +32,7 @@ export default function UserPage() {
 
   //
   // eslint-disable-next-line no-unused-vars
-  const [date, setdate] = useState(new Date(2022, 8, 24));
+  const [date, setdate] = useState(new Date());
   const [isInternal, setisInternal] = useState(false);
   const [userName, setuserName] = useState('User');
 
@@ -55,6 +59,9 @@ export default function UserPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  // handleSearch
+  const handleSearch = (value) => {};
+
   // return loader while fetching data
   if (activities.loader) {
     return (
@@ -72,10 +79,28 @@ export default function UserPage() {
   }
 
   return (
-    <CssBaseline>
-      <Box component="div" sx={{ width: '95%', margin: 'auto' }}>
-        <PageHeader title={`${userName}'s Timeline`} />
-        {/* <Calendar
+    <Page title="Timeline">
+      <CssBaseline>
+        <Box component="div" sx={{ width: '95%', margin: 'auto', position: 'relative' }}>
+          <PageHeader title={`${userName}'s Timeline`} />
+
+          {/* search box */}
+          <Autocomplete
+            onChange={(value) => handleSearch(value)}
+            disablePortal
+            id="employee-search"
+            options={['1', '2']}
+            sx={{
+              position: 'absolute',
+              width: 300,
+              right: 30,
+              top: 10,
+            }}
+            renderInput={(params) => <TextField {...params} label="Search Employee" />}
+          />
+
+          <Test activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
+          {/* <Calendar
           date={dateObj.format('D')}
           days={commonData?.commonData?.user?.days}
           setDate={(date) =>
@@ -90,18 +115,19 @@ export default function UserPage() {
           }}
         /> */}
 
-        {/* overview */}
-        <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />
+          {/* overview */}
+          <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />
 
-        {/* timeline */}
-        <Timeline activities={activities.activities} date={date} />
+          {/* timeline */}
+          <Timeline activities={activities.activities} date={date} />
 
-        {/* Internal / External switcher */}
-        <IntExt setInternal={(isInt) => setisInternal(isInt)} />
+          {/* Internal / External switcher */}
+          <IntExt setInternal={(isInt) => setisInternal(isInt)} />
 
-        {/* screenshots and activities */}
-        <ScreenShots isInternal={isInternal} activities={activities.activities} date={date} />
-      </Box>
-    </CssBaseline>
+          {/* screenshots and activities */}
+          <ScreenShots isInternal={isInternal} activities={activities.activities} date={date} />
+        </Box>
+      </CssBaseline>
+    </Page>
   );
 }

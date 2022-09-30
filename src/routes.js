@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Products from './pages/Products';
 import Projects from './pages/Projects';
 import UserPage from './pages/UserPage';
+import Reports from './pages/Reports';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +23,7 @@ export default function Router() {
       children: [
         { path: 'timeline/:id', element: <UserPage /> },
         { path: 'clients', element: <User /> },
+        { path: 'reports', element: <Reports /> },
         { path: 'dashboard', element: <Products /> },
         { path: 'setting', element: <Setting /> },
         { path: 'projects', element: <Projects /> },
