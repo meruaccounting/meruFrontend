@@ -14,6 +14,7 @@ import useStore from '../store/activityStore';
 // components
 // eslint-disable-next-line no-unused-vars
 import Test from '../components/UserPage/Test';
+import ChangeMonth from '../components/UserPage/ChangeMonth';
 // import Calendar from '../components/UserPage/Calendar';
 import Overview from '../components/UserPage/Overview';
 import ScreenShots from '../components/UserPage/ScreenShots';
@@ -98,6 +99,7 @@ export default function UserPage() {
             }}
             renderInput={(params) => <TextField {...params} label="Search Employee" />}
           />
+          <ChangeMonth date={date} setdate={(date) => setdate(date)} />
 
           <Test activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
           {/* <Calendar

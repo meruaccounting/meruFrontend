@@ -6,13 +6,25 @@ import dayjs from 'dayjs';
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function Test({ date, setdate }) {
-  const [value, setvalue] = useState(1);
+export default function Test({ date, setdate, activities }) {
+  const [value, setvalue] = useState(date.getDate());
 
+  // just to bring the date back to first day
   useEffect(() => {
-    const arr = [...Array(dayjs(date).daysInMonth())].fill(0);
+    // const arr = [...Array(dayjs(date).daysInMonth())].fill(0);
+    setvalue(date.getDate());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [date]);
+
+  // to calculate only on act change(called when month changes)
+  const arr = [...Array(dayjs(date).daysInMonth())].fill(0);
+  useEffect(() => {
+    activities.forEach((act) => {
+      arr[new Date(act.activityOn)] += act.endTime - act.startTime;
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activities]);
 
   const handleClick = (e) => {
     setvalue(Number(e.target.value));
@@ -82,7 +94,7 @@ export default function Test({ date, setdate }) {
               >
                 {key}
               </Button>
-              <LinearProgress variant="determinate" value={50} />
+              <LinearProgress variant="determinate" value={arr[key] / 300} />
             </Box>
           );
         })}
