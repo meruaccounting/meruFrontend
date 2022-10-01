@@ -161,7 +161,7 @@ export default function Main() {
           <Button onClick={handleGenerateReports} variant="contained" endIcon={<SendIcon />}>
             Generate Reports
           </Button>
-          {!reports.loader ? <ReportsOptions options={[]} /> : null}
+          {!reports.loader ? <ReportsOptions reports={reports} options={[]} /> : null}
         </Box>
         {!reports.loader ? (
           <>

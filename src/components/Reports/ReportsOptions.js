@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import { FormControl, FormControlLabel, Autocomplete, Checkbox } from '@mui/material';
+import { FormControl, DialogContentText, FormControlLabel, Autocomplete, Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -21,109 +21,28 @@ import { useSnackbar } from 'notistack';
 // import { utils, writeFile } from 'xlsx';
 import PdfExport from './Export';
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}));
-
-const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
-
 export default function ReportsOptions({ reports, options }) {
-  const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState(`${options?.groupBy}`);
-  const [checked, setChecked] = React.useState([true, '']);
-  const [ssval, setSsval] = React.useState([false, '']);
-  const [moneyval, setMoneyval] = React.useState([false, '']);
-  const [alval, setAlval] = React.useState([false, '']);
-  const [appurl, setAppurl] = React.useState([false, '']);
-  const [scheduleChecked, setScheduleChecked] = React.useState([false, '']);
-  const [expdf, setExPdf] = React.useState(false);
-  const [timeint, setTimeint] = React.useState('Daily');
-  const [dayint, setDayint] = React.useState(null);
-  const [hourint, setHourint] = React.useState('12:00');
-  const [monthlyDate, setMonthlyDate] = React.useState([]);
+  // for dialog open close
+  const [open, setopen] = React.useState(false);
+  // name of report
+  const [name, setname] = React.useState('Save Reports');
+  const [share, setshare] = React.useState(true);
+  const [includeSS, setincludeSS] = React.useState(false);
+  const [includePR, setincludePR] = React.useState(false);
+  const [includeAL, setincludeAL] = React.useState(false);
+  const [includeApps, setincludeApps] = React.useState(false);
+  const [schedule, setschedule] = React.useState(false);
+  const [interval, setinterval] = React.useState('Daily');
+  const [weeklyDay, setweeklyDay] = React.useState('Monday');
+  const [dailyTime, setdailyTime] = React.useState(12);
+  const [monthlyDate, setmonthlyDate] = React.useState(1);
   const { enqueueSnackbar } = useSnackbar();
 
   const [url, setUrl] = React.useState(uuidv4());
-  // Default name of the saved report
-  React.useEffect(() => {
-    // if (options?.groupBy === 'E') {
-    //   options?.userIds?.length
-    //     ? setName(`${options.userIds?.length} employee - Summary by employees`)
-    //     : setName(`Summary by employees`);
-    // }
-    // if (options?.groupBy === 'D') {
-    //   options.userIds?.length
-    //     ? setName(`${options.userIds.length} employee - Summary by details`)
-    //     : setName(`Summary by Details`);
-    // }
-    // if (options?.groupBy === 'P') {
-    //   options.userIds?.length
-    //     ? setName(`${options?.userIds.length} employee - Summary by projects`)
-    //     : setName(`Summary by projects`);
-    // }
-    // if (options?.groupBy === 'C') {
-    //   options.userIds?.length
-    //     ? setName(`${options?.userIds?.length} employee - Summary by Clients`)
-    //     : setName(`Summary by Clients`);
-    // }
-    // if (options?.groupBy === 'A') {
-    //   options?.userIds?.length
-    //     ? setName(`${options?.userIds?.length} employee - Summary by Apps&Url`)
-    //     : setName(`Summary by App&Urls`);
-    // }
-  }, [options]);
 
   React.useEffect(() => {
     setUrl(uuidv4());
   }, [open]);
-
-  //   const data = {
-  //     schedule: scheduleChecked[0],
-  //     scheduleType: [timeint, dayint, hourint],
-  //     scheduledEmail: loginC?.userData?.email,
-  //     // scheduledTime: ,
-  //     share: checked[0],
-  //     includeSS: ssval[0],
-  //     includeAL: alval[0],
-  //     includePR: moneyval[0],
-  //     includeApps: appurl[0],
-  //     reports: reports.reports,
-  //     url,
-  //     name,
-  //     options: options,
-  //   };
 
   //   const handleExportExcel = async () => {
   //     try {
@@ -278,36 +197,36 @@ export default function ReportsOptions({ reports, options }) {
   //     }
   //   };
 
-  const children2 = (
+  const scheduleEmailChildren = (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      <OutlinedInput id="component-outlined" value={'email'} label="mail" />
+      <TextField disabled={!schedule} id="email" label="Email" value={'email'} />
       <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>
         <Autocomplete
-          defaultValue="Daily"
-          onChange={(e, value) => setTimeint(value)}
+          disabled={!schedule}
+          value={interval}
+          onChange={(e, value) => setinterval(value)}
           disablePortal
-          id="combo-box-demo"
           options={['Monthly', 'Weekly', 'Daily']}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Select interval" />}
         />
-        {timeint === 'Weekly' && (
+        {interval === 'Weekly' && (
           <Autocomplete
-            defaultValue="Monday"
-            onChange={(e, value) => setDayint(value)}
+            disabled={!schedule}
+            value={weeklyDay}
+            onChange={(e, value) => setweeklyDay(value)}
             disablePortal
-            id="combo-box-demo"
             options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
             sx={{ width: 300, ml: 1 }}
             renderInput={(params) => <TextField {...params} label="Select Day" />}
           />
         )}
-        {timeint === 'Monthly' && (
+        {interval === 'Monthly' && (
           <Autocomplete
+            disabled={!schedule}
             defaultValue={1}
-            onChange={(e, value) => setDayint(value)}
+            onChange={(e, value) => setmonthlyDate(value)}
             disablePortal
-            id="combo-box-demo"
             options={Array(28)
               .fill()
               .map((x, i) => i + 1)}
@@ -316,10 +235,11 @@ export default function ReportsOptions({ reports, options }) {
           />
         )}
         <Autocomplete
+          disabled={!schedule}
+          value={dailyTime}
           defaultValue="12:00 am"
-          onChange={(e, value) => setHourint(value)}
+          onChange={(e, value) => setdailyTime(value)}
           disablePortal
-          id="combo-box-demo"
           options={[]}
           sx={{ width: 300, ml: 1 }}
           renderInput={(params) => <TextField {...params} label="Select Time" />}
@@ -327,19 +247,60 @@ export default function ReportsOptions({ reports, options }) {
       </Box>
     </Box>
   );
-  const children = (
+  const shareReportChildren = (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      <FormControlLabel label="Include screenshots" control={<Checkbox checked={ssval[0]} />} />
-      {true ? <FormControlLabel label="Include money" control={<Checkbox checked={moneyval[0]} />} /> : ''}
-      <FormControlLabel label="Include activity level" control={<Checkbox checked={alval[0]} />} />
-
-      <FormControlLabel label="Include Apps&Url charts" control={<Checkbox checked={appurl[0]} />} />
+      <FormControlLabel
+        disabled={!share}
+        label="Include screenshots"
+        control={<Checkbox checked={includeSS} onClick={() => setincludeSS(!includeSS)} />}
+      />
+      <FormControlLabel
+        disabled={!share}
+        label="Include money"
+        control={<Checkbox checked={includePR} onClick={() => setincludePR(!includePR)} />}
+      />
+      <FormControlLabel
+        disabled={!share}
+        label="Include activity level"
+        control={<Checkbox checked={includeAL} onClick={() => setincludeAL(!includeAL)} />}
+      />
+      <FormControlLabel
+        disabled={!share}
+        label={`Include Apps & Url charts`}
+        control={<Checkbox checked={includeApps} onClick={() => setincludeApps(!includeApps)} />}
+      />
     </Box>
   );
 
+  const handleSave = () => {
+    console.log(reports);
+    const data = {
+      schedule,
+      scheduleType: [interval, monthlyDate, dailyTime],
+      scheduledEmail: 'email',
+      share,
+      includeSS,
+      includeAL,
+      includePR,
+      includeApps,
+      reports: reports.reports,
+      url,
+      name,
+      options,
+    };
+    axios.post('/report/save', data).then((res) => {
+      console.log(res);
+      setopen(!open);
+    });
+    if (share) {
+      navigator.clipboard.writeText(`${window.location.origin}/reports/sharedReports/${url}`);
+      enqueueSnackbar('link copied', { variant: 'success' });
+    }
+  };
+
   return (
     <>
-      {expdf ? <PdfExport options={options} /> : ''}
+      {/* {expdf ? <PdfExport options={options} /> : ''} */}
       <div style={{ marginRight: '2.5%' }}>
         <Button variant="outlined">Export pdf</Button>
         <Button variant="outlined" sx={{ ml: 1 }}>
@@ -348,54 +309,58 @@ export default function ReportsOptions({ reports, options }) {
         <Button variant="outlined" sx={{ ml: 1 }}>
           Share Report
         </Button>
-        <Button variant="outlined" sx={{ ml: 1 }}>
+        <Button variant="outlined" onClick={() => setopen(true)} sx={{ ml: 1 }}>
           Save Report
         </Button>
-        <BootstrapDialog aria-labelledby="customized-dialog-title" open={open}>
-          <BootstrapDialogTitle id="customized-dialog-title">Save Report</BootstrapDialogTitle>
-          <DialogContent dividers>
-            <Typography gutterBottom>
-              Date range :
-              {`${options?.dateOne === null ? '' : options?.dateOne}-${options?.dateTwo ? '' : options?.dateTwo}`}
-            </Typography>
-            <Typography gutterBottom>Description: {name}</Typography>
-            <FormControl>
-              <InputLabel htmlFor="component-outlined">Name</InputLabel>
-              <OutlinedInput id="component-outlined" value={name} label="Name" />
-            </FormControl>
 
-            <Box sx={{ mt: 1.5 }}>
-              <TextField
-                disabled={!checked[0]}
-                fullWidth
-                label="Sharing link"
-                defaultValue={`${window.location.origin}/reports/sharedReports/${url}`}
-                // defaultValue={`https://monitor-meruaccounting-bf9db.web.app/reports/sharedReports/${url}`}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Box>
+        <Dialog open={open}>
+          <DialogTitle>Save Reports</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {' '}
+              {/*  */}
+              <Typography gutterBottom>
+                Date range :
+                {` ${options?.dateOne === null ? '' : options?.dateOne}-${options?.dateTwo ? '' : options?.dateTwo}`}
+              </Typography>
+              {/*  */}
+              <Typography gutterBottom>Description: {name}</Typography>
+              {/*  */}
+              <TextField value={name} label="Name" />
+            </DialogContentText>
 
-            <div>
+            {/*  */}
+            <TextField
+              sx={{ mt: 1.5 }}
+              disabled={!share}
+              fullWidth
+              label="Sharing link"
+              defaultValue={`${window.location.origin}/reports/sharedReports/${url}`}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+            {/*  */}
+            <Box>
               <FormControlLabel
                 label="Share Report"
-                control={<Checkbox defaultChecked={checked} checked={checked[0]} />}
+                control={<Checkbox checked={share} onClick={() => setshare(!share)} />}
               />
-              {checked[0] ? children : null}
-            </div>
-            <div>
+              {shareReportChildren}
+            </Box>
+            <Box>
               <FormControlLabel
                 label="Schedule Email"
-                control={<Checkbox defaultChecked={false} checked={scheduleChecked[0]} />}
+                control={<Checkbox checked={schedule} onClick={() => setschedule(!schedule)} />}
               />
-              {scheduleChecked[0] ? children2 : null}
-            </div>
+              {scheduleEmailChildren}
+            </Box>
           </DialogContent>
           <DialogActions>
-            <Button autoFocus>Save & Copy</Button>
+            <Button onClick={() => setopen(false)}>Cancel</Button>
+            <Button onClick={handleSave}>Save</Button>
           </DialogActions>
-        </BootstrapDialog>
+        </Dialog>
       </div>
     </>
   );
