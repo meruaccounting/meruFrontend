@@ -12,6 +12,7 @@ import Products from './pages/Products';
 import Projects from './pages/Projects';
 import Team from './pages/Team';
 import UserPage from './pages/UserPage';
+import Reports from './pages/Reports';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ export default function Router() {
       children: [
         { path: 'timeline/:id', element: <UserPage /> },
         { path: 'clients', element: <User /> },
+        { path: 'reports', element: <Reports /> },
         { path: 'dashboard', element: <Products /> },
         { path: 'setting', element: <Setting /> },
         { path: 'team', element: <Team/> },

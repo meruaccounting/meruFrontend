@@ -152,6 +152,7 @@ export default function Overview({ date, activities }) {
             <TabContext value={value}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Typography
+                  component="div"
                   color="text.primary"
                   sx={{
                     fontSize: 14,
@@ -170,8 +171,8 @@ export default function Overview({ date, activities }) {
               <TabPanel value="1">
                 <Box overflow={'auto'} sx={{ height: 145 }}>
                   {activities &&
-                    activities.map((activity) => (
-                      <>
+                    activities.map((activity, index) => (
+                      <div key={index}>
                         <a
                           style={{
                             display: 'flex',
@@ -194,7 +195,7 @@ export default function Overview({ date, activities }) {
                           </Typography>
                         </a>
                         <Divider sx={{ backgroundColor: 'primary.dark' }} />
-                      </>
+                      </div>
                     ))}
                 </Box>
               </TabPanel>

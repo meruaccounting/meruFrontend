@@ -20,6 +20,11 @@ const navConfig = [
     icon: getIcon('eva:shopping-bag-fill'),
   },
   {
+    title: 'Reports',
+    path: '/dashboard/reports',
+    icon: getIcon('eva:lock-fill'),
+  },
+  {
     title: 'clients',
     path: '/dashboard/clients',
     icon: getIcon('eva:people-fill'),
@@ -34,11 +39,6 @@ const navConfig = [
     path: '/dashboard/projects',
     icon: getIcon('eva:alert-triangle-fill'),
   },
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: getIcon('eva:lock-fill'),
-  // },
   // {
   //   title: 'register',
   //   path: '/register',

@@ -26,10 +26,10 @@ const cell = {
   borderWidth: '0 1px 0 0',
   borderStyle: 'solid',
   borderColor: '#919EAB',
-  '&:first-child': {
+  '&:firstChild': {
     borderRadius: '5px 0 0 5px',
   },
-  '&:last-child': {
+  '&:lastChild': {
     borderStyle: 'none',
     borderRadius: '0 5px 5px 0',
   },
@@ -72,16 +72,17 @@ export default function Timeline({ activities }) {
   }, [activities]);
 
   const row = [];
+
   for (let i = 0; i < 24; i += 1) {
     row.push(
-      <TableCell style={cell} key={i}>
+      <div style={cell} key={i}>
         {i !== 0 ? `${i < 12 ? `${i} AM` : `${i === 12 ? 12 : i - 12} PM`}` : `${i + 12} AM`}
         {workTimes &&
           workTimes
             .filter((el) => el.hr === i)
-            .map((el) => (
+            .map((el, index) => (
               <Box
-                key={el.length}
+                key={index}
                 sx={{
                   width: `${el.length}%`,
                   height: '100%',
@@ -93,7 +94,7 @@ export default function Timeline({ activities }) {
                 }}
               />
             ))}
-      </TableCell>
+      </div>
     );
   }
 

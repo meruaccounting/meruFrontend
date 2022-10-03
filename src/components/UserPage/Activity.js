@@ -86,14 +86,12 @@ export default function Activity({ act }) {
         }}
       >
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon
-              sx={{ float: 'right' }}
-              fontSize="small"
-              onClick={() => {
-                delSs(selectedSs);
-              }}
-            />
+          <IconButton
+            onClick={() => {
+              delSs(selectedSs);
+            }}
+          >
+            <DeleteIcon sx={{ float: 'right' }} fontSize="small" />
           </IconButton>
         </Tooltip>
 
@@ -124,7 +122,7 @@ export default function Activity({ act }) {
             />
           ))
         ) : (
-          <Alert fullWidth severity="info" sx={{ m: 2, width: '100%' }} variant="string">
+          <Alert severity="info" sx={{ m: 2, width: '100%' }} variant="string">
             <AlertTitle>No Screenshots</AlertTitle>
             Evidence was deleted — <strong>{`OOF :")`}</strong>
           </Alert>
