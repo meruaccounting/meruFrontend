@@ -22,10 +22,12 @@ const month = [
 export default function ChangeMonth({ date, setdate }) {
   const handleNext = () => {
     setdate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+    // call next month activities here
   };
 
   const handleBack = () => {
     setdate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+    // call previous month activities here
   };
 
   return (

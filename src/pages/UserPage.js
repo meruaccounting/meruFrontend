@@ -15,7 +15,6 @@ import useStore from '../store/activityStore';
 // eslint-disable-next-line no-unused-vars
 import Test from '../components/UserPage/Test';
 import ChangeMonth from '../components/UserPage/ChangeMonth';
-// import Calendar from '../components/UserPage/Calendar';
 import Overview from '../components/UserPage/Overview';
 import ScreenShots from '../components/UserPage/ScreenShots';
 import Timeline from '../components/UserPage/Timeline';
@@ -26,12 +25,9 @@ import Page from '../components/Page';
 export default function UserPage() {
   // url params
   const { id } = useParams();
-
   // store
   const setActivities = useStore((state) => state.setActivities);
   const activities = useStore((state) => state.activities);
-
-  //
   // eslint-disable-next-line no-unused-vars
   const [date, setdate] = useState(new Date());
   const [isInternal, setisInternal] = useState(false);
@@ -102,20 +98,6 @@ export default function UserPage() {
           <ChangeMonth date={date} setdate={(date) => setdate(date)} />
 
           <Test activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
-          {/* <Calendar
-          date={dateObj.format('D')}
-          days={commonData?.commonData?.user?.days}
-          setDate={(date) =>
-            setdate((prev) => {
-              return date;
-            })
-          }
-          setDateObj={(obj) => {
-            setdateObj((prev) => {
-              return obj;
-            });
-          }}
-        /> */}
 
           {/* overview */}
           <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />
