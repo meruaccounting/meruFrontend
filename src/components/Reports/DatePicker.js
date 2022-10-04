@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import DateRangePicker from '@mui/lab/DateRangePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
 import AdapterDayjs from '@mui/lab/AdapterDayjs';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Box, Typography } from '@mui/material';
 
 // style
@@ -121,21 +121,30 @@ export default function DatePicker({ setdate }) {
           Last year
         </Typography>
       </Box>
-      <LocalizationProvider dateAdapter={AdapterDayjs} localeText={{ start: 'Check-in', end: 'Check-out' }}>
-        <DateRangePicker
-          value={value}
+      {/* date one */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DesktopDatePicker
+          label="From"
+          value={value[0]}
+          maxDate={value[1] ? value[1] : dayjs('2023-12-01')}
           onChange={(newValue) => {
-            // setValue(newValue);
+            setvalue((prev) => [newValue, prev[1]]);
           }}
-          renderInput={(startProps, endProps) => (
-            <>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </>
-          )}
+          renderInput={(params) => <TextField {...params} />}
+        />
+
+        {/* date two */}
+        <DesktopDatePicker
+          label="To"
+          value={value[1]}
+          minDate={value[0] ? value[0] : dayjs('2021-12-01')}
+          onChange={(newValue) => {
+            setvalue((prev) => [prev[0], newValue]);
+          }}
+          renderInput={(params) => <TextField sx={{ ml: 1 }} {...params} />}
         />
       </LocalizationProvider>
+
       <Typography sx={{ ml: 0.5, mb: 3, mt: 0.5 }} variant="subtitle2">
         ({range})
       </Typography>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 // mui components
-import { TextField, Divider, Container, CircularProgress, Paper, Box } from '@mui/material';
+import { Tooltip, Button, Container, CircularProgress, Paper, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -12,6 +12,9 @@ import ChangeClient from './ChangeClient';
 import ChangeProjectLeader from './ChangeProjectLeader';
 import ChangeBudget from './ChangeBudget';
 import ProjectTime from './ProjectTime';
+
+// store
+import useStore from '../../store/projectStore';
 
 //---------------------------------------------------------------
 
@@ -43,9 +46,24 @@ const rootPaper = {
   display: 'flex',
   flexDirection: 'column',
 };
+const input = {
+  marginTop: '8px',
+  color: '#000',
+  width: 'fit-content',
+  wordWrap: 'break-word',
+  height: '35px',
+  fontSize: '30px',
+  fontWeight: 'bold',
+  border: 'none',
+  background: '#fff',
+  transition: 'width 0.4s ease-in-out',
+  '& :focus': { width: '100%' },
+};
 
-export default function Main({ projectId }) {
+export default function Main({ projectId, setprojectId }) {
+  const setClients = useStore((state) => state.setClients);
   const [project, setproject] = useState({ project: {}, loader: true });
+  const [name, setName] = useState(project.project.name);
 
   // fetch the data
   useEffect(() => {
@@ -55,6 +73,42 @@ export default function Main({ projectId }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
+
+  useEffect(() => {
+    setName(project.project.name);
+  }, [project]);
+
+  // to make the form(name) focused
+  const inputRef = useRef();
+  // edit name, refresh clients in sidebar and change local state of name
+  const handleEditSubmit = (e) => {
+    try {
+      e.preventDefault();
+      axios.patch(`/project/${project.project._id}/name`, { name }).then((res) => {
+        console.log(res);
+        axios.get(`/project/byClients`).then((res) => {
+          setClients(res.data.data, false);
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // del client, set clientId to null, refresh sidebar clients(store)
+  const handleDelete = () => {
+    try {
+      axios.delete(`/project/${projectId}`).then((res) => {
+        console.log(res);
+        axios.get(`/project/byClients`).then((res) => {
+          setClients(res.data.data, false);
+        });
+        setprojectId(null);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!projectId) return <NoProjectSelected />;
 
@@ -68,21 +122,42 @@ export default function Main({ projectId }) {
             </Box>
           ) : (
             <Box sx={{ m: 1 }}>
-              {/* Name compoent ///////////////////////// */}
-              <TextField
-                fullWidth
-                label="Name"
-                value={project.project.name}
-                InputProps={{
-                  endAdornment: (
-                    <>
-                      <EditIcon sx={{ cursor: 'pointer' }} />
-                      <DeleteIcon sx={{ cursor: 'pointer' }} />
-                    </>
-                  ),
-                }}
-              />
-              <Divider sx={{ mt: 0.5 }} />
+              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                {/* Project Name components */}
+                <form
+                  onBlur={(e) => {
+                    handleEditSubmit(e);
+                    inputRef.current.blur();
+                  }}
+                  onSubmit={handleEditSubmit}
+                  style={{ display: 'inline' }}
+                >
+                  <input
+                    ref={inputRef}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    style={input}
+                    value={name}
+                  />
+                </form>
+                <Box>
+                  <Tooltip title="Edit Client">
+                    <Button>
+                      <EditIcon
+                        onClick={() => {
+                          inputRef.current.focus();
+                        }}
+                        color="action"
+                      />
+                    </Button>
+                  </Tooltip>
+                  <Tooltip onClick={handleDelete} title="Delete Client">
+                    <Button>
+                      <DeleteIcon color="action" />
+                    </Button>
+                  </Tooltip>
+                </Box>
+              </Box>
 
               {/* change client and project Leader and Budget///////////////// */}
               <Container disableGutters sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>

@@ -55,6 +55,7 @@ export default function Sidebar({ setprojectId }) {
   // setfiltereddata every time clients changes
   useEffect(() => {
     setfilteredData(clients.clients);
+    console.log(clients.clients.filter((client) => client._id === null));
   }, [clients]);
 
   const handleSearch = (e) => {
@@ -115,44 +116,94 @@ export default function Sidebar({ setprojectId }) {
                   width: '100%',
                 }}
               >
-                {filteredData.length
-                  ? filteredData.map((client) => (
-                      <TreeItem
-                        nodeId={(client._id ? client._id : 1).toString()}
-                        label={
-                          <Typography
-                            sx={{
-                              color: '#637381',
-                              fontSize: '1.5rem',
-                              fontWeight: '700',
-                            }}
-                          >
-                            {client._id ? client.name : 'No Client'}
-                          </Typography>
-                        }
-                        key={client._id}
+                {/* No clients */}
+                {filteredData.filter((client) => client._id === null).length ? (
+                  <TreeItem
+                    nodeId={(1).toString()}
+                    label={
+                      <Typography
+                        sx={{
+                          color: '#637381',
+                          fontSize: '1.5rem',
+                          fontWeight: '700',
+                        }}
                       >
-                        {client.projects.map((project) => (
-                          <TreeItem
-                            nodeId={(project._id + (client._id ? client._id : 1)).toString()}
-                            key={project._id}
-                            label={
-                              <Typography
-                                sx={{
-                                  color: '#2a3641',
-                                  fontSize: '1.2rem',
-                                  fontWeight: '700',
-                                }}
-                                onClick={() => setprojectId(project._id)}
-                              >
-                                {project.name}
-                              </Typography>
-                            }
-                          />
-                        ))}
-                      </TreeItem>
-                    ))
-                  : 'noclients'}
+                        {'No Client'}
+                      </Typography>
+                    }
+                    key={1}
+                  >
+                    {filteredData
+                      .filter((client) => client._id === null)[0]
+                      .projects.map((project) => (
+                        <TreeItem
+                          nodeId={(project._id + 1).toString()}
+                          key={project._id}
+                          label={
+                            <Typography
+                              sx={{
+                                color: '#2a3641',
+                                fontSize: '1.2rem',
+                                fontWeight: '700',
+                              }}
+                              onClick={() => setprojectId(project._id)}
+                            >
+                              {project.name}
+                            </Typography>
+                          }
+                        />
+                      ))}
+                  </TreeItem>
+                ) : (
+                  ''
+                )}
+
+                {/* with clients */}
+                {filteredData.filter((client) => client._id !== null).length
+                  ? filteredData
+                      .filter((client) => client._id !== null)
+                      .map((client) => (
+                        <TreeItem
+                          nodeId={(client._id ? client._id : 1).toString()}
+                          label={
+                            <Typography
+                              sx={{
+                                color: '#637381',
+                                fontSize: '1.5rem',
+                                fontWeight: '700',
+                              }}
+                            >
+                              {client._id ? client.name : 'No Client'}
+                            </Typography>
+                          }
+                          key={client._id}
+                        >
+                          {client.projects.map((project) => (
+                            <TreeItem
+                              nodeId={(project._id + (client._id ? client._id : 1)).toString()}
+                              key={project._id}
+                              label={
+                                <Typography
+                                  sx={{
+                                    color: '#2a3641',
+                                    fontSize: '1.2rem',
+                                    fontWeight: '700',
+                                  }}
+                                  onClick={() => setprojectId(project._id)}
+                                >
+                                  {project.name}
+                                </Typography>
+                              }
+                            />
+                          ))}
+                        </TreeItem>
+                      ))
+                  : ''}
+                {!filteredData.length ? (
+                  <Typography sx={{ mt: '25vh', textAlign: 'center' }}>No Projects</Typography>
+                ) : (
+                  ''
+                )}
               </TreeView>
             </Box>
           )}

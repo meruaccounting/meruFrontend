@@ -11,6 +11,9 @@ import ClientInfo from './ClientInfo';
 import NoClientSelected from './NoClientSelected';
 import ClientTime from './ClientTime';
 
+// helpers
+import secondsToHms from '../../helpers/secondsToHms';
+
 //---------------------------------------------------------------
 
 // style
@@ -62,7 +65,7 @@ export default function Main({ clientId, setclientId }) {
               <ClientInfo setclientId={(id) => setclientId(id)} client={client} />
 
               {/* Client Time ///////////////////////// */}
-              <ClientTime clientId={clientId} />
+              {/* <ClientTime clientId={clientId} /> */}
             </Box>
           )}
         </Paper>

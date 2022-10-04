@@ -23,7 +23,8 @@ import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import UserListHead from '../components/Dashboard/UserListHead';
+import UserListToolbar from '../components/Dashboard/UserListToolbar';
 // helpers
 import secondsToHms from '../helpers/secondsToHms';
 
@@ -70,7 +71,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function Dashboard() {
   const [userList, setuserList] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -164,10 +165,10 @@ export default function User() {
                           </Label>
                         </TableCell>
                         <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.today)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.yesterday)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.weekly)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.monthly)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.today)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.yesterday)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.weekly)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.monthly)}</TableCell>
                       </TableRow>
                     );
                   })}

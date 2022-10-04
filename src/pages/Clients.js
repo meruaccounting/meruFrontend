@@ -20,11 +20,10 @@ const innerBox = {
   height: '78vh',
   width: '100%',
   display: 'flex',
-  // backgroundColor: '#fdfdff',
-  backgroundColor: 'red',
+  backgroundColor: '#fdfdff',
 };
 
-export default function User() {
+export default function Clients() {
   // store
   const [clientId, setclientId] = useState(null);
 

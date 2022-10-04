@@ -16,8 +16,7 @@ const innerBox = {
   height: '78vh',
   width: '100%',
   display: 'flex',
-  // backgroundColor: '#fdfdff',
-  backgroundColor: 'red',
+  backgroundColor: '#fdfdff',
 };
 export default function Projects() {
   const [projectId, setprojectId] = useState(null);
@@ -29,7 +28,7 @@ export default function Projects() {
       <Box sx={innerBox}>
         {/* -------- sidebar components--------- */}
         <Sidebar setprojectId={(id) => setprojectId(id)} />
-        <Main projectId={projectId} />
+        <Main projectId={projectId} setprojectId={(id) => setprojectId(id)} />
       </Box>
     </Box>
   );
