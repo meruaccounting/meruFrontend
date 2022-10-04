@@ -10,6 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // store
 import useStore from '../../store/projectStore';
 
+// ---------------------------------------------------------
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
