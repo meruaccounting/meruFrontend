@@ -1,72 +1,76 @@
 // react and other importanat library
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // mui components
-import { Box, Paper, Container, Input, Typography, IconButton } from '@mui/material';
+import { Box, Modal, Autocomplete, Button, TextField, Typography, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+// ------------------------------------------------------------------------
 
-const ChangeBudget = () => {
-  // store
-  const [edit, setEdit] = useState(false);
-  const [projectHrs, setProjectHrs] = useState(0);
-  const [internalHrs, setInternalHrs] = useState(0);
-  const [budgetHrs, setBudgetHrs] = useState(0);
-
-  return (
-    <Paper>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Container disableGutters>
-          <Typography variant="h5">
-            Total Project Hours :{' '}
-            {edit ? (
-              <Input
-                type="number"
-                sx={{ width: 100, height: 20 }}
-                onChange={(event) => setProjectHrs(event.target.value)}
-                value={projectHrs}
-              />
-            ) : (
-              projectHrs
-            )}{' '}
-            hrs
-          </Typography>
-          <Typography variant="h5">
-            Total Internal Hours :{' '}
-            {edit ? (
-              <Input
-                type="number"
-                sx={{ width: 100, height: 20 }}
-                onChange={(event) => setInternalHrs(event.target.value)}
-                value={internalHrs}
-              />
-            ) : (
-              internalHrs
-            )}{' '}
-            hrs
-          </Typography>
-        </Container>
-        <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }} disableGutters>
-          <Typography variant="h5">
-            BudgetHours :{' '}
-            {edit ? (
-              <Input
-                type="number"
-                sx={{ width: 100, height: 20 }}
-                onChange={(event) => setBudgetHrs(event.target.value)}
-                value={budgetHrs}
-              />
-            ) : (
-              budgetHrs
-            )}{' '}
-            hrs
-          </Typography>
-          <IconButton sx={{ ml: 2 }} onClick={() => setEdit(!edit)}>
-            <EditIcon />
-          </IconButton>
-        </Container>
-      </Box>
-    </Paper>
-  );
+const modalStyle = {
+  display: 'flex',
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
 };
 
-export default ChangeBudget;
+export default function ChangeBudget({ project }) {
+  // store
+  const [budget, setbudget] = useState({ timePeriod: 'Week', time: 0, money: 0 });
+  const [open, setopen] = useState(false);
+
+  // change the local client state every time project changes
+  useEffect(() => {
+    setbudget((prev) => (project.project.budget ? project.project.budget : prev));
+  }, [project]);
+
+  // edit budget
+  const handleChange = (e, value) => {
+    axios.patch(`project/${project.project._id}/budget`, { budget: value }).then((res) => {
+      if (res.status === 200) {
+        setbudget(value);
+      }
+    });
+    setopen(false);
+  };
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <Typography variant="h5">Budget: </Typography>
+      <Typography variant="h6">{`${budget.time}Hrs, ${budget.money} per ${budget.timePeriod}`} </Typography>
+      <IconButton onClick={() => setopen(true)} size="small">
+        <EditIcon />
+      </IconButton>
+
+      {/* modal */}
+      <Modal open={open} onClose={() => setopen(false)}>
+        <Box sx={modalStyle}>
+          <Typography variant="h6" component="h2">
+            Change Budget
+          </Typography>
+          <TextField sx={{ width: 100, mt: 1, mr: 1 }} label="Time" value={budget.time}>
+            Budget
+          </TextField>
+          <TextField sx={{ width: 100, mt: 1, mr: 1 }} label="Money" value={budget.money}>
+            Budget
+          </TextField>
+          <Autocomplete
+            disablePortal
+            options={['Week', 'Month']}
+            sx={{ width: 160, mt: 1, mr: 1 }}
+            renderInput={(params) => <TextField {...params} label="Time Period" />}
+          />
+          <Button onClick={handleChange} size="small" variant="contained" color="primary">
+            Save
+          </Button>
+        </Box>
+      </Modal>
+    </Box>
+  );
+}
