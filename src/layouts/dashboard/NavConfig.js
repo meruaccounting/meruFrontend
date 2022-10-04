@@ -6,7 +6,13 @@ import Iconify from '../../components/Iconify';
 const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 
 // ud from localStorage
-const ud = JSON.parse(localStorage.ud);
+let ud = {
+  _id: 'moveto/404',
+};
+
+if (localStorage.ud) {
+  ud = JSON.parse(localStorage.ud);
+}
 
 const navConfig = [
   {
