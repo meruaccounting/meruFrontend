@@ -16,10 +16,12 @@ import Reports from './pages/Reports';
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const token = localStorage['Bearer Token'];
+
   return useRoutes([
     {
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element: token ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
         { path: 'timeline/:id', element: <UserPage /> },
         { path: 'clients', element: <Clients /> },
@@ -31,11 +33,11 @@ export default function Router() {
     },
     {
       path: 'login',
-      element: <Login />,
+      element: !token ? <Login /> : <Navigate to="/dashboard/dashboard" />,
     },
     {
       path: 'register',
-      element: <Register />,
+      element: !token ? <Register /> : <Navigate to="/dashboard/dashboard" />,
     },
     {
       path: '/',

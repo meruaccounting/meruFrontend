@@ -29,14 +29,13 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#D1E9FC',
-  light: '#76B0F1',
-  main: '#2065D1',
-  dark: '#103996',
-  darker: '#061B64',
+  lighter: '#C8DCFD',
+  light: '#A5B9D9',
+  main: '#435773',
+  dark: '#394E69',
+  darker: '#001C33',
   contrastText: '#fff',
 };
-
 const SECONDARY = {
   lighter: '#D6E4FF',
   light: '#84A9FF',
@@ -45,7 +44,6 @@ const SECONDARY = {
   darker: '#091A7A',
   contrastText: '#fff',
 };
-
 const INFO = {
   lighter: '#D0F2FF',
   light: '#74CAFF',
@@ -54,7 +52,6 @@ const INFO = {
   darker: '#04297A',
   contrastText: '#fff',
 };
-
 const SUCCESS = {
   lighter: '#E9FCD4',
   light: '#AAF27F',
@@ -63,7 +60,6 @@ const SUCCESS = {
   darker: '#08660D',
   contrastText: GREY[800],
 };
-
 const WARNING = {
   lighter: '#FFF7CD',
   light: '#FFE16A',
@@ -72,7 +68,6 @@ const WARNING = {
   darker: '#7A4F01',
   contrastText: GREY[800],
 };
-
 const ERROR = {
   lighter: '#FFE7D9',
   light: '#FFA48D',
@@ -111,7 +106,7 @@ const palette = {
   chart: CHART_COLORS,
   divider: GREY[500_24],
   text: { primary: GREY[800], secondary: GREY[600], disabled: GREY[500] },
-  background: { paper: '#fff', default: GREY[100], neutral: GREY[200] },
+  background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
   action: {
     active: GREY[600],
     hover: GREY[500_8],

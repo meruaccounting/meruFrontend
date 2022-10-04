@@ -23,7 +23,8 @@ import Page from '../components/Page';
 import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import UserListHead from '../components/Dashboard/UserListHead';
+import UserListToolbar from '../components/Dashboard/UserListToolbar';
 // helpers
 import secondsToHms from '../helpers/secondsToHms';
 

@@ -200,7 +200,7 @@ export default function Sidebar({ setprojectId }) {
                       ))
                   : ''}
                 {!filteredData.length ? (
-                  <Typography sx={{ mt: '100%', textAlign: 'center' }}>No Projects</Typography>
+                  <Typography sx={{ mt: '25vh', textAlign: 'center' }}>No Projects</Typography>
                 ) : (
                   ''
                 )}

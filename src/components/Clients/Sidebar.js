@@ -132,7 +132,7 @@ export default function Sidebar({ setclientId }) {
                     />
                   ))
                 ) : (
-                  <Typography sx={{ mt: '100%', textAlign: 'center' }}>No Clients</Typography>
+                  <Typography sx={{ mt: '25vh', textAlign: 'center' }}>No Clients</Typography>
                 )}
               </TreeView>
             </Box>

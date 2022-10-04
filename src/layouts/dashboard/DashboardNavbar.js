@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import FileSaver from 'file-saver';
+
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Stack, Tooltip, Button, AppBar, Toolbar, IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
 // components
 import Iconify from '../../components/Iconify';
 //
-import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
@@ -41,6 +44,24 @@ DashboardNavbar.propTypes = {
 };
 
 export default function DashboardNavbar({ onOpenSidebar }) {
+  const navigate = useNavigate();
+
+  const downloadApp = async () => {
+    await axios
+      .post('/download')
+      .then((res) => {
+        FileSaver.saveAs(new Blob([res.data], { type: 'application/x-msdownload' }), 'MeruScreenshotMonitor.exe');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/', { replace: true });
+  };
+
   return (
     <RootStyle>
       <ToolbarStyle>
@@ -48,11 +69,26 @@ export default function DashboardNavbar({ onOpenSidebar }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
-        <Searchbar />
         <Box sx={{ flexGrow: 1 }} />
+        {/* <RouterLink to="/login" replace={True}> */}
+        <Box sx={{ p: 2, pt: 1.5, color: 'black' }}>
+          <Button fullWidth onClick={handleLogout} color="inherit" variant="outlined">
+            logout
+          </Button>
+        </Box>
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <LanguagePopover />
+          <Tooltip title="Download App">
+            <IconButton
+              size="large"
+              color="default"
+              onClick={async () => {
+                await downloadApp();
+              }}
+            >
+              <DownloadIcon />
+            </IconButton>
+          </Tooltip>
           <NotificationsPopover />
           <AccountPopover />
         </Stack>
