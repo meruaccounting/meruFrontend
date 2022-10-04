@@ -50,7 +50,7 @@ export default function LoginForm() {
       .then((res) => {
         localStorage.setItem('Bearer Token', res.data.token);
         localStorage.setItem('ud', JSON.stringify(res.data.user));
-        navigate('/dashboard/projects', { replace: true });
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response.data.message);
