@@ -50,9 +50,9 @@ export default function ChangeClient({ project }) {
     });
   };
 
-  // edit client
+  // edit projectLeader
   const handleChange = (e, value) => {
-    axios.patch(`project/${project.project._id}/client`, { client: value._id }).then((res) => {
+    axios.patch(`project/${project.project._id}/pLeader`, { projectLeader: value._id }).then((res) => {
       if (res.status === 200) {
         setprojectLeader(value);
       }
