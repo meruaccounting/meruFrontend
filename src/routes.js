@@ -4,11 +4,11 @@ import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Setting from './pages/Setting';
-import User from './pages/User';
+import Clients from './pages/Clients';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
-import Products from './pages/Products';
+import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import UserPage from './pages/UserPage';
 import Reports from './pages/Reports';
@@ -22,9 +22,9 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'timeline/:id', element: <UserPage /> },
-        { path: 'clients', element: <User /> },
+        { path: 'clients', element: <Clients /> },
         { path: 'reports', element: <Reports /> },
-        { path: 'dashboard', element: <Products /> },
+        { path: 'dashboard', element: <Dashboard /> },
         { path: 'setting', element: <Setting /> },
         { path: 'projects', element: <Projects /> },
       ],

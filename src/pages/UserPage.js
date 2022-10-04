@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // mui
 import { CssBaseline, Box } from '@mui/material';
@@ -13,7 +13,7 @@ import useStore from '../store/activityStore';
 
 // components
 // eslint-disable-next-line no-unused-vars
-import Test from '../components/UserPage/Test';
+import Calendar from '../components/UserPage/Calendar';
 import ChangeMonth from '../components/UserPage/ChangeMonth';
 import Overview from '../components/UserPage/Overview';
 import ScreenShots from '../components/UserPage/ScreenShots';
@@ -23,12 +23,16 @@ import IntExt from '../components/UserPage/IntExt';
 import Page from '../components/Page';
 
 export default function UserPage() {
+  const navigate = useNavigate();
+
   // url params
   const { id } = useParams();
   // store
   const setActivities = useStore((state) => state.setActivities);
   const activities = useStore((state) => state.activities);
+
   // eslint-disable-next-line no-unused-vars
+  const [employees, setemployees] = useState([]);
   const [date, setdate] = useState(new Date());
   const [isInternal, setisInternal] = useState(false);
   const [userName, setuserName] = useState('User');
@@ -36,12 +40,30 @@ export default function UserPage() {
   // get alll activities
   useEffect(() => {
     const source = axios.CancelToken.source();
+    // get activities of current month on mount
+    const now = new Date();
     axios
-      .post('/activity/getActivities', { userId: id })
+      .post('/activity/getActivities', {
+        userId: id,
+        startTime: new Date(now.getFullYear(), now.getMonth(), 1),
+        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+      })
       .then((res) => {
         setActivities(res.data.data, false);
         setuserName(`${res.data.user.firstName} ${res.data.user.lastName}`);
+        setdate(new Date());
       })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Axios request aborted.');
+        } else {
+          console.error(err);
+        }
+      });
+
+    axios
+      .get('/employee/all')
+      .then((res) => setemployees(res.data.data))
       .catch((err) => {
         if (axios.isCancel(err)) {
           console.log('Axios request aborted.');
@@ -57,7 +79,9 @@ export default function UserPage() {
   }, [id]);
 
   // handleSearch
-  const handleSearch = (value) => {};
+  const handleSearch = (e, value) => {
+    navigate(`/dashboard/timeline/${value._id}`);
+  };
 
   // return loader while fetching data
   if (activities.loader) {
@@ -83,10 +107,11 @@ export default function UserPage() {
 
           {/* search box */}
           <Autocomplete
-            onChange={(value) => handleSearch(value)}
+            onChange={(e, value) => handleSearch(e, value)}
             disablePortal
             id="employee-search"
-            options={['1', '2']}
+            options={employees}
+            getOptionLabel={(option) => option.name}
             sx={{
               position: 'absolute',
               width: 300,
@@ -95,9 +120,9 @@ export default function UserPage() {
             }}
             renderInput={(params) => <TextField {...params} label="Search Employee" />}
           />
-          <ChangeMonth date={date} setdate={(date) => setdate(date)} />
+          <ChangeMonth id={id} date={date} setdate={(date) => setdate(date)} />
 
-          <Test activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
+          <Calendar activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
 
           {/* overview */}
           <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />

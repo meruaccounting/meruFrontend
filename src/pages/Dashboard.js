@@ -70,7 +70,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function Dashboard() {
   const [userList, setuserList] = useState([]);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -164,10 +164,10 @@ export default function User() {
                           </Label>
                         </TableCell>
                         <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.today)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.yesterday)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.weekly)}</TableCell>
-                        <TableCell align="left">{secondsToHms(time.monthly)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.today)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.yesterday)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.weekly)}</TableCell>
+                        <TableCell align="left">{secondsToHms(time?.monthly)}</TableCell>
                       </TableRow>
                     );
                   })}

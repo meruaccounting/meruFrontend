@@ -112,26 +112,28 @@ export default function Sidebar({ setclientId }) {
                   width: '100%',
                 }}
               >
-                {filteredData.length
-                  ? filteredData.map((client) => (
-                      <TreeItem
-                        onClick={() => setclientId(client._id)}
-                        nodeId={(client._id ? client._id : 1).toString()}
-                        label={
-                          <Typography
-                            sx={{
-                              color: '#637381',
-                              fontSize: '1.5rem',
-                              fontWeight: '700',
-                            }}
-                          >
-                            {client._id ? client.name : 'No Client'}
-                          </Typography>
-                        }
-                        key={client._id}
-                      />
-                    ))
-                  : 'noclients'}
+                {filteredData.length ? (
+                  filteredData.map((client) => (
+                    <TreeItem
+                      onClick={() => setclientId(client._id)}
+                      nodeId={(client._id ? client._id : 1).toString()}
+                      label={
+                        <Typography
+                          sx={{
+                            color: '#637381',
+                            fontSize: '1.5rem',
+                            fontWeight: '700',
+                          }}
+                        >
+                          {client._id ? client.name : 'No Client'}
+                        </Typography>
+                      }
+                      key={client._id}
+                    />
+                  ))
+                ) : (
+                  <Typography sx={{ mt: '100%', textAlign: 'center' }}>No Clients</Typography>
+                )}
               </TreeView>
             </Box>
           )}

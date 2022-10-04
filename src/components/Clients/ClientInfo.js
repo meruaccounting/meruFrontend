@@ -39,6 +39,20 @@ export default function ClientInfo({ client, setclientId }) {
 
   // to make the form focused
   const inputRef = useRef();
+  // edit name, refresh clients in sidebar and change local state of name
+  const handleEditSubmit = (e) => {
+    try {
+      e.preventDefault();
+      axios.patch(`/client/${client.client._id}`, { name }).then((res) => {
+        console.log(res);
+        axios.get(`/client`).then((res) => {
+          setClients(res.data.data, false);
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     setName(client.client.name);
@@ -53,21 +67,6 @@ export default function ClientInfo({ client, setclientId }) {
           setClients(res.data.data, false);
         });
         setclientId(null);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // edit name, refresh clients in sidebar and change local state of name
-  const handleEditSubmit = (e) => {
-    try {
-      e.preventDefault();
-      axios.patch(`/client/${client.client._id}`, { name }).then((res) => {
-        console.log(res);
-        axios.get(`/client`).then((res) => {
-          setClients(res.data.data, false);
-        });
       });
     } catch (error) {
       console.log(error);
