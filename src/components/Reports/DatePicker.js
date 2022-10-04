@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs from 'dayjs';
 import AdapterDayjs from '@mui/lab/AdapterDayjs';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import LocalizationProvider from '@mui/x-date-pickers/LocalizationProvider';
 import { Box, Typography } from '@mui/material';
 
 // style
