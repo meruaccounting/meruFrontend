@@ -3,6 +3,8 @@ import { Pie } from '@ant-design/plots';
 import { Box, Typography } from '@mui/material';
 
 export default function AppsCharts({ reports }) {
+  console.log(reports);
+
   const [chartData, setchartData] = useState([]);
   const [totalHours, settotalHours] = useState(null);
   const [totalActCount, settotalCount] = useState(null);

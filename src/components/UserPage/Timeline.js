@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+
+// mui
 import TableCell from '@mui/material/TableCell';
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer';
@@ -35,17 +38,24 @@ const cell = {
   },
 };
 
-export default function Timeline({ activities }) {
+export default function Timeline({ activities, date }) {
   const [workTimes, setWorkTimes] = useState();
 
   useEffect(() => {
     const arr = [];
-    activities?.forEach((activity) => {
-      const dateObj = new Date(activity.startTime);
+
+    // get date filtered acts by day
+    const filteredActs = activities.filter((act) => {
+      const date1 = new Date(act.activityOn);
+      return dayjs(date1).isSame(date, 'day');
+    });
+
+    filteredActs?.forEach((act) => {
+      const dateObj = new Date(act.startTime);
       const hrs = dateObj.getHours();
       const mins = dateObj.getMinutes();
       const seconds = dateObj.getSeconds();
-      const endDateObj = new Date(activity.endTime);
+      const endDateObj = new Date(act.endTime);
       const endHrs = endDateObj.getHours();
       const endMins = endDateObj.getMinutes();
       const endSeconds = endDateObj.getSeconds();
@@ -69,7 +79,7 @@ export default function Timeline({ activities }) {
       }
     });
     setWorkTimes(arr);
-  }, [activities]);
+  }, [activities, date]);
 
   const row = [];
 

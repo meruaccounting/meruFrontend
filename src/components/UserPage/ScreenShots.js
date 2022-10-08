@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 // mui
 import { Box } from '@mui/material';
@@ -14,7 +15,10 @@ export default function ScreenShots({ activities, date, isInternal }) {
   // filter day selected day wise and internal and external
   useEffect(() => {
     // get date filtered acts
-    const arr = activities.filter((act) => new Date(act.activityOn) <= date);
+    const arr = activities.filter((act) => {
+      const date1 = new Date(act.activityOn);
+      return dayjs(date1).isSame(date, 'day');
+    });
     // get intExt filtered acts
     setfilteredActs(arr.filter((act) => act.isInternal === isInternal));
     // eslint-disable-next-line react-hooks/exhaustive-deps

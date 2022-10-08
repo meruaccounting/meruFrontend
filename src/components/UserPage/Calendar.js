@@ -19,13 +19,11 @@ export default function Calendar({ date, setdate, activities }) {
 
   // to calculate only on act change(called when month changes)
   useEffect(() => {
-    console.log(activities);
     const arr = [...Array(dayjs(date).daysInMonth() + 1)].fill(0);
     activities.forEach((act) => {
       arr[new Date(act.activityOn).getDate()] += act.consumeTime;
     });
     setprogressValues(arr);
-    console.log(arr);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities]);
@@ -98,7 +96,8 @@ export default function Calendar({ date, setdate, activities }) {
               >
                 {key}
               </Button>
-              <LinearProgress variant="determinate" value={progressValues[key]} />
+              {/* value calculated by 5h(18k seconds) */}
+              <LinearProgress variant="determinate" value={(progressValues[key] / 18000) * 100} />
             </Box>
           );
         })}

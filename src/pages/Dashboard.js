@@ -119,6 +119,34 @@ export default function Dashboard() {
     setFilterName(event.target.value);
   };
 
+  const getStatus = (lastActive) => {
+    const now = new Date().getTime();
+
+    const seconds = Math.floor(now - lastActive) / 1000;
+
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+      return `${Math.floor(interval)} years ago`;
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return `${Math.floor(interval)} months ago`;
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return `${Math.floor(interval)} days ago`;
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return `${Math.floor(interval)} hours ago`;
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return `${Math.floor(interval)} minutes ago`;
+    }
+    return `${Math.floor(seconds)} seconds ago`;
+  };
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
 
   const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
@@ -151,7 +179,7 @@ export default function Dashboard() {
                       <TableRow hover key={_id} tabIndex={-1} role="checkbox">
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar sx={{ ml: 1, mr: -1 }} alt={name} />
+                            <Avatar sx={{ ml: 1, mr: -1 }} href={avatar} alt={name} />
                             <Typography sx={{ cursor: 'pointer' }} variant="subtitle2" noWrap>
                               <Link href={`/dashboard/timeline/${_id}`} underline="hover" color="inherit">
                                 {name}
@@ -161,7 +189,7 @@ export default function Dashboard() {
                         </TableCell>
                         <TableCell align="left">
                           <Label variant="ghost" color={(true === 'banned' && 'error') || 'success'}>
-                            {sentenceCase('active')}
+                            {getStatus(lastActive)}
                           </Label>
                         </TableCell>
                         <TableCell align="left">{role}</TableCell>

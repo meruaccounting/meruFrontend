@@ -16,6 +16,7 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // axios.defaults.baseURL = "https://monitoring-meru.herokuapp.com/";
+// axios.defaults.baseURL = 'http://merubackend2.ap-south-1.elasticbeanstalk.com/';
 axios.defaults.baseURL = 'http://localhost:8000/';
 // axios.defaults.baseURL = "https://merubackend.live/";
 // axios.defaults.baseURL = "http://monitor.meruaccounting.com:8000/";
