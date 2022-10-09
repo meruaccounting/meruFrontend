@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NoUserSelected from './NoUserSelected';
 import ChangePayRate from './ChangePayRate';
 import ChangeRole from './ChangeRole';
+import UserSettings from './UserSettings';
 
 // store
 import useStore from '../../store/teamStore';
@@ -93,6 +94,7 @@ export default function Main({ userId }) {
                 View Timeline
               </Link>
               <ChangeRole user={user} />
+              <UserSettings user={user} />
             </Box>
           )}
         </Paper>
