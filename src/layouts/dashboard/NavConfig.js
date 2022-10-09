@@ -31,6 +31,11 @@ const navConfig = [
     icon: getIcon('eva:lock-fill'),
   },
   {
+    title: 'Teams',
+    path: '/dashboard/teams',
+    icon: getIcon('eva:lock-fill'),
+  },
+  {
     title: 'clients',
     path: '/dashboard/clients',
     icon: getIcon('eva:people-fill'),

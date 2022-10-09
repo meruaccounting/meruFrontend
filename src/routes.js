@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import UserPage from './pages/UserPage';
 import Reports from './pages/Reports';
+import Teams from './pages/Teams';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export default function Router() {
         { path: 'timeline/:id', element: <UserPage /> },
         { path: 'clients', element: <Clients /> },
         { path: 'reports', element: <Reports /> },
+        { path: 'teams', element: <Teams /> },
         { path: 'dashboard', element: <Dashboard /> },
         { path: 'setting', element: <Setting /> },
         { path: 'projects', element: <Projects /> },
