@@ -144,8 +144,29 @@ export default function Dashboard() {
     if (interval > 1) {
       return `${Math.floor(interval)} minutes ago`;
     }
-    return `${Math.floor(seconds)} seconds ago`;
+    return `Active now`;
   };
+
+  function formatRole(role) {
+    if (role === 'projectLeader') return 'Project Leader';
+    return role.charAt(0).toUpperCase() + role.slice(1);
+  }
+
+  function getStatusColor(lastActive) {
+    const now = new Date().getTime();
+    const seconds = Math.floor(now - lastActive) / 1000;
+
+    let interval = seconds / 86400;
+    if (interval > 1) {
+      return `error`;
+    }
+
+    interval = seconds / 60;
+    if (interval > 1) {
+      return `primary`;
+    }
+    return `success`;
+  }
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
 
@@ -188,11 +209,11 @@ export default function Dashboard() {
                           </Stack>
                         </TableCell>
                         <TableCell align="left">
-                          <Label variant="ghost" color={(true === 'banned' && 'error') || 'success'}>
+                          <Label variant="ghost" color={getStatusColor(lastActive)}>
                             {getStatus(lastActive)}
                           </Label>
                         </TableCell>
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left">{formatRole(role)}</TableCell>
                         <TableCell align="left">{secondsToHms(time?.today)}</TableCell>
                         <TableCell align="left">{secondsToHms(time?.yesterday)}</TableCell>
                         <TableCell align="left">{secondsToHms(time?.weekly)}</TableCell>

@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Setting from './pages/Setting';
+import Settings from './pages/Settings.';
 import Clients from './pages/Clients';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
@@ -29,7 +29,7 @@ export default function Router() {
         { path: 'reports', element: <Reports /> },
         { path: 'teams', element: <Teams /> },
         { path: 'dashboard', element: <Dashboard /> },
-        { path: 'setting', element: <Setting /> },
+        { path: 'setting', element: <Settings /> },
         { path: 'projects', element: <Projects /> },
       ],
     },

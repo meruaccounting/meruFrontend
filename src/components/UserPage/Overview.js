@@ -39,15 +39,15 @@ export default function Overview({ date, activities }) {
     let month = 0;
     let week = 0;
     let today = 0;
-    arr.forEach((act) => {
+    activities.forEach((act) => {
       const date1 = new Date(act.activityOn);
       total += act.consumeTime;
-      if (date1.toDateString() === date.toDateString()) {
-        today += act.endTime - act.startTime;
+      if (dayjs(date1).isSame(date, 'day')) {
+        today += act.consumeTime;
       } else if (dayjs(date1).isSame(date, 'week')) {
-        week += act.endTime - act.startTime;
+        week += act.consumeTime;
       } else if (dayjs(date1).isSame(date, 'month')) {
-        month += act.endTime - act.startTime;
+        month += act.consumeTime;
       }
     });
     settotalHours(total);

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
+
 // mui
 import { Box, Typography, Tooltip, Alert, AlertTitle, Toolbar, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -41,7 +43,19 @@ export default function Activity({ act }) {
     const array = selectedSs.map((ss) => ({ activityId: act._id, screenshotId: ss }));
   };
 
-  const delAct = async (actId) => {};
+  const handleDeleteAct = async (activityId) => {
+    axios
+      .delete('/activity/', {
+        data: { activityId },
+      })
+      .then((res) => {
+        if (res.status === 200) enqueueSnackbar('Activity deleted', { variant: 'success' });
+        else enqueueSnackbar('Some Error Occured', { variant: 'error' });
+      })
+      .catch((error) => {
+        enqueueSnackbar('Some Error Occured', { variant: 'error' });
+      });
+  };
 
   return (
     <Box component="div" sx={outerBox}>
@@ -60,14 +74,14 @@ export default function Activity({ act }) {
       <IconButton
         sx={{ float: 'right', color: 'primary.dark' }}
         onClick={() => {
-          delAct(act._id);
+          handleDeleteAct(act._id);
         }}
       >
         <DeleteIcon />
       </IconButton>
-      <IconButton sx={{ float: 'right', color: 'primary.dark' }}>
+      {/* <IconButton sx={{ float: 'right', color: 'primary.dark' }}>
         <EditIcon />
-      </IconButton>
+      </IconButton> */}
       <Toolbar
         sx={{
           // use this for dynamic display none

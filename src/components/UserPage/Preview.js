@@ -1,4 +1,8 @@
 import React from 'react';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+
+// mui
 import {
   Box,
   Backdrop,
@@ -12,8 +16,14 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+// -----------------------------------------------------------------
+
 export default function Preview(props) {
+  // notistack
+  const { enqueueSnackbar } = useSnackbar();
+
   const [open, setOpen] = React.useState(false);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -21,7 +31,19 @@ export default function Preview(props) {
     setOpen(!open);
   };
 
-  const delSs = async (activityId, screenshotId) => {};
+  const handleDeleteSs = async (screenshotId) => {
+    axios
+      .delete('/activity/screenshot', {
+        data: { screenshots: [screenshotId] },
+      })
+      .then((res) => {
+        if (res.status === 200) enqueueSnackbar('Screenshot deleted', { variant: 'success' });
+        else enqueueSnackbar('Some Error Occured', { variant: 'error' });
+      })
+      .catch((error) => {
+        enqueueSnackbar('Some Error Occured', { variant: 'error' });
+      });
+  };
   // console.log(props.selectedSs);
   // const isChecked = (e) => {
   //   return !props.selectedSs.indexOf(e.target.value) !== -1;
@@ -70,11 +92,11 @@ export default function Preview(props) {
               </Box>
             </span>
             <DeleteIcon
-              sx={{ float: 'right' }}
+              sx={{ float: 'right', cursor: 'pointer' }}
               fontSize="small"
               onClick={(e) => {
-                delSs(props.act._id, props.ssId);
-                props.setSelectedSs(false, props.act._id, props.ssId);
+                handleDeleteSs(props.ssId);
+                // props.setSelectedSs(false, props.act._id, props.ssId);
               }}
             />
           </CardContent>

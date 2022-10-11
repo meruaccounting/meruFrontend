@@ -7,8 +7,6 @@ import { Box, Container, CssBaseline } from '@mui/material';
 // own components
 import Sidebar from '../components/Settings/Sidebar';
 import PageHeader from '../components/Projects/PageHeader';
-import Info from '../components/Settings/Info';
-import Main from '../components/Settings/Main';
 
 // styles
 const rootBox = {
@@ -24,9 +22,8 @@ const innerBox = {
   // backgroundColor: 'red',
 };
 
-const Setting = () => {
+export default function Settings() {
   // store
-  const [settingMsg, setSettingMsg] = useState(0);
   return (
     <Box sx={rootBox}>
       <CssBaseline />
@@ -35,21 +32,8 @@ const Setting = () => {
         {/* -----------------------------------------------------------------
         SIDE BAR
         ---------------------------------------------------------------------- */}
-        <Sidebar
-          setMsg={(msg) => {
-            setSettingMsg(msg);
-          }}
-        />
-        <Container sx={{ width: '70%', paddingX: 2 }} disableGutters>
-          {/* -------------------------------------------------------------------------
-            Information Sections
-            -------------------------------------------------------------------------------- */}
-          <Info msg={settingMsg} />
-          <Main selectedSettingNo={settingMsg.selectedIndex} />
-        </Container>
+        <Sidebar />
       </Box>
     </Box>
   );
-};
-
-export default Setting;
+}
