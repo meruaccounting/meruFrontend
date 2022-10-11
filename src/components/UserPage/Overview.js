@@ -42,13 +42,9 @@ export default function Overview({ date, activities }) {
     activities.forEach((act) => {
       const date1 = new Date(act.activityOn);
       total += act.consumeTime;
-      if (dayjs(date1).isSame(date, 'day')) {
-        today += act.consumeTime;
-      } else if (dayjs(date1).isSame(date, 'week')) {
-        week += act.consumeTime;
-      } else if (dayjs(date1).isSame(date, 'month')) {
-        month += act.consumeTime;
-      }
+      if (dayjs(date1).isSame(date, 'day')) today += act.consumeTime;
+      if (dayjs(date1).isSame(date, 'week')) week += act.consumeTime;
+      if (dayjs(date1).isSame(date, 'month')) month += act.consumeTime;
     });
     settotalHours(total);
     setweeklyHours(week);
