@@ -1,5 +1,5 @@
 // react and other importanat library
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 // mui components
@@ -23,50 +23,81 @@ const modalStyle = {
 export default function ChangeBudget({ project }) {
   // store
   const [budget, setbudget] = useState({ timePeriod: 'Week', time: 0, money: 0 });
+  const [modalBudget, setmodalBudget] = useState({ timePeriod: 'Week', time: 0, money: 0 });
   const [open, setopen] = useState(false);
+
+  // form ref
+  const formRef = useRef();
 
   // change the local client state every time project changes
   useEffect(() => {
     setbudget((prev) => (project.project.budget ? project.project.budget : prev));
+    setmodalBudget((prev) => (project.project.budget ? project.project.budget : prev));
   }, [project]);
 
   // edit budget
-  const handleChange = (e, value) => {
-    axios.patch(`project/${project.project._id}/budget`, { budget: value }).then((res) => {
-      if (res.status === 200) {
-        setbudget(value);
-      }
-    });
+  const handleSubmit = (e) => {
+    axios
+      .patch(`project/${project.project._id}/budget`, { budget: modalBudget })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          setbudget(modalBudget);
+        }
+      })
+      .catch((error) => console.log(error));
+    console.log(modalBudget);
     setopen(false);
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ mt: 1, display: 'flex' }}>
       <Typography variant="h5">Budget: </Typography>
-      <Typography variant="h6">{`${budget.time}Hrs, ${budget.money} per ${budget.timePeriod}`} </Typography>
-      <IconButton onClick={() => setopen(true)} size="small">
-        <EditIcon />
-      </IconButton>
+      <Box sx={{ ml: 1, display: 'flex' }}>
+        <Typography variant="h6">{`${budget.time}Hrs, ${budget.money}/${budget.timePeriod}`} </Typography>
+        <IconButton onClick={() => setopen(true)} size="small">
+          <EditIcon fontSize="small" />
+        </IconButton>
+      </Box>
 
       {/* modal */}
       <Modal open={open} onClose={() => setopen(false)}>
         <Box sx={modalStyle}>
+          {/* heading */}
           <Typography variant="h6" component="h2">
             Change Budget
           </Typography>
-          <TextField sx={{ width: 100, mt: 1, mr: 1 }} label="Time" value={budget.time}>
-            Budget
-          </TextField>
-          <TextField sx={{ width: 100, mt: 1, mr: 1 }} label="Money" value={budget.money}>
-            Budget
-          </TextField>
+
+          {/* Time */}
+
+          <TextField
+            id="time"
+            sx={{ width: 100, mt: 1, mr: 1 }}
+            label="Time"
+            value={modalBudget.time}
+            onChange={(e) => setmodalBudget((prev) => ({ ...prev, time: e.target.value }))}
+          />
+
+          {/* Money */}
+          <TextField
+            id="money"
+            sx={{ width: 100, mt: 1, mr: 1 }}
+            label="Money"
+            onChange={(e) => setmodalBudget((prev) => ({ ...prev, money: e.target.value }))}
+            value={modalBudget.money}
+          />
+
+          {/* Time period */}
           <Autocomplete
+            id="timePeriod"
             disablePortal
+            value={modalBudget.timePeriod ?? 'Week'}
             options={['Week', 'Month']}
+            onChange={(e, value) => setmodalBudget((prev) => ({ ...prev, timePeriod: value }))}
             sx={{ width: 160, mt: 1, mr: 1 }}
             renderInput={(params) => <TextField {...params} label="Time Period" />}
           />
-          <Button onClick={handleChange} size="small" variant="contained" color="primary">
+          <Button onClick={handleSubmit} type="submit" size="small" variant="contained" color="primary">
             Save
           </Button>
         </Box>

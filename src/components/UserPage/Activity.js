@@ -10,6 +10,10 @@ import HourglassFullIcon from '@mui/icons-material/HourglassFull';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
+// store
+// store
+import useStore from '../../store/activityStore';
+
 // helpers
 import toHhMm from '../../helpers/hhMm';
 
@@ -33,6 +37,8 @@ const percentIcon = (percent) =>
 const outerBox = { m: 0.5, pt: 1.5, pr: 1, pb: 1, pl: 0.5, borderRadius: 1 };
 
 export default function Activity({ act }) {
+  const setActivities = useStore((state) => state.setActivities);
+
   // selected ss to delete
   const [selectedSs, setselectedSs] = useState([]);
 
@@ -52,6 +58,7 @@ export default function Activity({ act }) {
         if (res.status === 200) enqueueSnackbar('Activity deleted', { variant: 'success' });
         else enqueueSnackbar('Some Error Occured', { variant: 'error' });
       })
+      // eslint-disable-next-line no-unused-vars
       .catch((error) => {
         enqueueSnackbar('Some Error Occured', { variant: 'error' });
       });

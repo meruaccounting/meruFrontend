@@ -9,6 +9,8 @@ import AlertTitle from '@mui/material/AlertTitle';
 // components
 import Activity from './Activity';
 
+// ------------------------------------------
+
 export default function ScreenShots({ activities, date, isInternal }) {
   const [filteredActs, setfilteredActs] = useState([]);
 

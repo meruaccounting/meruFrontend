@@ -61,8 +61,11 @@ const input = {
 };
 
 export default function Main({ projectId, setprojectId }) {
+  // store
   const setClients = useStore((state) => state.setClients);
   const [project, setproject] = useState({ project: {}, loader: true });
+
+  // for name component
   const [name, setName] = useState(project.project.name);
 
   // fetch the data

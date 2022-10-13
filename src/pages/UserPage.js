@@ -30,11 +30,12 @@ export default function UserPage() {
   // store
   const setActivities = useStore((state) => state.setActivities);
   const activities = useStore((state) => state.activities);
-
-  // eslint-disable-next-line no-unused-vars
-  const [employees, setemployees] = useState([]);
   const [date, setdate] = useState(new Date());
   const [isInternal, setisInternal] = useState(false);
+
+  // for searchBox
+  const [employees, setemployees] = useState([]);
+  // heading of timeline
   const [userName, setuserName] = useState('User');
 
   // get alll activities
