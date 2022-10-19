@@ -23,6 +23,7 @@ export default function Calendar({ date, setdate, activities }) {
     activities.forEach((act) => {
       arr[new Date(act.activityOn).getDate()] += act.consumeTime;
     });
+    console.log(arr);
     setprogressValues(arr);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +98,10 @@ export default function Calendar({ date, setdate, activities }) {
                 {key}
               </Button>
               {/* value calculated by 5h(18k seconds) */}
-              <LinearProgress variant="determinate" value={(progressValues[key] / 18000) * 100} />
+              <LinearProgress
+                variant="determinate"
+                value={(progressValues[key] / 18000) * 100 > 100 ? 100 : (progressValues[key] / 18000) * 100}
+              />
             </Box>
           );
         })}

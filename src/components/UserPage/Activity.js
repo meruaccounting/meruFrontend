@@ -11,7 +11,6 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 // store
-// store
 import useStore from '../../store/activityStore';
 
 // helpers
@@ -36,7 +35,7 @@ const percentIcon = (percent) =>
 // style
 const outerBox = { m: 0.5, pt: 1.5, pr: 1, pb: 1, pl: 0.5, borderRadius: 1 };
 
-export default function Activity({ act }) {
+export default function Activity({ act, date, id }) {
   const setActivities = useStore((state) => state.setActivities);
 
   // selected ss to delete
@@ -55,8 +54,20 @@ export default function Activity({ act }) {
         data: { activityId },
       })
       .then((res) => {
-        if (res.status === 200) enqueueSnackbar('Activity deleted', { variant: 'success' });
-        else enqueueSnackbar('Some Error Occured', { variant: 'error' });
+        if (res.status === 200) {
+          enqueueSnackbar('Activity deleted', { variant: 'success' });
+
+          // refresh activities
+          axios
+            .post('/activity/getActivities', {
+              userId: id,
+              startTime: new Date(date.getFullYear(), date.getMonth(), 1),
+              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0),
+            })
+            .then((res) => {
+              setActivities(res.data.data, false);
+            });
+        } else enqueueSnackbar('Some Error Occured', { variant: 'error' });
       })
       // eslint-disable-next-line no-unused-vars
       .catch((error) => {
@@ -125,6 +136,8 @@ export default function Activity({ act }) {
           act.screenshots.map((ss, key) => (
             <Preview
               ss={ss}
+              id={id}
+              date={date}
               setSelectedSs={(isCheck, screenshotId) => {
                 if (isCheck) {
                   setselectedSs((prev) => [...prev, screenshotId]);
@@ -132,6 +145,7 @@ export default function Activity({ act }) {
                   setselectedSs((prev) => selectedSs.filter((pre) => screenshotId !== pre));
                 }
               }}
+              takenAt={ss.takenAt}
               selectedSs={selectedSs}
               ssId={ss._id}
               act={act}

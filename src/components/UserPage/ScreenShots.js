@@ -11,7 +11,7 @@ import Activity from './Activity';
 
 // ------------------------------------------
 
-export default function ScreenShots({ activities, date, isInternal }) {
+export default function ScreenShots({ activities, date, isInternal, id }) {
   const [filteredActs, setfilteredActs] = useState([]);
 
   // filter day selected day wise and internal and external
@@ -30,7 +30,7 @@ export default function ScreenShots({ activities, date, isInternal }) {
     <Box component="div">
       {/* map the time ranges from user data for the particular date */}
       {filteredActs.length ? (
-        filteredActs.map((act) => <Activity act={act} key={act._id} />)
+        filteredActs.map((act) => <Activity date={date} id={id} act={act} key={act._id} />)
       ) : (
         <Alert severity="info">
           <AlertTitle>No Activities</AlertTitle>

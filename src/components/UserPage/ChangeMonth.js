@@ -40,9 +40,11 @@ export default function ChangeMonth({ date, setdate, id }) {
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1),
-        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 0),
+        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 2, 0),
+        hello: 'hello',
       })
       .then((res) => {
+        console.log(res.data.data);
         setActivities(res.data.data, false);
       })
       .catch((err) => {
@@ -57,15 +59,16 @@ export default function ChangeMonth({ date, setdate, id }) {
   const handleBack = () => {
     const prevDate = date;
     setdate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+
     // call previous month activities here
-    // call next month activities here
     axios
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1),
-        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 0),
+        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth(), 0),
       })
       .then((res) => {
+        console.log(res.data.data);
         setActivities(res.data.data, false);
       })
       .catch((err) => {
@@ -87,6 +90,7 @@ export default function ChangeMonth({ date, setdate, id }) {
         endTime: new Date(now.getFullYear(), now.getMonth() + 1, 0),
       })
       .then((res) => {
+        console.log(res.data.data);
         setActivities(res.data.data, false);
       })
       .catch((err) => {

@@ -135,7 +135,7 @@ export default function UserPage() {
           <IntExt setInternal={(isInt) => setisInternal(isInt)} />
 
           {/* screenshots and activities */}
-          <ScreenShots isInternal={isInternal} activities={activities.activities} date={date} />
+          <ScreenShots id={id} isInternal={isInternal} activities={activities.activities} date={date} />
         </Box>
       </CssBaseline>
     </Page>

@@ -7,6 +7,7 @@ function checkTime(i) {
 
 export default function toHhMm(string) {
   const today = new Date(string);
+  console.log(today);
   let h = today.getHours();
   let m = today.getMinutes();
 

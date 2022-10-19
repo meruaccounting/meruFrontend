@@ -16,10 +16,19 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+// store
+import useStore from '../../store/activityStore';
+
+// helpers
+import toHhMm from '../../helpers/hhMm';
+
 // -----------------------------------------------------------------
 
 export default function Preview(props) {
+  const setActivities = useStore((state) => state.setActivities);
+
   // notistack
+  const { id, date } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = React.useState(false);
@@ -37,8 +46,20 @@ export default function Preview(props) {
         data: { screenshots: [screenshotId] },
       })
       .then((res) => {
-        if (res.status === 200) enqueueSnackbar('Screenshot deleted', { variant: 'success' });
-        else enqueueSnackbar('Some Error Occured', { variant: 'error' });
+        if (res.status === 200) {
+          enqueueSnackbar('Screenshot deleted', { variant: 'success' });
+
+          // refresh activities
+          axios
+            .post('/activity/getActivities', {
+              userId: id,
+              startTime: new Date(date.getFullYear(), date.getMonth(), 1),
+              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0),
+            })
+            .then((res) => {
+              setActivities(res.data.data, false);
+            });
+        } else enqueueSnackbar('Some Error Occured', { variant: 'error' });
       })
       .catch((error) => {
         enqueueSnackbar('Some Error Occured', { variant: 'error' });
@@ -117,7 +138,7 @@ export default function Preview(props) {
           }}
         >
           <Typography color="text.primary" gutterBottom variant="subtitle2">
-            {`${Math.ceil(props.performanceData)}%, Taken at ${props.activityAt}`}
+            {`${Math.ceil(props.performanceData)}%, Taken at ${toHhMm(props.takenAt)}`}
           </Typography>
         </CardContent>
       </Card>
