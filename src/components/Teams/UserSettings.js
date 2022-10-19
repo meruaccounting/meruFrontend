@@ -33,14 +33,18 @@ export default function UserSettings({ user }) {
   };
 
   return (
-    <Box sx={{ width: 380, pt: 2, fontSize: '20px' }}>
+    <Box sx={{ width: 420, pt: 2, fontSize: '20px' }}>
       <Typography variant="h4">Effective Settings</Typography>
       {Object.keys(settingsLabel).map((setKey, index) => (
         <Box key={index} sx={{ display: 'flex', flexDirection: 'rows', justifyContent: 'space-between' }}>
           <Typography varihant="h6" sx={{ pr: 2, fontSize: '20px', color: 'success' }}>
             {settingsLabel[setKey]}
           </Typography>
-          <Link underline="hover" to="/dashboard/settings" sx={{ pr: 1, cursor: 'pointer' }}>
+          <Link
+            underline="hover"
+            to="/dashboard/settings"
+            sx={{ pr: 1, cursor: 'pointer', justifyContent: 'flex-start' }}
+          >
             {formatSettingsValue(setKey)}
           </Link>
         </Box>

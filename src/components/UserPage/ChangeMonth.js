@@ -1,9 +1,10 @@
 import * as React from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 // mui
+import { Link, Typography, IconButton } from '@mui/material/';
 import Box from '@mui/material/Box';
-import { IconButton } from '@mui/material';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 
@@ -76,15 +77,43 @@ export default function ChangeMonth({ date, setdate, id }) {
       });
   };
 
+  const handleToday = () => {
+    setdate(new Date());
+    const now = new Date();
+    axios
+      .post('/activity/getActivities', {
+        userId: id,
+        startTime: new Date(now.getFullYear(), now.getMonth(), 1),
+        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+      })
+      .then((res) => {
+        setActivities(res.data.data, false);
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Axios request aborted.');
+        } else {
+          console.error(err);
+        }
+      });
+  };
+
   return (
-    <Box sx={{ maxWidth: 250, flexGrow: 1 }}>
-      <IconButton color="primary" size="medium" onClick={handleBack}>
-        <KeyboardArrowLeft />
-      </IconButton>
-      {`${month[date.getMonth()]} ${date.getFullYear()}`}
-      <IconButton color="primary" size="medium" onClick={handleNext}>
-        <KeyboardArrowRight />
-      </IconButton>
+    <Box sx={{ display: 'flex', maxWidth: 250 }}>
+      <Box>
+        <IconButton color="primary" size="medium" onClick={handleBack}>
+          <KeyboardArrowLeft />
+        </IconButton>
+        {`${month[date.getMonth()]} ${date.getFullYear()}`}
+        <IconButton color="primary" size="medium" onClick={handleNext}>
+          <KeyboardArrowRight />
+        </IconButton>
+      </Box>
+      {!dayjs(date).isSame(new Date(), 'day') && (
+        <Link sx={{ cursor: 'pointer', pt: 1, m: 0 }} underline="hover" onClick={handleToday}>
+          Today
+        </Link>
+      )}
     </Box>
   );
 }
