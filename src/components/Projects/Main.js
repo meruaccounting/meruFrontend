@@ -11,6 +11,7 @@ import NoProjectSelected from './NoProjectSelected';
 import ChangeClient from './ChangeClient';
 import ChangeProjectLeader from './ChangeProjectLeader';
 import ChangeBudget from './ChangeBudget';
+import ProjectMembers from './ProjectMembers';
 import ProjectTime from './ProjectTime';
 
 // store
@@ -167,7 +168,8 @@ export default function Main({ projectId, setprojectId }) {
                 <ChangeClient project={project} />
                 <ChangeProjectLeader project={project} />
                 <ChangeBudget project={project} />
-                <ProjectTime projectId={projectId} />
+                {/* <ProjectTime projectId={projectId} /> */}
+                <ProjectMembers project={project} />
               </Container>
             </Box>
           )}

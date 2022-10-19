@@ -132,12 +132,6 @@ export default function ScreenshotsPerHour({ heading }) {
         <Typography variant="h6">Individual Settings</Typography>
         <Typography>If enabled, individual settings will be used instead of the team Settings</Typography>
       </Container>
-      {/* to search user from database */}
-      {/* <SearchField callback={handleUsers} /> */}
-      {/* to make visible of selected user */}
-      {/* {selectedUser.map((name, input) => (
-        <Option radioLabel={radioLabel} inputLabel={inputLabel} key={input} userDetail={name} />
-      ))} */}
 
       {filteredUsers.map((user) => (
         <Box sx={{ mt: 2 }} key={user._id}>
