@@ -123,7 +123,11 @@ export default function Preview(props) {
           </CardContent>
         </Tooltip>
 
-        <Tooltip title={`${props.activityAt}, ${Math.ceil(props.performanceData)}%`} placement="top" followCursor>
+        <Tooltip
+          title={`${toHhMm(props.activityAt)}, ${Math.ceil(props.performanceData)}%`}
+          placement="top"
+          followCursor
+        >
           <CardActionArea onClick={handleToggle}>
             <CardMedia component="img" height="140" image={`${props.preview}`} alt="green iguana" />
           </CardActionArea>
@@ -138,7 +142,7 @@ export default function Preview(props) {
           }}
         >
           <Typography color="text.primary" gutterBottom variant="subtitle2">
-            {`${Math.ceil(props.performanceData)}%, Taken at ${toHhMm(props.takenAt)}`}
+            {`${Math.ceil(props.performanceData)}%, Taken at ${toHhMm(props.activityAt)}`}
           </Typography>
         </CardContent>
       </Card>

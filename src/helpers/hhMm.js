@@ -6,13 +6,10 @@ function checkTime(i) {
 }
 
 export default function toHhMm(string) {
-  const today = new Date(string);
-  console.log(today);
-  let h = today.getHours();
-  let m = today.getMinutes();
+  const today = new Date(string * 1000);
+  // let h = today.getHours();
+  // let m = today.getMinutes();
+  console.log(string);
 
-  // add a zero in front of numbers<10
-  h = checkTime(h);
-  m = checkTime(m);
-  return `${h}:${m}`;
+  return today.toLocaleTimeString();
 }

@@ -33,7 +33,7 @@ export default function DatePicker({ setdate }) {
             ...typoStyle,
           }}
           onClick={() => {
-            setvalue([dayjs(), dayjs()]);
+            setvalue([dayjs(), dayjs().add(1, 'day')]);
             setrange('Today');
           }}
         >
@@ -80,7 +80,7 @@ export default function DatePicker({ setdate }) {
             ...typoStyle,
           }}
           onClick={() => {
-            setvalue([dayjs().add(-1, 'day'), dayjs().add(-1, 'day')]);
+            setvalue([dayjs().add(-1, 'day'), dayjs()]);
             setrange('Yesterday');
           }}
         >
