@@ -17,7 +17,6 @@ function ToggleMember({ user, project }) {
 }
 
 export default function ProjectMembers({ project }) {
-  console.log(project);
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
@@ -27,7 +26,6 @@ export default function ProjectMembers({ project }) {
       setfilteredUsers(res.data.data);
     });
 
-    console.log(project.project.employees);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -46,17 +44,32 @@ export default function ProjectMembers({ project }) {
     setfilteredUsers(data);
   };
 
-  const addMember = (e, employeeId) => {
-    let editType = 'remove';
-    if (e.target.checked) editType = 'add';
-    // convert input text to lower case
-    axios
-      .patch(`project/members/${editType}/${project.project._id}`, { employeeId })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => console.log(error));
-  };
+  function ToggleMember({ user }) {
+    const [isMember, setisMember] = useState(project.project.employees.includes(user._id));
+
+    const editMember = (e, employeeId) => {
+      let editType = 'remove';
+      if (e.target.checked) editType = 'add';
+      // convert input text to lower case
+      axios
+        .patch(`project/members/${editType}/${project.project._id}`, { employeeId })
+        .then((res) => {
+          console.log(res);
+          setisMember(!isMember);
+        })
+        .catch((error) => console.log(error));
+    };
+
+    return (
+      <Box component="div" sx={{ mt: 2, overflowY: 'auto' }} key={user._id}>
+        <Box sx={{ display: 'flex' }}>
+          <Switch onClick={(e) => editMember(e, user._id)} checked={isMember} />
+          <Typography variant="h5">{user.name}</Typography>
+        </Box>
+        <Divider dark />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ overflowY: 'auto' }}>
@@ -79,16 +92,7 @@ export default function ProjectMembers({ project }) {
         />
       </Box>
       {filteredUsers.map((user) => (
-        <Box component="div" sx={{ mt: 2, overflowY: 'auto' }} key={user._id}>
-          <Box sx={{ display: 'flex' }}>
-            <Switch
-              onClick={(e) => addMember(e, user._id)}
-              defaultChecked={project.project.employees.includes(user._id)}
-            />
-            <Typography variant="h5">{user.name}</Typography>
-          </Box>
-          <Divider dark />
-        </Box>
+        <ToggleMember key={user._id} user={user} />
       ))}
     </Box>
   );
