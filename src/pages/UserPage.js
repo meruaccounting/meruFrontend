@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // mui
-import { CssBaseline, Box } from '@mui/material';
+import { CssBaseline, Box, Container } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -23,6 +23,7 @@ import IntExt from '../components/UserPage/IntExt';
 import Page from '../components/Page';
 
 export default function UserPage() {
+  const ud = JSON.parse(localStorage.ud);
   const navigate = useNavigate();
 
   // url params
@@ -102,42 +103,47 @@ export default function UserPage() {
 
   return (
     <Page title="Timeline">
-      <CssBaseline>
-        <Box component="div" sx={{ width: '95%', margin: 'auto', position: 'relative' }}>
-          <PageHeader title={`${userName}'s Timeline`} />
+      <Container>
+        <CssBaseline>
+          <Box component="div" sx={{ width: '95%', margin: 'auto', position: 'relative' }}>
+            <PageHeader title={`${userName}'s Timeline`} />
 
-          {/* search box */}
-          <Autocomplete
-            onChange={(e, value) => handleSearch(e, value)}
-            disablePortal
-            id="employee-search"
-            options={employees}
-            getOptionLabel={(option) => option.name}
-            sx={{
-              position: 'absolute',
-              width: 300,
-              right: 30,
-              top: 10,
-            }}
-            renderInput={(params) => <TextField {...params} label="Search Employee" />}
-          />
-          <ChangeMonth id={id} date={date} setdate={(date) => setdate(date)} />
+            {/* search box (not for employee) */}
+            {!(ud.role === 'employee') && (
+              <Autocomplete
+                onChange={(e, value) => handleSearch(e, value)}
+                disablePortal
+                id="employee-search"
+                options={employees}
+                getOptionLabel={(option) => option.name}
+                sx={{
+                  position: 'absolute',
+                  width: 300,
+                  right: 30,
+                  top: 10,
+                }}
+                renderInput={(params) => <TextField {...params} label="Search Employee" />}
+              />
+            )}
 
-          <Calendar activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
+            <ChangeMonth id={id} date={date} setdate={(date) => setdate(date)} />
 
-          {/* overview */}
-          <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />
+            <Calendar activities={activities.activities} date={date} setdate={(date) => setdate(date)} />
 
-          {/* timeline */}
-          <Timeline activities={activities.activities} date={date} />
+            {/* overview */}
+            <Overview date={date} dateObj={date} days={[]} activities={activities.activities} />
 
-          {/* Internal / External switcher */}
-          <IntExt setInternal={(isInt) => setisInternal(isInt)} />
+            {/* timeline */}
+            <Timeline activities={activities.activities} date={date} />
 
-          {/* screenshots and activities */}
-          <ScreenShots id={id} isInternal={isInternal} activities={activities.activities} date={date} />
-        </Box>
-      </CssBaseline>
+            {/* Internal / External switcher */}
+            <IntExt setInternal={(isInt) => setisInternal(isInt)} />
+
+            {/* screenshots and activities */}
+            <ScreenShots id={id} isInternal={isInternal} activities={activities.activities} date={date} />
+          </Box>
+        </CssBaseline>
+      </Container>
     </Page>
   );
 }

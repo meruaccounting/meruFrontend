@@ -1,15 +1,66 @@
 import * as React from 'react';
-import { Box, Autocomplete } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import axios from 'axios';
 
-export default function SelectEmployees({ options, setEmployees }) {
-  const [value, setvalue] = React.useState([]);
+// mui
+import { Box, Autocomplete, TextField } from '@mui/material';
+
+// -----------------------------------------------------------------
+
+export default function SelectEmployees({ setEmployees }) {
+  const [options, setoptions] = React.useState([]);
+
+  React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    // get activities of current month on mount
+    axios
+      .post('/report/options')
+      .then((res) => {
+        // setoptions(res.data.projectsClientsOptions[0].members);
+        setoptions(res.data.employeesOptions[0].members);
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Axios request aborted.');
+        } else {
+          console.error(err);
+        }
+      });
+
+    return () => {
+      source.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    // get activities of current month on mount
+    axios
+      .post('/report/options')
+      .then((res) => {
+        // setoptions(res.data.projectsClientsOptions[0].members);
+        setoptions(res.data.projectsClientsOptions[0].clients);
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Axios request aborted.');
+        } else {
+          console.error(err);
+        }
+      });
+
+    return () => {
+      source.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box sx={{ m: 2, ml: 0 }}>
       <Autocomplete
         multiple
         options={options}
-        getOptionLabel={(option) => `${option.name} `}
+        getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
         filterSelectedOptions
         onChange={(e, value) => {
           setEmployees(value);

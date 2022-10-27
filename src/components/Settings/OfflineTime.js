@@ -57,7 +57,7 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function WeekStart({ heading }) {
+export default function OfflineTime({ heading }) {
   // store
   const [take, settake] = useState(0);
   const [users, setusers] = useState([]);

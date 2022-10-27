@@ -86,6 +86,7 @@ export default function Dashboard() {
       .get('/employee/dashboard/all')
       .then((res) => {
         setuserList(res.data.data);
+        console.log(res.data.data);
       })
       .catch((err) => {
         if (axios.isCancel(err)) {

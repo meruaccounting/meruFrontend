@@ -35,21 +35,9 @@ function ToggleSettings({ user }) {
       {toggle && (
         <FormControl>
           <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-            <FormControlLabel value={1} control={<Radio />} label="Take" />
-            {/* no. of screenshots */}
-            <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-              <Select value={3} label="Age">
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
-              </Select>
-              {/* <FormHelperText>screenshots per hour</FormHelperText> */}
-            </FormControl>
+            <FormControlLabel value={1} control={<Radio />} label="Track" />
 
-            <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+            <FormControlLabel value={0} control={<Radio />} label="Do not track" />
           </RadioGroup>
         </FormControl>
       )}
@@ -57,7 +45,7 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function WeekStart({ heading }) {
+export default function AppsUrlTrack({ heading }) {
   // store
   const [take, settake] = useState(0);
   const [users, setusers] = useState([]);
@@ -98,21 +86,9 @@ export default function WeekStart({ heading }) {
       {/* Team settings handler */}
       <FormControl sx={{ mt: 2 }}>
         <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-          <FormControlLabel value={1} control={<Radio />} label="Take" />
-          {/* no. of screenshots */}
-          <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-            <Select value={3} label="Age">
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={12}>12</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={30}>30</MenuItem>
-            </Select>
-            {/* <FormHelperText>screenshots per hour</FormHelperText> */}
-          </FormControl>
+          <FormControlLabel value={1} control={<Radio />} label="Track" />
 
-          <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+          <FormControlLabel value={0} control={<Radio />} label="Do not track" />
         </RadioGroup>
       </FormControl>
 

@@ -1,21 +1,48 @@
-import * as React from "react";
-import { Box, Autocomplete } from "@mui/material";
-import TextField from "@mui/material/TextField";
+import * as React from 'react';
+import axios from 'axios';
 
-export default function SelectEmployees({ options, setProjects }) {
+// mui
+import { Box, Autocomplete, TextField } from '@mui/material';
+
+// ------------------------------------------------------------------
+
+export default function SelectEmployees({ setprojects }) {
+  const [options, setoptions] = React.useState([]);
+
+  React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    // get activities of current month on mount
+    axios
+      .post('/report/options')
+      .then((res) => {
+        // setoptions(res.data.projectsClientsOptions[0].members);
+        setoptions(res.data.projectsClientsOptions[0].projects);
+      })
+      .catch((err) => {
+        if (axios.isCancel(err)) {
+          console.log('Axios request aborted.');
+        } else {
+          console.error(err);
+        }
+      });
+
+    return () => {
+      source.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box sx={{ m: 2, ml: 0 }}>
       <Autocomplete
         multiple
         options={options}
-        getOptionLabel={(option) => `${option.name} - ${option.client?.name} `}
+        getOptionLabel={(option) => `${option.name} ** ${option.client?.name} `}
         filterSelectedOptions
         onChange={(e, value) => {
-          setProjects(value);
+          setprojects(value);
         }}
-        renderInput={(params) => (
-          <TextField {...params} label="Select Projects" />
-        )}
+        renderInput={(params) => <TextField {...params} label="Select Projects" />}
       />
     </Box>
   );

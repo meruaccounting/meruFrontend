@@ -41,6 +41,11 @@ DashboardSidebar.propTypes = {
   onCloseSidebar: PropTypes.func,
 };
 
+function formatRole(role) {
+  if (role === 'projectLeader') return 'Project Leader';
+  return role.charAt(0).toUpperCase() + role.slice(1);
+}
+
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const ud = JSON.parse(localStorage.ud);
 
@@ -75,7 +80,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 {ud.firstName} {ud.lastName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {ud.role}
+                {formatRole(ud.role)}
               </Typography>
             </Box>
           </AccountStyle>

@@ -274,19 +274,33 @@ export default function ReportsOptions({ reports, options }) {
 
   const handleSave = () => {
     console.log(reports);
+
+    // schedule,
+    // scheduleType,
+    // scheduleEmail,
+    // share,
+    // options,
+    // url,
+    // includeSS,
+    // includeAL,
+    // includePR,
+    // includeApps,
+    // name: name === "" ? `${firstName} ${lastName}` : name,
+    // fileName,
+
     const data = {
       schedule,
       scheduleType: [interval, monthlyDate, dailyTime],
       scheduledEmail: 'email',
       share,
+      options,
+      url,
       includeSS,
       includeAL,
       includePR,
       includeApps,
       reports: reports.reports,
-      url,
       name,
-      options,
     };
     axios.post('/report/save', data).then((res) => {
       console.log(res);

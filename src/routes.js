@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Settings from './pages/Settings.';
+import Settings from './pages/Settings';
 import Clients from './pages/Clients';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
@@ -13,6 +13,7 @@ import Projects from './pages/Projects';
 import UserPage from './pages/UserPage';
 import Reports from './pages/Reports';
 import Teams from './pages/Teams';
+import SavedReports from './pages/SavedReports';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/dashboard/" /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
+        { path: '/reports/sharedReports/:id', element: <SavedReports /> },
       ],
     },
     {

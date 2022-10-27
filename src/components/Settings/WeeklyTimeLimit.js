@@ -35,10 +35,10 @@ function ToggleSettings({ user }) {
       {toggle && (
         <FormControl>
           <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-            <FormControlLabel value={1} control={<Radio />} label="Take" />
+            <FormControlLabel value={1} control={<Radio />} label="Limit to" />
             {/* no. of screenshots */}
             <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-              <Select value={3} label="Age">
+              <Select value={3}>
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={6}>6</MenuItem>
                 <MenuItem value={9}>9</MenuItem>
@@ -49,7 +49,7 @@ function ToggleSettings({ user }) {
               {/* <FormHelperText>screenshots per hour</FormHelperText> */}
             </FormControl>
 
-            <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+            <FormControlLabel value={0} control={<Radio />} label="Do not limit" />
           </RadioGroup>
         </FormControl>
       )}
@@ -57,7 +57,7 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function WeekStart({ heading }) {
+export default function WeeklyTimeLimit({ heading }) {
   // store
   const [take, settake] = useState(0);
   const [users, setusers] = useState([]);
@@ -98,7 +98,7 @@ export default function WeekStart({ heading }) {
       {/* Team settings handler */}
       <FormControl sx={{ mt: 2 }}>
         <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-          <FormControlLabel value={1} control={<Radio />} label="Take" />
+          <FormControlLabel value={1} control={<Radio />} label="Limit to" />
           {/* no. of screenshots */}
           <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
             <Select value={3} label="Age">
@@ -112,7 +112,7 @@ export default function WeekStart({ heading }) {
             {/* <FormHelperText>screenshots per hour</FormHelperText> */}
           </FormControl>
 
-          <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+          <FormControlLabel value={0} control={<Radio />} label="Do not limit" />
         </RadioGroup>
       </FormControl>
 

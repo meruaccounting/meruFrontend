@@ -5,6 +5,14 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ScreenshotsPerHour from './ScreenshotsPerHour';
+import AppsUrlTrack from './AppsUrlTrack';
+import WeeklyTimeLimit from './WeeklyTimeLimit';
+import AutoPause from './AutoPause';
+import OfflineTime from './OfflineTime';
+import NotifyUser from './NotifyUser';
+import WeekStart from './WeekStart';
+import CurrencySymbol from './CurrencySymbol';
+import SsDelete from './SsDelete';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,7 +94,7 @@ export default function Settings() {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 224 }}>
+    <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
@@ -109,22 +117,28 @@ export default function Settings() {
         <ScreenshotsPerHour heading={sidebarData[0]} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <AppsUrlTrack heading={sidebarData[1]} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <WeeklyTimeLimit heading={sidebarData[2]} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        <AutoPause heading={sidebarData[3]} />
       </TabPanel>
       <TabPanel value={value} index={4}>
-        Item Five
+        <OfflineTime heading={sidebarData[4]} />
       </TabPanel>
       <TabPanel value={value} index={5}>
-        Item Six
+        <NotifyUser heading={sidebarData[5]} />
       </TabPanel>
       <TabPanel value={value} index={6}>
-        Item Seven
+        <WeekStart heading={sidebarData[6]} />
+      </TabPanel>
+      <TabPanel value={value} index={7}>
+        <CurrencySymbol heading={sidebarData[7]} />
+      </TabPanel>
+      <TabPanel value={value} index={8}>
+        <SsDelete heading={sidebarData[8]} />
       </TabPanel>
     </Box>
   );

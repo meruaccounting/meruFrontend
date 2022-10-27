@@ -3,9 +3,8 @@ import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import dayjs from 'dayjs';
-
 // mui
-import { Tabs, Tab, Typography, Box, Button } from '@mui/material';
+import { Tabs, Tab, Typography, Box, Button, Divider } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 // components
 import DatePicker from './DatePicker';
@@ -16,14 +15,21 @@ import SelectClients from './SelectClients';
 import SelectGroup from './SelectGroup';
 import ReportsOptions from './ReportsOptions';
 import SavedR from './SavedR';
+import ByEp from './ByEp';
+import ByPr from './ByPr';
+import ByCl from './ByCL';
+import ByDetailed from './ByDetailed';
+import ByAppsUrl from './ByApp&Url';
 
-// contexts and apis
+// --------------------------------------------------------------
 
-// import ByEp from './ByEp';
-// import ByPr from './ByPr';
-// import ByCl from './ByCL';
-// import ByDetailed from './ByDetailed';
-// import ByAppsUrl from './ByApp&Url';
+const groupReports = (group, reports) => {
+  if (group[0].value === 'E') return <ByEp sx={{ height: 'auto' }} reports={reports} />;
+  if (group[0].value === 'P') return <ByPr sx={{ height: 'auto' }} reports={reports} />;
+  if (group[0].value === 'C') return <ByCl sx={{ height: 'auto' }} reports={reports} />;
+  if (group[0].value === 'D') return <ByDetailed sx={{ height: 'auto' }} reports={reports} />;
+  if (group[0].value === 'A') return <ByAppsUrl sx={{ height: 'auto' }} reports={reports} />;
+};
 
 // tab panels
 function TabPanel(props) {
@@ -69,6 +75,8 @@ export default function Main() {
   const [date, setdate] = React.useState([null, null]);
   const [group, setgroup] = React.useState(null);
   const [value, setValue] = React.useState(0);
+
+  console.log(reports);
 
   // tabs and tab panels
   const handleChange = (event, newValue) => {
@@ -161,34 +169,29 @@ export default function Main() {
           <Button onClick={handleGenerateReports} variant="contained" endIcon={<SendIcon />}>
             Generate Reports
           </Button>
-          {!reports.loader ? <ReportsOptions reports={reports} options={[]} /> : null}
+          {!reports.loader && reports.reports[0].total.length ? (
+            <ReportsOptions reports={reports} options={[]} />
+          ) : null}
         </Box>
-        {!reports.loader ? (
+        {!reports.loader && reports.reports[0].total.length ? (
           <>
             <Graphs reports={reports} style={{ margin: 10 }} />
-            {/* <Divider /> */}
-
-            {/* {group.filter((grp) => grp.value === 'E').length !== 0 ? (
-              <ByEp sx={{ height: 'auto' }} reports={reports} />
-            ) : group.filter((grp) => grp.value === 'P').length !== 0 ? (
-              <ByPr sx={{ height: 'auto' }} reports={reports} />
-            ) : group.filter((grp) => grp.value === 'C').length !== 0 ? (
-              <ByCl sx={{ height: 'auto' }} reports={reports} />
-            ) : group.filter((grp) => grp.value === 'D').length !== 0 ? (
-              <ByDetailed sx={{ height: 'auto' }} reports={reports} />
-            ) : group.filter((grp) => grp.value === 'A').length !== 0 ? (
-              <ByAppsUrl sx={{ height: 'auto' }} reports={reports} />
-            ) : (
-              ''
-            )} */}
+            <Divider />
+            {groupReports(group, reports)}
           </>
         ) : (
-          <></>
+          <>
+            <Box sx={{ display: 'flex', flexDirection: 'row', m: 10 }}>
+              <Typography varinat="h1" sx={{ fontWeight: 'bold' }}>
+                No tracked time found matching the criteria
+              </Typography>
+            </Box>
+          </>
         )}
       </TabPanel>
       {/* saved reports panel */}
       <TabPanel value={value} index={1}>
-        {/* <SavedR /> */}
+        <SavedR />
       </TabPanel>
     </Box>
   );
