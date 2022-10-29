@@ -101,7 +101,10 @@ export default function Settings() {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{
+          borderRight: 1,
+          borderColor: 'divider',
+        }}
       >
         <Tab label={sidebarData[0].title} {...a11yProps(0)} />
         <Tab label={sidebarData[1].title} {...a11yProps(1)} />
@@ -116,7 +119,7 @@ export default function Settings() {
       <TabPanel value={value} index={0}>
         <ScreenshotsPerHour heading={sidebarData[0]} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel sx={{ minWidth: '80%' }} value={value} index={1}>
         <AppsUrlTrack heading={sidebarData[1]} />
       </TabPanel>
       <TabPanel value={value} index={2}>

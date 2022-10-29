@@ -6,48 +6,37 @@ import { Box, Autocomplete, TextField } from '@mui/material';
 
 // -----------------------------------------------------------------
 
-export default function SelectEmployees({ setEmployees }) {
+export default function SelectEmployees({ setemployees }) {
+  const ud = JSON.parse(localStorage.ud);
+  console.log(ud);
   const [options, setoptions] = React.useState([]);
 
+  // get options for selection
   React.useEffect(() => {
     const source = axios.CancelToken.source();
-    // get activities of current month on mount
-    axios
-      .post('/report/options')
-      .then((res) => {
-        // setoptions(res.data.projectsClientsOptions[0].members);
-        setoptions(res.data.employeesOptions[0].members);
-      })
-      .catch((err) => {
-        if (axios.isCancel(err)) {
-          console.log('Axios request aborted.');
-        } else {
-          console.error(err);
-        }
-      });
-
-    return () => {
-      source.cancel();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    const source = axios.CancelToken.source();
-    // get activities of current month on mount
-    axios
-      .post('/report/options')
-      .then((res) => {
-        // setoptions(res.data.projectsClientsOptions[0].members);
-        setoptions(res.data.projectsClientsOptions[0].clients);
-      })
-      .catch((err) => {
-        if (axios.isCancel(err)) {
-          console.log('Axios request aborted.');
-        } else {
-          console.error(err);
-        }
-      });
+    if (ud.role !== 'employee') {
+      // get activities of current month on mount
+      axios
+        .post('/report/options')
+        .then((res) => {
+          // setoptions(res.data.projectsClientsOptions[0].members);
+          setoptions(res.data.employeesOptions[0].members);
+        })
+        .catch((err) => {
+          if (axios.isCancel(err)) {
+            console.log('Axios request aborted.');
+          } else {
+            console.error(err);
+          }
+        });
+    } else
+      setemployees([
+        {
+          _id: ud._id,
+          firstName: ud.firstName,
+          lastName: ud.lastName,
+        },
+      ]);
 
     return () => {
       source.cancel();
@@ -58,12 +47,25 @@ export default function SelectEmployees({ setEmployees }) {
   return (
     <Box sx={{ m: 2, ml: 0 }}>
       <Autocomplete
+        disabled={ud.role === 'employee'}
         multiple
+        defaultValue={
+          ud.role === 'employee'
+            ? [
+                {
+                  _id: ud._id,
+                  firstName: ud.firstName,
+                  lastName: ud.lastName,
+                },
+              ]
+            : []
+        }
         options={options}
         getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
         filterSelectedOptions
         onChange={(e, value) => {
-          setEmployees(value);
+          console.log(value);
+          setemployees(value);
         }}
         renderInput={(params) => (
           <TextField

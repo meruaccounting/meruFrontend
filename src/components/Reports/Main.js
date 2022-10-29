@@ -130,9 +130,8 @@ export default function Main() {
           }}
         />
         <SelectEmployees
-          options={[]}
           setemployees={(newValue) => {
-            if (!newValue.length) {
+            if (!newValue) {
               setemployees(null);
             } else {
               setemployees(newValue);
@@ -141,9 +140,8 @@ export default function Main() {
         />
 
         <SelectClients
-          options={[]}
           setclients={(newValue) => {
-            if (!newValue.length) {
+            if (!newValue) {
               setclients(null);
             } else {
               setclients(newValue);
@@ -151,9 +149,8 @@ export default function Main() {
           }}
         />
         <SelectProjects
-          options={[]}
           setprojects={(newValue) => {
-            if (!newValue.length) {
+            if (!newValue) {
               setprojects(null);
             } else {
               setprojects(newValue);

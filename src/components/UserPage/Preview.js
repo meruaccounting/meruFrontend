@@ -43,7 +43,7 @@ export default function Preview(props) {
   const handleDeleteSs = async (screenshotId) => {
     axios
       .delete('/activity/screenshot', {
-        data: { screenshots: [screenshotId] },
+        data: { screenshotId },
       })
       .then((res) => {
         if (res.status === 200) {
@@ -72,7 +72,7 @@ export default function Preview(props) {
 
   return (
     <>
-      <Card sx={{ width: 260, maxWidth: 260, m: 1.8 }}>
+      <Card sx={{ width: 240, maxWidth: 240, m: 1.5 }}>
         <Tooltip title={`${props.title}`} placement="top" followCursor>
           <CardContent
             sx={{
@@ -81,6 +81,7 @@ export default function Preview(props) {
               mt: -2,
               ml: -1.5,
               background: '#A5B9D9',
+              height: '45px',
               maxHeight: '50px',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -89,13 +90,13 @@ export default function Preview(props) {
           >
             {/* use ref to checkbox, perform onClick */}
             <span>
-              <Checkbox
+              {/* <Checkbox
                 value={props.ssId}
                 aria-labelledby={props.ssId}
                 checked={props.selectedSs.indexOf(props.ssId) !== -1}
                 sx={{ pt: 0, pl: 0, pr: 0.5 }}
                 onChange={(e) => props.setSelectedSs(e.target.checked, props.ssId)}
-              />
+              /> */}
 
               <Box
                 sx={{

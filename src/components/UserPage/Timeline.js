@@ -51,11 +51,11 @@ export default function Timeline({ activities, date }) {
     });
 
     filteredActs?.forEach((act) => {
-      const dateObj = new Date(act.startTime);
+      const dateObj = new Date(act.startTime * 1000);
       const hrs = dateObj.getHours();
       const mins = dateObj.getMinutes();
       const seconds = dateObj.getSeconds();
-      const endDateObj = new Date(act.endTime);
+      const endDateObj = new Date(act.endTime * 1000);
       const endHrs = endDateObj.getHours();
       const endMins = endDateObj.getMinutes();
       const endSeconds = endDateObj.getSeconds();

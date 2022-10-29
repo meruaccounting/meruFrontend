@@ -36,13 +36,23 @@ const percentIcon = (percent) =>
 const outerBox = { m: 0.5, pt: 1.5, pr: 1, pb: 1, pl: 0.5, borderRadius: 1 };
 
 export default function Activity({ act, date, id }) {
+  // notistack
+  const { enqueueSnackbar } = useSnackbar();
   const setActivities = useStore((state) => state.setActivities);
+
+  const [avgPerformanceData, setavgPerformanceData] = useState(0);
+
+  React.useEffect(() => {
+    let avg = 0;
+    act.screenshots.forEach((ss) => {
+      avg += ss.performanceData;
+    });
+    if (act.screenshots.length) setavgPerformanceData(avg / act.screenshots.length);
+    else setavgPerformanceData(0);
+  }, [act]);
 
   // selected ss to delete
   const [selectedSs, setselectedSs] = useState([]);
-
-  // notistack
-  const { enqueueSnackbar } = useSnackbar();
 
   const delSs = async (selectedSs) => {
     const array = selectedSs.map((ss) => ({ activityId: act._id, screenshotId: ss }));
@@ -80,10 +90,10 @@ export default function Activity({ act, date, id }) {
       <Typography component="span" sx={{ fontWeight: 'bold', ml: 2.5 }}>
         {toHhMm(act.startTime)} - {toHhMm(act.endTime)} ||
       </Typography>
-      <Tooltip title={`${Math.ceil(act.performanceData)}%`} placement="top" followCursor>
+      <Tooltip title={`${Math.ceil(avgPerformanceData)}%`} placement="top" followCursor>
         <Box sx={{ m: 1, fontWeight: 'bold' }} component="span">
-          {percentIcon(act.performanceData)}
-          <span> ({Math.ceil(act.performanceData)}%)</span>
+          {percentIcon(avgPerformanceData)}
+          <span> ({Math.ceil(avgPerformanceData)}%)</span>
         </Box>
       </Tooltip>
       <Typography component="span" sx={{ m: 0, fontWeight: 'bold' }}>

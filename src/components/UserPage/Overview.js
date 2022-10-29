@@ -52,13 +52,14 @@ export default function Overview({ date, activities }) {
     settodayHours(today);
 
     // group by task(projects)
-    const groupByTasks = arr.reduce((group, act) => {
-      const { project } = act;
-      group[project] = group[project] ?? { consumeTime: 0 };
-      group[project].consumeTime += act.consumeTime;
-      return group;
-    }, {});
-    settasks(groupByTasks);
+    // const groupByTasks = arr.reduce((group, act) => {
+    //   const { project } = act;
+    //   group[project] = group[project] ?? { consumeTime: 0 };
+    //   group[project].consumeTime += act.consumeTime;
+    //   return group;
+    // }, {});
+    // console.log(groupByTasks);
+    // settasks(groupByTasks);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities, date]);
