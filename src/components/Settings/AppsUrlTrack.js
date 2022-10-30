@@ -8,33 +8,71 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import Select from '@mui/material/Select';
 
 // components
 import Header from './Header';
-import IndividaulInfo from './IndividaulInfo';
-import Option from './Option';
-import SearchField from './SearchField';
+
+// ---------------------------------------------------------------
 
 function ToggleSettings({ user }) {
-  const [toggle, settoggle] = useState(false);
-  const [take, settake] = useState(0);
+  console.log(user.config);
+  const [toggle, settoggle] = useState(user.config.disableAppTracking !== null);
+  const [track, settrack] = useState(0);
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
+  useEffect(() => {
+    if (user.config.disableAppTracking !== null) settrack(user.config.disableAppTracking ? 1 : 0);
+  }, []);
+
+  const handleToggleChange = (e) => {
+    settoggle(!toggle);
+    console.log(toggle);
+    let config;
+    // if false
+    if (toggle)
+      config = {
+        disableAppTracking: null,
+      };
+    else
+      config = {
+        disableAppTracking: false,
+      };
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
+  };
+
+  const handleTrackChange = (e) => {
+    settrack(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        disableAppTracking: true,
+      };
+    else
+      config = {
+        disableAppTracking: false,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
   };
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex' }}>
-        <Switch onClick={() => settoggle(!toggle)} checked={toggle} />
+        <Switch onClick={handleToggleChange} checked={toggle} />
         <Typography variant="h5">{user.name}</Typography>
       </Box>
       {toggle && (
         <FormControl>
-          <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
+          <RadioGroup onChange={handleTrackChange} row name="trackScreenshots" value={track}>
             <FormControlLabel value={1} control={<Radio />} label="Track" />
 
             <FormControlLabel value={0} control={<Radio />} label="Do not track" />
@@ -45,9 +83,10 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function AppsUrlTrack({ heading }) {
+export default function AppsUrlTrack({ heading, teamConfig }) {
   // store
-  const [take, settake] = useState(0);
+  console.log(teamConfig);
+  const [track, settrack] = useState(!teamConfig.disableAppTracking ? 0 : 1);
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
@@ -74,8 +113,31 @@ export default function AppsUrlTrack({ heading }) {
     setfilteredUsers(data);
   };
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
+  const handleTrackChange = (e) => {
+    settrack(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        disableAppTracking: true,
+      };
+    else
+      config = {
+        disableAppTracking: false,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.disableAppTracking = config.disableAppTracking;
+        console.log(newUd.teamConfig.disableAppTracking);
+        localStorage.ud = JSON.stringify(newUd);
+      });
   };
 
   return (
@@ -85,7 +147,7 @@ export default function AppsUrlTrack({ heading }) {
 
       {/* Team settings handler */}
       <FormControl sx={{ mt: 2 }}>
-        <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
+        <RadioGroup onChange={handleTrackChange} row name="trackScreenshots" value={track}>
           <FormControlLabel value={1} control={<Radio />} label="Track" />
 
           <FormControlLabel value={0} control={<Radio />} label="Do not track" />

@@ -48,6 +48,7 @@ function a11yProps(index) {
 }
 
 export default function Settings() {
+  const ud = JSON.parse(localStorage.ud);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -117,31 +118,31 @@ export default function Settings() {
         <Tab label={sidebarData[8].title} {...a11yProps(8)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <ScreenshotsPerHour heading={sidebarData[0]} />
+        <ScreenshotsPerHour teamConfig={ud.teamConfig} heading={sidebarData[0]} />
       </TabPanel>
-      <TabPanel sx={{ minWidth: '80%' }} value={value} index={1}>
-        <AppsUrlTrack heading={sidebarData[1]} />
+      <TabPanel value={value} index={1}>
+        <AppsUrlTrack teamConfig={ud.teamConfig} heading={sidebarData[1]} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <WeeklyTimeLimit heading={sidebarData[2]} />
+        <WeeklyTimeLimit teamConfig={ud.teamConfig} heading={sidebarData[2]} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <AutoPause heading={sidebarData[3]} />
+        <AutoPause teamConfig={ud.teamConfig} heading={sidebarData[3]} />
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <OfflineTime heading={sidebarData[4]} />
+        <OfflineTime teamConfig={ud.teamConfig} heading={sidebarData[4]} />
       </TabPanel>
       <TabPanel value={value} index={5}>
-        <NotifyUser heading={sidebarData[5]} />
+        <NotifyUser teamConfig={ud.teamConfig} heading={sidebarData[5]} />
       </TabPanel>
       <TabPanel value={value} index={6}>
-        <WeekStart heading={sidebarData[6]} />
+        <WeekStart teamConfig={ud.teamConfig} heading={sidebarData[6]} />
       </TabPanel>
       <TabPanel value={value} index={7}>
-        <CurrencySymbol heading={sidebarData[7]} />
+        <CurrencySymbol teamConfig={ud.teamConfig} heading={sidebarData[7]} />
       </TabPanel>
       <TabPanel value={value} index={8}>
-        <SsDelete heading={sidebarData[8]} />
+        <SsDelete teamConfig={ud.teamConfig} heading={sidebarData[8]} />
       </TabPanel>
     </Box>
   );

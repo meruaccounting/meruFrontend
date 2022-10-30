@@ -8,28 +8,84 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
 import Select from '@mui/material/Select';
 
 // components
 import Header from './Header';
-import IndividaulInfo from './IndividaulInfo';
-import Option from './Option';
-import SearchField from './SearchField';
+
+// ----------------------------------------------------------------------
 
 function ToggleSettings({ user }) {
-  const [toggle, settoggle] = useState(false);
+  const [toggle, settoggle] = useState(user.config.screensConfig);
   const [take, settake] = useState(0);
+  const [screenshotsPerHour, setscreenshotsPerHour] = useState(3);
+
+  useEffect(() => {
+    if (user.config.screensConfig) {
+      settake(user.config.screensConfig.screenshotsPerHour !== 0 ? 1 : 0);
+      setscreenshotsPerHour(
+        user.config.screensConfig.screenshotsPerHour === 0 ? 3 : user.config.screensConfig.screenshotsPerHour
+      );
+    }
+  }, []);
+
+  const handleToggleChange = (e) => {
+    settoggle(!toggle);
+    let config;
+    // if false
+    if (toggle)
+      config = {
+        screensConfig: null,
+      };
+    else
+      config = {
+        screensConfig: { screenshotsPerHour: 0, blurScreens: 0 },
+      };
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
+  };
 
   const handleTakeChange = (e) => {
     settake(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        screensConfig: { ...user.config.screensConfig, screenshotsPerHour },
+      };
+    else
+      config = {
+        screensConfig: { ...user.config.screensConfig, ...{ screenshotsPerHour: 0 } },
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
+  };
+  const handleScreenshotsPerHourChange = (e) => {
+    setscreenshotsPerHour(e.target.value);
+    const config = {
+      screensConfig: { ...user.config.screensConfig, screenshotsPerHour: e.target.value },
+    };
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
   };
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex' }}>
-        <Switch onClick={() => settoggle(!toggle)} checked={toggle} />
+        <Switch onClick={handleToggleChange} checked={toggle} />
         <Typography variant="h5">{user.name}</Typography>
       </Box>
       {toggle && (
@@ -38,7 +94,7 @@ function ToggleSettings({ user }) {
             <FormControlLabel value={1} control={<Radio />} label="Take" />
             {/* no. of screenshots */}
             <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-              <Select value={3} label="Age">
+              <Select onChange={handleScreenshotsPerHourChange} value={screenshotsPerHour}>
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={6}>6</MenuItem>
                 <MenuItem value={9}>9</MenuItem>
@@ -57,9 +113,12 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function ScreenshotsPerHour({ heading }) {
+export default function ScreenshotsPerHour({ heading, teamConfig }) {
   // store
-  const [take, settake] = useState(0);
+  const [take, settake] = useState(teamConfig.screensConfig.screenshotsPerHour !== 0 ? 1 : 0);
+  const [screenshotsPerHour, setscreenshotsPerHour] = useState(
+    teamConfig.screensConfig.screenshotsPerHour === 0 ? 3 : teamConfig.screensConfig.screenshotsPerHour
+  );
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
@@ -88,6 +147,45 @@ export default function ScreenshotsPerHour({ heading }) {
 
   const handleTakeChange = (e) => {
     settake(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        screensConfig: { ...teamConfig.screensConfig, screenshotsPerHour },
+      };
+    else
+      config = {
+        screensConfig: { ...teamConfig.screensConfig, ...{ screenshotsPerHour: 0 } },
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.screensConfig = config.screensConfig;
+        localStorage.ud = JSON.stringify(newUd);
+      });
+  };
+  const handleScreenshotsPerHourChange = (e) => {
+    setscreenshotsPerHour(e.target.value);
+    const config = {
+      screensConfig: { ...teamConfig.screensConfig, screenshotsPerHour: e.target.value },
+    };
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.screensConfig = config.screensConfig;
+        localStorage.ud = JSON.stringify(newUd);
+      });
   };
 
   return (
@@ -101,7 +199,7 @@ export default function ScreenshotsPerHour({ heading }) {
           <FormControlLabel value={1} control={<Radio />} label="Take" />
           {/* no. of screenshots */}
           <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-            <Select value={3} label="Age">
+            <Select onChange={handleScreenshotsPerHourChange} value={screenshotsPerHour}>
               <MenuItem value={3}>3</MenuItem>
               <MenuItem value={6}>6</MenuItem>
               <MenuItem value={9}>9</MenuItem>

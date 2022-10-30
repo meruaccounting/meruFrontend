@@ -8,48 +8,74 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import Select from '@mui/material/Select';
 
 // components
 import Header from './Header';
-import IndividaulInfo from './IndividaulInfo';
-import Option from './Option';
-import SearchField from './SearchField';
+
+// ---------------------------------------------------------------
 
 function ToggleSettings({ user }) {
-  const [toggle, settoggle] = useState(false);
-  const [take, settake] = useState(0);
+  console.log(user.config);
+  const [toggle, settoggle] = useState(user.config.disableOfflineTime !== null);
+  const [allow, setallow] = useState(0);
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
+  useEffect(() => {
+    if (user.config.disableOfflineTime !== null) setallow(user.config.disableOfflineTime ? 1 : 0);
+  }, []);
+
+  const handleToggleChange = (e) => {
+    settoggle(!toggle);
+    console.log(toggle);
+    let config;
+    // if false
+    if (toggle)
+      config = {
+        disableOfflineTime: null,
+      };
+    else
+      config = {
+        disableOfflineTime: false,
+      };
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
+  };
+
+  const handleallowChange = (e) => {
+    setallow(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        disableOfflineTime: true,
+      };
+    else
+      config = {
+        disableOfflineTime: false,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
   };
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex' }}>
-        <Switch onClick={() => settoggle(!toggle)} checked={toggle} />
+        <Switch onClick={handleToggleChange} checked={toggle} />
         <Typography variant="h5">{user.name}</Typography>
       </Box>
       {toggle && (
         <FormControl>
-          <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-            <FormControlLabel value={1} control={<Radio />} label="Take" />
-            {/* no. of screenshots */}
-            <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-              <Select value={3} label="Age">
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
-              </Select>
-              {/* <FormHelperText>screenshots per hour</FormHelperText> */}
-            </FormControl>
+          <RadioGroup onChange={handleallowChange} row name="allowScreenshots" value={allow}>
+            <FormControlLabel value={1} control={<Radio />} label="allow" />
 
-            <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+            <FormControlLabel value={0} control={<Radio />} label="Do not allow" />
           </RadioGroup>
         </FormControl>
       )}
@@ -57,9 +83,10 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function OfflineTime({ heading }) {
+export default function OfflineTime({ heading, teamConfig }) {
   // store
-  const [take, settake] = useState(0);
+  console.log(teamConfig);
+  const [allow, setallow] = useState(!teamConfig.disableOfflineTime ? 0 : 1);
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
@@ -86,8 +113,31 @@ export default function OfflineTime({ heading }) {
     setfilteredUsers(data);
   };
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
+  const handleallowChange = (e) => {
+    setallow(e.target.value);
+    console.log(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        disableOfflineTime: true,
+      };
+    else
+      config = {
+        disableOfflineTime: false,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.disableOfflineTime = config.disableOfflineTime;
+        console.log(newUd.teamConfig.disableOfflineTime);
+        localStorage.ud = JSON.stringify(newUd);
+      });
   };
 
   return (
@@ -97,22 +147,10 @@ export default function OfflineTime({ heading }) {
 
       {/* Team settings handler */}
       <FormControl sx={{ mt: 2 }}>
-        <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
-          <FormControlLabel value={1} control={<Radio />} label="Take" />
-          {/* no. of screenshots */}
-          <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-            <Select value={3} label="Age">
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={12}>12</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={30}>30</MenuItem>
-            </Select>
-            {/* <FormHelperText>screenshots per hour</FormHelperText> */}
-          </FormControl>
+        <RadioGroup onChange={handleallowChange} row name="allowScreenshots" value={allow}>
+          <FormControlLabel value={1} control={<Radio />} label="allow" />
 
-          <FormControlLabel value={0} control={<Radio />} label="Do not Take" />
+          <FormControlLabel value={0} control={<Radio />} label="Do not allow" />
         </RadioGroup>
       </FormControl>
 
