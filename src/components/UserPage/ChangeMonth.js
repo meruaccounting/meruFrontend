@@ -40,7 +40,7 @@ export default function ChangeMonth({ date, setdate, id }) {
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1),
-        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 2, 0),
+        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth() + 2, 1),
         hello: 'hello',
       })
       .then((res) => {
@@ -65,7 +65,7 @@ export default function ChangeMonth({ date, setdate, id }) {
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1),
-        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth(), 0),
+        endTime: new Date(prevDate.getFullYear(), prevDate.getMonth(), 1),
       })
       .then((res) => {
         console.log(res.data.data);
@@ -87,7 +87,7 @@ export default function ChangeMonth({ date, setdate, id }) {
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(now.getFullYear(), now.getMonth(), 1),
-        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 1),
       })
       .then((res) => {
         console.log(res.data.data);

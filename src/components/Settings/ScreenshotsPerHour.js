@@ -25,7 +25,7 @@ function ToggleSettings({ user }) {
     if (user.config.screensConfig) {
       settake(user.config.screensConfig.screenshotsPerHour !== 0 ? 1 : 0);
       setscreenshotsPerHour(
-        user.config.screensConfig.screenshotsPerHour === 0 ? 3 : user.config.screensConfig.screenshotsPerHour
+        user.config.screensConfig.screenshotsPerHour === 0 ? 0 : user.config.screensConfig.screenshotsPerHour
       );
     }
   }, []);

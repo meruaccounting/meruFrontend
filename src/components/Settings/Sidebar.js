@@ -115,7 +115,7 @@ export default function Settings() {
         <Tab label={sidebarData[5].title} {...a11yProps(5)} />
         <Tab label={sidebarData[6].title} {...a11yProps(6)} />
         <Tab label={sidebarData[7].title} {...a11yProps(7)} />
-        <Tab label={sidebarData[8].title} {...a11yProps(8)} />
+        {/* <Tab label={sidebarData[8].title} {...a11yProps(8)} /> */}
       </Tabs>
       <TabPanel value={value} index={0}>
         <ScreenshotsPerHour teamConfig={ud.teamConfig} heading={sidebarData[0]} />
@@ -141,9 +141,9 @@ export default function Settings() {
       <TabPanel value={value} index={7}>
         <CurrencySymbol teamConfig={ud.teamConfig} heading={sidebarData[7]} />
       </TabPanel>
-      <TabPanel value={value} index={8}>
+      {/* <TabPanel value={value} index={8}>
         <SsDelete teamConfig={ud.teamConfig} heading={sidebarData[8]} />
-      </TabPanel>
+      </TabPanel> */}
     </Box>
   );
 }

@@ -31,6 +31,7 @@ export default function UserPage() {
   // store
   const setActivities = useStore((state) => state.setActivities);
   const activities = useStore((state) => state.activities);
+  console.log(activities);
   const [date, setdate] = useState(new Date());
   const [isInternal, setisInternal] = useState(false);
 
@@ -48,7 +49,7 @@ export default function UserPage() {
       .post('/activity/getActivities', {
         userId: id,
         startTime: new Date(now.getFullYear(), now.getMonth(), 1),
-        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 0),
+        endTime: new Date(now.getFullYear(), now.getMonth() + 1, 1),
       })
       .then((res) => {
         setActivities(res.data.data, false);

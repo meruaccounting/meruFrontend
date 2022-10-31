@@ -20,33 +20,98 @@ import Option from './Option';
 import SearchField from './SearchField';
 
 function ToggleSettings({ user }) {
-  const [toggle, settoggle] = useState(false);
-  const [take, settake] = useState(0);
+  const [toggle, settoggle] = useState(user.config.weeklyLimit !== null);
+  const [limit, setlimit] = useState(0);
+  const [hours, sethours] = useState(0);
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
+  useEffect(() => {
+    if (user.config.screensConfig) {
+      setlimit(user.config.weeklyLimit !== 0 ? 1 : 0);
+      sethours(user.config.weeklyLimit === 0 ? 0 : user.config.weeklyLimit);
+    }
+  }, []);
+
+  const handleToggleChange = (e) => {
+    settoggle(!toggle);
+    let config;
+    // if false
+    if (toggle)
+      config = {
+        weeklyLimit: null,
+      };
+    else
+      config = {
+        weeklyLimit: 0,
+      };
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
   };
+
+  const handleLimitChange = (e) => {
+    setlimit(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        weeklyLimit: hours,
+      };
+    else
+      config = {
+        weeklyLimit: 0,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config,
+      })
+      .then((res) => console.log(res.data));
+  };
+
+  const min = 5;
+  const max = 100;
+  const handleHoursChange = (e) => {
+    console.log(e.target.value);
+    let value = parseInt(e.target.value, 10);
+    if (value > max) value = max;
+    if (value < min) value = min;
+    sethours(value);
+    axios
+      .patch('admin/config', {
+        employeeId: user._id,
+        config: {
+          weeklyLimit: value,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex' }}>
-        <Switch onClick={() => settoggle(!toggle)} checked={toggle} />
+        <Switch onClick={handleToggleChange} checked={toggle} />
         <Typography variant="h5">{user.name}</Typography>
       </Box>
       {toggle && (
         <FormControl>
-          <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
+          <RadioGroup onChange={handleLimitChange} row name="limitScreenshots" value={limit}>
             <FormControlLabel value={1} control={<Radio />} label="Limit to" />
-            {/* no. of screenshots */}
-            <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-              <Select value={3}>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-                <MenuItem value={15}>15</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
-              </Select>
-              {/* <FormHelperText>screenshots per hour</FormHelperText> */}
+
+            <FormControl variant="standard" disabled={!Number(limit)} sx={{ mr: 3, minWidth: 40, width: 120 }}>
+              <TextField
+                inputProps={{ min, max, step: 2 }}
+                disabled={!Number(limit)}
+                onChange={handleHoursChange}
+                value={hours}
+                type="number"
+                helperText="hrs per week"
+                variant="standard"
+              />
             </FormControl>
 
             <FormControlLabel value={0} control={<Radio />} label="Do not limit" />
@@ -57,9 +122,11 @@ function ToggleSettings({ user }) {
   );
 }
 
-export default function WeeklyTimeLimit({ heading }) {
+export default function WeeklyTimeLimit({ heading, teamConfig }) {
   // store
-  const [take, settake] = useState(0);
+  console.log(teamConfig);
+  const [limit, setlimit] = useState(teamConfig.weeklyLimit === 0 ? 0 : 1);
+  const [hours, sethours] = useState(teamConfig.weeklyLimit);
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
@@ -70,6 +137,54 @@ export default function WeeklyTimeLimit({ heading }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleLimitChange = (e) => {
+    setlimit(e.target.value);
+    let config;
+    if (e.target.value !== '0')
+      config = {
+        weeklyLimit: hours,
+      };
+    else
+      config = {
+        weeklyLimit: 0,
+      };
+
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.weeklyLimit = config.weeklyLimit;
+        localStorage.ud = JSON.stringify(newUd);
+      });
+  };
+
+  const min = 5;
+  const max = 100;
+  const handleHoursChange = (e) => {
+    console.log(e.target.value);
+    let value = parseInt(e.target.value, 10);
+    if (value > max) value = max;
+    if (value < min) value = min;
+    sethours(value);
+    axios
+      .patch('admin/config', {
+        employeeId: null,
+        config: {
+          weeklyLimit: value,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const newUd = JSON.parse(localStorage.ud);
+        newUd.teamConfig.weeklyLimit = value;
+        localStorage.ud = JSON.stringify(newUd);
+      });
+  };
 
   const handleSearch = (e) => {
     // convert input text to lower case
@@ -86,10 +201,6 @@ export default function WeeklyTimeLimit({ heading }) {
     setfilteredUsers(data);
   };
 
-  const handleTakeChange = (e) => {
-    settake(e.target.value);
-  };
-
   return (
     <Box>
       {/* Heading */}
@@ -97,19 +208,18 @@ export default function WeeklyTimeLimit({ heading }) {
 
       {/* Team settings handler */}
       <FormControl sx={{ mt: 2 }}>
-        <RadioGroup onChange={handleTakeChange} row name="takeScreenshots" value={take}>
+        <RadioGroup onChange={handleLimitChange} row name="limitScreenshots" value={limit}>
           <FormControlLabel value={1} control={<Radio />} label="Limit to" />
-          {/* no. of screenshots */}
-          <FormControl variant="standard" disabled={!Number(take)} sx={{ mr: 3, minWidth: 40, width: 40 }}>
-            <Select value={3} label="Age">
-              <MenuItem value={3}>3</MenuItem>
-              <MenuItem value={6}>6</MenuItem>
-              <MenuItem value={9}>9</MenuItem>
-              <MenuItem value={12}>12</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={30}>30</MenuItem>
-            </Select>
-            {/* <FormHelperText>screenshots per hour</FormHelperText> */}
+          <FormControl variant="standard" disabled={!Number(limit)} sx={{ mr: 3, minWidth: 40, width: 120 }}>
+            <TextField
+              inputProps={{ min, max, step: 2 }}
+              disabled={!Number(limit)}
+              onChange={handleHoursChange}
+              value={hours}
+              type="number"
+              helperText="hrs per week"
+              variant="standard"
+            />
           </FormControl>
 
           <FormControlLabel value={0} control={<Radio />} label="Do not limit" />
