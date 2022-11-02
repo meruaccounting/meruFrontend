@@ -14,6 +14,7 @@ import UserPage from './pages/UserPage';
 import Reports from './pages/Reports';
 import Teams from './pages/Teams';
 import SavedReports from './pages/SavedReports';
+import DesktopLogin from './pages/DesktopLogin';
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ export default function Router() {
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
         { path: '/reports/sharedReports/:id', element: <SavedReports /> },
+        { path: '/auth/:token', element: <DesktopLogin /> },
       ],
     },
     {

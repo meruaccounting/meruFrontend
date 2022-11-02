@@ -18,6 +18,7 @@ import toHhMm from '../../helpers/hhMm';
 
 // components
 import Preview from './Preview';
+import EditActivity from './EditActivity';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -39,8 +40,10 @@ export default function Activity({ act, date, id }) {
   // notistack
   const { enqueueSnackbar } = useSnackbar();
   const setActivities = useStore((state) => state.setActivities);
-
   const [avgPerformanceData, setavgPerformanceData] = useState(0);
+
+  // edit act
+  const [openEdit, setopenEdit] = useState(false);
 
   React.useEffect(() => {
     let avg = 0;
@@ -72,7 +75,7 @@ export default function Activity({ act, date, id }) {
             .post('/activity/getActivities', {
               userId: id,
               startTime: new Date(date.getFullYear(), date.getMonth(), 1),
-              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0),
+              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 1),
             })
             .then((res) => {
               setActivities(res.data.data, false);
@@ -100,16 +103,17 @@ export default function Activity({ act, date, id }) {
         || {!act.project ? `No Project` : act.project.name}
       </Typography>
       <IconButton
+        size="small"
         sx={{ float: 'right', color: 'primary.dark' }}
         onClick={() => {
           handleDeleteAct(act._id);
         }}
       >
-        <DeleteIcon />
+        <DeleteIcon fontSize="small" />
       </IconButton>
-      {/* <IconButton sx={{ float: 'right', color: 'primary.dark' }}>
-        <EditIcon />
-      </IconButton> */}
+      <IconButton size="small" sx={{ float: 'right', color: 'primary.dark' }}>
+        <EditIcon onClick={() => setopenEdit(true)} fontSize="small" />
+      </IconButton>
       <Toolbar
         sx={{
           // use this for dynamic display none
@@ -132,6 +136,7 @@ export default function Activity({ act, date, id }) {
             onClick={() => {
               delSs(selectedSs);
             }}
+            size="small"
           >
             <DeleteIcon sx={{ float: 'right' }} fontSize="small" />
           </IconButton>
@@ -172,6 +177,17 @@ export default function Activity({ act, date, id }) {
             Evidence was deleted — <strong>{`OOF :")`}</strong>
           </Alert>
         )}
+
+        {/* edit act */}
+        <EditActivity
+          id={id}
+          date={date}
+          act={act}
+          open={openEdit}
+          setopen={(value) => {
+            setopenEdit(value);
+          }}
+        />
       </Box>
     </Box>
   );
