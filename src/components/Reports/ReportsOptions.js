@@ -1,7 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import { FormControl, DialogContentText, FormControlLabel, Autocomplete, Checkbox } from '@mui/material';
+import {
+  FormControl,
+  DialogContentText,
+  FormControlLabel,
+  Autocomplete,
+  Checkbox,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -33,7 +41,7 @@ export default function ReportsOptions({ reports, options }) {
   const [includeApps, setincludeApps] = React.useState(false);
   const [schedule, setschedule] = React.useState(false);
   const [interval, setinterval] = React.useState('Daily');
-  const [weeklyDay, setweeklyDay] = React.useState('Monday');
+  const [weeklyDay, setweeklyDay] = React.useState(1);
   const [dailyTime, setdailyTime] = React.useState(12);
   const [monthlyDate, setmonthlyDate] = React.useState(1);
   const { enqueueSnackbar } = useSnackbar();
@@ -201,49 +209,47 @@ export default function ReportsOptions({ reports, options }) {
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
       <TextField disabled={!schedule} id="email" label="Email" value={'email'} />
       <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>
-        <Autocomplete
-          disabled={!schedule}
-          value={interval}
-          onChange={(e, value) => setinterval(value)}
-          disablePortal
-          options={['Monthly', 'Weekly', 'Daily']}
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Select interval" />}
-        />
+        <Select disabled={!schedule} value={interval} onChange={(e) => setinterval(e.target.value)}>
+          <MenuItem value={'Daily'}>Daily</MenuItem>
+          <MenuItem value={'Weekly'}>Weekly</MenuItem>
+          <MenuItem value={'Monthly'}>Monthly</MenuItem>
+        </Select>
         {interval === 'Weekly' && (
-          <Autocomplete
-            disabled={!schedule}
-            value={weeklyDay}
-            onChange={(e, value) => setweeklyDay(value)}
-            disablePortal
-            options={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
-            sx={{ width: 300, ml: 1 }}
-            renderInput={(params) => <TextField {...params} label="Select Day" />}
-          />
+          <Select disabled={!schedule} sx={{ ml: 1 }} value={weeklyDay} onChange={(e) => setweeklyDay(e.target.value)}>
+            <MenuItem value={1}>Monday</MenuItem>
+            <MenuItem value={2}>Tuesday</MenuItem>
+            <MenuItem value={3}>Wednesday</MenuItem>
+            <MenuItem value={4}>Thursday</MenuItem>
+            <MenuItem value={5}>Friday</MenuItem>
+            <MenuItem value={6}>Saturday</MenuItem>
+            <MenuItem value={7}>Sunday</MenuItem>
+          </Select>
         )}
         {interval === 'Monthly' && (
-          <Autocomplete
+          <Select
             disabled={!schedule}
-            defaultValue={1}
-            onChange={(e, value) => setmonthlyDate(value)}
-            disablePortal
-            options={Array(28)
-              .fill()
-              .map((x, i) => i + 1)}
-            sx={{ width: 300, ml: 1 }}
-            renderInput={(params) => <TextField {...params} label="Select date" />}
-          />
+            sx={{ ml: 1 }}
+            value={monthlyDate}
+            onChange={(e) => setmonthlyDate(e.target.value)}
+          >
+            {Array(28)
+              .fill(0)
+              .map((x, i) => (
+                <MenuItem key={i + 1} value={i + 1}>
+                  {i + 1}
+                </MenuItem>
+              ))}
+          </Select>
         )}
-        <Autocomplete
-          disabled={!schedule}
-          value={dailyTime}
-          defaultValue="12:00 am"
-          onChange={(e, value) => setdailyTime(value)}
-          disablePortal
-          options={[]}
-          sx={{ width: 300, ml: 1 }}
-          renderInput={(params) => <TextField {...params} label="Select Time" />}
-        />
+        <Select disabled={!schedule} sx={{ ml: 1 }} value={dailyTime} onChange={(e) => setdailyTime(e.target.value)}>
+          {Array(24)
+            .fill(0)
+            .map((x, i) => (
+              <MenuItem key={i + 1} value={i + 1}>
+                {`${i + 1}:00`}
+              </MenuItem>
+            ))}
+        </Select>
       </Box>
     </Box>
   );
@@ -273,7 +279,14 @@ export default function ReportsOptions({ reports, options }) {
   );
 
   const handleSave = () => {
+    // making cronString
     console.log(reports);
+    console.log(interval);
+    let cronString = '* * * * *';
+    if (interval === 'Monthly') cronString = `* ${dailyTime} ${monthlyDate} * *`;
+    if (interval === 'Weekly') cronString = `* ${dailyTime} * ${weeklyDay} *`;
+    if (interval === 'Daily') cronString = `* ${dailyTime} * * *`;
+    console.log(cronString);
 
     // schedule,
     // scheduleType,
@@ -354,7 +367,7 @@ export default function ReportsOptions({ reports, options }) {
                 readOnly: true,
               }}
             />
-            {/*  */}
+            {/* save and share options */}
             <Box>
               <FormControlLabel
                 label="Share Report"

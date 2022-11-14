@@ -37,6 +37,7 @@ const percentIcon = (percent) =>
 const outerBox = { m: 0.5, pt: 1.5, pr: 1, pb: 1, pl: 0.5, borderRadius: 1 };
 
 export default function Activity({ act, date, id }) {
+  console.log(act.note);
   // notistack
   const { enqueueSnackbar } = useSnackbar();
   const setActivities = useStore((state) => state.setActivities);
@@ -101,6 +102,9 @@ export default function Activity({ act, date, id }) {
       </Tooltip>
       <Typography component="span" sx={{ m: 0, fontWeight: 'bold' }}>
         || {!act.project ? `No Project` : act.project.name}
+      </Typography>
+      <Typography component="span" sx={{ ml: 1, fontWeight: 'bold' }}>
+        || {act.note ?? `No Note`}
       </Typography>
       <IconButton
         size="small"
