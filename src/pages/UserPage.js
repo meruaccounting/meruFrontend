@@ -17,6 +17,7 @@ import Calendar from '../components/UserPage/Calendar';
 import ChangeMonth from '../components/UserPage/ChangeMonth';
 import Overview from '../components/UserPage/Overview';
 import ScreenShots from '../components/UserPage/ScreenShots';
+import OfflineTime from '../components/UserPage/OfflineTime';
 import Timeline from '../components/UserPage/Timeline';
 import PageHeader from '../components/UserPage/PageHeader';
 import IntExt from '../components/UserPage/IntExt';
@@ -142,6 +143,8 @@ export default function UserPage() {
 
             {/* screenshots and activities */}
             <ScreenShots id={id} isInternal={isInternal} activities={activities.activities} date={date} />
+
+            <OfflineTime date={date} />
           </Box>
         </CssBaseline>
       </Container>

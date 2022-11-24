@@ -30,10 +30,11 @@ import { useSnackbar } from 'notistack';
 import PdfExport from './Export';
 
 export default function ReportsOptions({ reports, options }) {
+  const ud = JSON.parse(localStorage.ud);
   // for dialog open close
   const [open, setopen] = React.useState(false);
   // name of report
-  const [name, setname] = React.useState('Save Reports');
+  const [name, setname] = React.useState('');
   const [share, setshare] = React.useState(true);
   const [includeSS, setincludeSS] = React.useState(false);
   const [includePR, setincludePR] = React.useState(false);
@@ -207,7 +208,7 @@ export default function ReportsOptions({ reports, options }) {
 
   const scheduleEmailChildren = (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      <TextField disabled={!schedule} id="email" label="Email" value={'email'} />
+      <TextField readOnly disabled id="email" label="Email" value={ud.email} />
       <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>
         <Select disabled={!schedule} value={interval} onChange={(e) => setinterval(e.target.value)}>
           <MenuItem value={'Daily'}>Daily</MenuItem>
@@ -304,7 +305,7 @@ export default function ReportsOptions({ reports, options }) {
     const data = {
       schedule,
       scheduleType: [interval, monthlyDate, dailyTime],
-      scheduledEmail: 'email',
+      scheduledEmail: ud.email,
       share,
       options,
       url,
@@ -313,8 +314,9 @@ export default function ReportsOptions({ reports, options }) {
       includePR,
       includeApps,
       reports: reports.reports,
-      name,
+      name: name === '' ? `${ud.firstName} ${ud.lastName}` : name,
     };
+    console.log(data);
     axios.post('/report/save', data).then((res) => {
       console.log(res);
       setopen(!open);

@@ -31,21 +31,24 @@ export default function EditActivity({ open, setopen, act, date, id }) {
   const [startTime, setstartTime] = useState(new Date());
   const [endTime, setendTime] = useState(new Date());
   const [project, setproject] = useState(act.project ? act.project._id : 'null');
+  const [note, setnote] = useState(act.note ? act.note : 'No Note');
+  // for selection
   const [projects, setprojects] = useState([]);
   const [error, seterror] = useState(false);
   // for dialog open close
 
+  // get project options
   useEffect(() => {
     // get projects for editing projects
     axios.get('project').then((res) => setprojects(res.data.data));
   }, []);
+  // format startTime and endTime
   useEffect(() => {
     // format startTime and endTime
     const startDate = new Date(act.startTime * 1000);
     const endDate = new Date(act.endTime * 1000);
     setstartTime(`${startDate.getHours()}:${startDate.getMinutes()}`);
     setendTime(`${endDate.getHours()}:${endDate.getMinutes()}`);
-    axios.get('project').then((res) => setprojects(res.data.data));
   }, [act]);
 
   const handleStartTimeChange = (e) => {
@@ -66,6 +69,21 @@ export default function EditActivity({ open, setopen, act, date, id }) {
     const { value } = e.target;
     setproject(value);
   };
+  const handleNoteChange = (e) => {
+    const { value } = e.target;
+    setnote(value);
+  };
+
+  const handleCancel = (e) => {
+    setopen(false);
+    setproject(act.project ? act.project._id : 'null');
+    setnote(act.note ? act.note : 'No Note');
+    // format startTime and endTime
+    const startDate = new Date(act.startTime * 1000);
+    const endDate = new Date(act.endTime * 1000);
+    setstartTime(`${startDate.getHours()}:${startDate.getMinutes()}`);
+    setendTime(`${endDate.getHours()}:${endDate.getMinutes()}`);
+  };
 
   const handleSave = () => {
     // make new epoch values
@@ -77,30 +95,33 @@ export default function EditActivity({ open, setopen, act, date, id }) {
 
     // string null coz select component cant take null value
     const pro = project === 'null' ? null : project;
-    // axios
-    //   .patch(`activity/${act._id}`, {
-    //     project: pro,
-    //     startTime: Math.round(startDate.getTime() / 1000),
-    //     endTime: Math.round(endDate.getTime() / 1000),
-    //   })
-    //   .then((res) => {
-    //     setopen(false);
-    //     // refresh activities
-    //     axios
-    //       .post('/activity/getActivities', {
-    //         userId: id,
-    //         startTime: new Date(date.getFullYear(), date.getMonth(), 1),
-    //         endTime: new Date(date.getFullYear(), date.getMonth() + 1, 1),
-    //       })
-    //       .then((res) => {
-    //         setActivities(res.data.data, false);
-    //       });
-    //   });
+    // note change
+    let newNote = note.trim();
+    if (newNote === '') newNote = 'No Note';
+    axios
+      .patch(`activity/${act._id}`, {
+        project: pro,
+        note: newNote,
+        // startTime: Math.round(startDate.getTime() / 1000),
+        // endTime: Math.round(endDate.getTime() / 1000),
+      })
+      .then((res) => {
+        setopen(false);
+        // refresh activities
+        axios
+          .post('/activity/getActivities', {
+            userId: id,
+            startTime: new Date(date.getFullYear(), date.getMonth(), 1),
+            endTime: new Date(date.getFullYear(), date.getMonth() + 1, 1),
+          })
+          .then((res) => {
+            setActivities(res.data.data, false);
+          });
+      });
   };
 
   return (
     <>
-      {/* {expdf ? <PdfExport options={options} /> : ''} */}
       <Dialog sx={{ minWidth: 600, mt: 2 }} open={open}>
         <DialogTitle>Edit Activity</DialogTitle>
         <DialogContent>
@@ -138,13 +159,19 @@ export default function EditActivity({ open, setopen, act, date, id }) {
               </Select>
             </FormControl>
           </Box>
+          {/* Note Change */}
+          <Box sx={{ minWidth: 120, mt: 2 }}>
+            <FormControl fullWidth>
+              <TextField label="Note" multiline rows={4} value={note} onChange={handleNoteChange} />
+            </FormControl>
+          </Box>
         </DialogContent>
 
         <DialogActions>
           <Button disabled={error} onClick={handleSave}>
             Save
           </Button>
-          <Button onClick={() => setopen(false)}>Cancel</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

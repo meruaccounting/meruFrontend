@@ -75,6 +75,7 @@ export default function Main() {
   const [date, setdate] = React.useState([null, null]);
   const [group, setgroup] = React.useState(null);
   const [value, setValue] = React.useState(0);
+  const [saveReportOptions, setsaveReportOptions] = React.useState([]);
 
   console.log(reports);
 
@@ -102,6 +103,9 @@ export default function Main() {
         dateTwo,
         groupBy,
       };
+
+      // to send to save report module
+      setsaveReportOptions(options);
 
       // call reports here
       console.log(dayjs(-1));
@@ -167,7 +171,7 @@ export default function Main() {
             Generate Reports
           </Button>
           {!reports.loader && reports.reports[0].total.length ? (
-            <ReportsOptions reports={reports} options={[]} />
+            <ReportsOptions reports={reports} options={saveReportOptions} />
           ) : null}
         </Box>
         {!reports.loader && reports.reports[0].total.length ? (
