@@ -38,27 +38,32 @@ export default function ChangeRole({ user }) {
   };
 
   // toggle member for manager
-  function ToggleMember({ user }) {
-    const [isMember, setisMember] = useState(false);
+  function ToggleMember({ employee, user }) {
+    const [isMember, setisMember] = useState(user.user.managerFor.includes(employee._id));
 
-    // const editMember = (e, employeeId) => {
-    //   let editType = 'remove';
-    //   if (e.target.checked) editType = 'add';
-    //   // convert input text to lower case
-    //   axios
-    //     .patch(`project/members/${editType}/${project.project._id}`, { employeeId })
-    //     .then((res) => {
-    //       console.log(res);
-    //       setisMember(!isMember);
-    //     })
-    //     .catch((error) => console.log(error));
-    // };
+    const editMember = (e, employeeId) => {
+      let assign = false;
+      if (e.target.checked) assign = true;
+      // convert input text to lower case
+      axios
+        .patch(`employee/manager/${user.user._id}`, { employeeId, assign })
+        .then((res) => {
+          console.log(res);
+          setisMember(!isMember);
+        })
+        .catch((error) => console.log(error));
+    };
 
     return (
       <Box component="div" sx={{ mt: 2, overflowY: 'auto' }} key={user._id}>
         <Box sx={{ display: 'flex' }}>
-          <Switch onClick={(e) => {}} />
-          <Typography variant="h5">{user.name}</Typography>
+          <Switch
+            checked={isMember}
+            onClick={(e) => {
+              editMember(e, employee._id);
+            }}
+          />
+          <Typography variant="h5">{employee.name}</Typography>
         </Box>
         <Divider dark />
       </Box>
@@ -89,9 +94,9 @@ export default function ChangeRole({ user }) {
               label="Search"
             /> */}
           </Box>
-          {users.map((user) => (
-            <Box sx={{ mt: 2 }} key={user._id}>
-              <ToggleMember key={user._id} user={user} />
+          {users.map((employee) => (
+            <Box sx={{ mt: 2 }} key={employee._id}>
+              <ToggleMember user={user} key={employee._id} employee={employee} />
             </Box>
           ))}
         </Box>
