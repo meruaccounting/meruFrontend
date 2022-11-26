@@ -9,7 +9,7 @@ import { Box, Autocomplete, TextField } from '@mui/material';
 export default function SelectEmployees({ setclients }) {
   const ud = JSON.parse(localStorage.ud);
 
-  const [options, setoptions] = React.useState([]);
+  const [options, setoptions] = React.useState([{ _id: null, name: 'Without client' }]);
 
   React.useEffect(() => {
     const source = axios.CancelToken.source();
@@ -17,8 +17,8 @@ export default function SelectEmployees({ setclients }) {
     axios
       .post('/report/options')
       .then((res) => {
-        // setoptions(res.data.projectsClientsOptions[0].members);
-        setoptions(res.data.projectsClientsOptions[0].clients);
+        setoptions((prev) => [...prev, ...res.data.projectsClientsOptions[0].clients]);
+        console.log(options);
       })
       .catch((err) => {
         if (axios.isCancel(err)) {

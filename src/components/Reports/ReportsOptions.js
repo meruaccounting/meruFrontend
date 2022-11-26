@@ -243,7 +243,7 @@ export default function ReportsOptions({ reports, options }) {
           </Select>
         )}
         <Select disabled={!schedule} sx={{ ml: 1 }} value={dailyTime} onChange={(e) => setdailyTime(e.target.value)}>
-          {Array(24)
+          {Array(23)
             .fill(0)
             .map((x, i) => (
               <MenuItem key={i + 1} value={i + 1}>
@@ -283,10 +283,10 @@ export default function ReportsOptions({ reports, options }) {
     // making cronString
     console.log(reports);
     console.log(interval);
-    let cronString = '* * * * *';
-    if (interval === 'Monthly') cronString = `* ${dailyTime} ${monthlyDate} * *`;
-    if (interval === 'Weekly') cronString = `* ${dailyTime} * ${weeklyDay} *`;
-    if (interval === 'Daily') cronString = `* ${dailyTime} * * *`;
+    let cronString = '0 * * * *';
+    if (interval === 'Monthly') cronString = `0 ${dailyTime} ${monthlyDate} * *`;
+    if (interval === 'Weekly') cronString = `0 ${dailyTime} * * ${weeklyDay}`;
+    if (interval === 'Daily') cronString = `0 ${dailyTime} * * *`;
     console.log(cronString);
 
     // schedule,
@@ -304,6 +304,7 @@ export default function ReportsOptions({ reports, options }) {
 
     const data = {
       schedule,
+      cronString,
       scheduleType: [interval, monthlyDate, dailyTime],
       scheduledEmail: ud.email,
       share,

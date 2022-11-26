@@ -72,7 +72,7 @@ export default function Main() {
   const [employees, setemployees] = React.useState([]);
   const [clients, setclients] = React.useState([]);
   const [projects, setprojects] = React.useState([]);
-  const [date, setdate] = React.useState([null, null]);
+  const [date, setdate] = React.useState([dayjs(), dayjs()]);
   const [group, setgroup] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const [saveReportOptions, setsaveReportOptions] = React.useState([]);
@@ -136,7 +136,7 @@ export default function Main() {
         <SelectEmployees
           setemployees={(newValue) => {
             if (!newValue) {
-              setemployees(null);
+              setemployees([]);
             } else {
               setemployees(newValue);
             }
@@ -145,8 +145,9 @@ export default function Main() {
 
         <SelectClients
           setclients={(newValue) => {
+            console.log(newValue);
             if (!newValue) {
-              setclients(null);
+              setclients([]);
             } else {
               setclients(newValue);
             }
@@ -154,8 +155,9 @@ export default function Main() {
         />
         <SelectProjects
           setprojects={(newValue) => {
+            console.log(newValue);
             if (!newValue) {
-              setprojects(null);
+              setprojects([]);
             } else {
               setprojects(newValue);
             }
@@ -176,7 +178,7 @@ export default function Main() {
         </Box>
         {!reports.loader && reports.reports[0].total.length ? (
           <>
-            <Graphs reports={reports} style={{ margin: 10 }} />
+            <Graphs date={date} reports={reports} style={{ margin: 10 }} />
             <Divider />
             {groupReports(group, reports)}
           </>
