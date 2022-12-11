@@ -18,7 +18,7 @@ export default function SelectEmployees({ setclients }) {
       .post('/report/options')
       .then((res) => {
         setoptions((prev) => [...prev, ...res.data.projectsClientsOptions[0].clients]);
-        console.log(options);
+        setclients([{ _id: null, name: 'Without client' }, ...res.data.projectsClientsOptions[0].clients]);
       })
       .catch((err) => {
         if (axios.isCancel(err)) {
@@ -43,8 +43,8 @@ export default function SelectEmployees({ setclients }) {
           getOptionLabel={(option) => `${option.name}`}
           filterSelectedOptions
           onChange={(e, value) => {
-            console.log(value);
-            setclients(value);
+            if (value.length !== 0) setclients(value);
+            else setclients(options);
           }}
           renderInput={(params) => <TextField {...params} label="Select Clients" />}
         />

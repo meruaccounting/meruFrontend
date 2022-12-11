@@ -88,9 +88,9 @@ export default function Main() {
     try {
       const dateOne = date[0] ? new Date(date[0].format('MM/DD/YYYY')) : null;
       const dateTwo = date[1] ? new Date(date[1].format('MM/DD/YYYY')) : null;
-      const userIds = employees.length ? employees : null;
-      const projectIds = projects.length ? projects : null;
-      const clientIds = clients.length ? clients : null;
+      const userIds = employees;
+      const projectIds = projects;
+      const clientIds = clients;
       let groupBy = '';
       group.forEach((g) => {
         groupBy = groupBy.concat(g.value);
@@ -103,6 +103,7 @@ export default function Main() {
         dateTwo,
         groupBy,
       };
+      console.log(options);
 
       // to send to save report module
       setsaveReportOptions(options);

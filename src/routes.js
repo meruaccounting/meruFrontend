@@ -15,6 +15,8 @@ import Reports from './pages/Reports';
 import Teams from './pages/Teams';
 import SavedReports from './pages/SavedReports';
 import DesktopLogin from './pages/DesktopLogin';
+import DownloadReport from './pages/DownloadReport';
+import Profile from './pages/Profile';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +35,7 @@ export default function Router() {
         { path: 'dashboard', element: <Dashboard /> },
         { path: 'setting', element: <Settings /> },
         { path: 'projects', element: <Projects /> },
+        { path: 'profile', element: <Profile /> },
       ],
     },
     {
@@ -50,6 +53,8 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/dashboard/" /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
+        { path: '/downloadReportPdf/:id', element: <DownloadReport /> },
+
         { path: '/reports/sharedReports/:id', element: <SavedReports /> },
         { path: '/auth/:token', element: <DesktopLogin /> },
       ],
