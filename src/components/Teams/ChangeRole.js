@@ -15,6 +15,8 @@ export default function ChangeRole({ user }) {
   const [users, setusers] = useState([]);
   const [filteredUsers, setfilteredUsers] = useState([]);
 
+  // TODO: fix error for manager to other role(users are undefined)
+
   // get list of all users
   useEffect(() => {
     axios.get('/employee/all').then((res) => {
