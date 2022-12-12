@@ -27,6 +27,7 @@ import axios from 'axios';
 import { useSnackbar } from 'notistack';
 // import FileSaver from 'file-saver';
 // import { utils, writeFile } from 'xlsx';
+import FileSaver from 'file-saver';
 import PdfExport from './Export';
 
 export default function ReportsOptions({ reports, options }) {
@@ -328,11 +329,40 @@ export default function ReportsOptions({ reports, options }) {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    try {
+      const data = {
+        reports: reports.reports,
+        url: uuidv4(),
+        name,
+        options,
+      };
+      const savedData = await axios.post('/report/save', data);
+      window.open(`${window.location.origin}/downloadReportPdf/${savedData.data.data.url}`, '_blank');
+      axios
+        .get(`/report/download/${savedData.data.data.url}`, {
+          responseType: 'arraybuffer',
+          headers: {
+            Accept: 'application/pdf',
+          },
+        })
+        .then((res) => {
+          FileSaver.saveAs(new Blob([res.data], { type: 'application/pdf' }), `${name}.pdf`);
+          // window.open(res.data, '_blank');
+        });
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+  };
+
   return (
     <>
       {/* {expdf ? <PdfExport options={options} /> : ''} */}
       <div style={{ marginRight: '2.5%' }}>
-        <Button variant="outlined">Export pdf</Button>
+        <Button onClick={handleDownloadPdf} variant="outlined">
+          Export pdf
+        </Button>
         <Button variant="outlined" sx={{ ml: 1 }}>
           Export excel
         </Button>

@@ -60,7 +60,7 @@ export default function Graphs({ reports, options }) {
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Bars date={[options.options.dateOne, options.options.dateTwo]} reports={reports} />
+          <Bars date={[options?.options?.dateOne, options?.options?.dateTwo]} reports={reports} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <EmployeesCharts reports={reports} />

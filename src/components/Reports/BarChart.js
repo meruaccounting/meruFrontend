@@ -57,6 +57,7 @@ export default function Bar({ reports, date }) {
     const dateTwo = date[1];
     const differenceDays = (new Date(dateTwo).getTime() - new Date(dateOne).getTime()) / (1000 * 3600 * 24);
     setdiffDays(differenceDays);
+    console.log(differenceDays);
     // ----------------------------------
 
     let t = 0;
