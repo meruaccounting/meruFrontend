@@ -282,26 +282,10 @@ export default function ReportsOptions({ reports, options }) {
 
   const handleSave = () => {
     // making cronString
-    console.log(reports);
-    console.log(interval);
     let cronString = '0 * * * *';
     if (interval === 'Monthly') cronString = `0 ${dailyTime} ${monthlyDate} * *`;
     if (interval === 'Weekly') cronString = `0 ${dailyTime} * * ${weeklyDay}`;
     if (interval === 'Daily') cronString = `0 ${dailyTime} * * *`;
-    console.log(cronString);
-
-    // schedule,
-    // scheduleType,
-    // scheduleEmail,
-    // share,
-    // options,
-    // url,
-    // includeSS,
-    // includeAL,
-    // includePR,
-    // includeApps,
-    // name: name === "" ? `${firstName} ${lastName}` : name,
-    // fileName,
 
     const data = {
       schedule,
@@ -318,7 +302,7 @@ export default function ReportsOptions({ reports, options }) {
       reports: reports.reports,
       name: name === '' ? `${ud.firstName} ${ud.lastName}` : name,
     };
-    console.log(data);
+
     axios.post('/report/save', data).then((res) => {
       console.log(res);
       setopen(!open);
@@ -348,7 +332,6 @@ export default function ReportsOptions({ reports, options }) {
         })
         .then((res) => {
           FileSaver.saveAs(new Blob([res.data], { type: 'application/pdf' }), `${name}.pdf`);
-          // window.open(res.data, '_blank');
         });
     } catch (err) {
       console.log(err);
