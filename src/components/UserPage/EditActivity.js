@@ -1,45 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import {
-  FormControl,
-  DialogContentText,
-  FormControlLabel,
-  IconButton,
-  Link,
-  Autocomplete,
-  Checkbox,
-} from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { FormControl, DialogContentText, FormControlLabel, Autocomplete, Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import AddIcon from '@mui/icons-material/Add';
-
 import Typography from '@mui/material/Typography';
+import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 
 // store
 import useStore from '../../store/activityStore';
+import ProjectsCharts from '../Reports/ProjectsCharts';
 
 // ------------------------------------------------------------------
 
-export default function OfflineTime({ act, date, id }) {
+export default function EditActivity({ open, setopen, act, date, id }) {
   // store
   const setActivities = useStore((state) => state.setActivities);
+
   const { enqueueSnackbar } = useSnackbar();
-  //
-  const [open, setopen] = useState(false);
   const [startTime, setstartTime] = useState(new Date());
   const [endTime, setendTime] = useState(new Date());
-  const [project, setproject] = useState('null');
-  const [note, setnote] = useState('');
+  const [project, setproject] = useState(act.project ? act.project._id : 'null');
+  const [note, setnote] = useState(act.note ? act.note : 'No Note');
   // for selection
   const [projects, setprojects] = useState([]);
   const [error, seterror] = useState(false);
@@ -53,8 +45,8 @@ export default function OfflineTime({ act, date, id }) {
   // format startTime and endTime
   useEffect(() => {
     // format startTime and endTime
-    const startDate = new Date();
-    const endDate = new Date();
+    const startDate = new Date(act.startTime * 1000);
+    const endDate = new Date(act.endTime * 1000);
     setstartTime(`${startDate.getHours()}:${startDate.getMinutes()}`);
     setendTime(`${endDate.getHours()}:${endDate.getMinutes()}`);
   }, [act]);
@@ -93,7 +85,7 @@ export default function OfflineTime({ act, date, id }) {
     setendTime(`${endDate.getHours()}:${endDate.getMinutes()}`);
   };
 
-  const handleAddOfflineTime = () => {
+  const handleSave = () => {
     // make new epoch values
     const startDate = new Date(act.startTime * 1000);
     startDate.setMinutes(startTime.split(':')[1]);
@@ -130,27 +122,11 @@ export default function OfflineTime({ act, date, id }) {
 
   return (
     <>
-      <Link
-        variant="h6"
-        sx={{
-          cursor: 'pointer',
-          textAlign: 'center',
-        }}
-        onClick={() => setopen(true)}
-      >
-        <IconButton color="primary" size="small">
-          <AddIcon />
-        </IconButton>
-        Add Offline time
-      </Link>
-
       <Dialog sx={{ minWidth: 600, mt: 2 }} open={open}>
-        <DialogTitle>Add offline time</DialogTitle>
+        <DialogTitle>Edit Activity</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <Typography gutterBottom>
-              Offline time range will appear on your timeline. You'll be able to delete or edit it there.
-            </Typography>
+            <Typography gutterBottom>You can trim activity time, or edit activity project</Typography>
             <TextField
               error={error}
               value={startTime}
@@ -173,7 +149,7 @@ export default function OfflineTime({ act, date, id }) {
           <Box sx={{ minWidth: 120, mt: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Project</InputLabel>
-              <Select value={project} onChange={handleProjectChange} label="Project(Optional)">
+              <Select value={project} onChange={handleProjectChange} label="Project">
                 <MenuItem value={'null'}>No Project</MenuItem>
                 {projects.map((project) => (
                   <MenuItem key={project._id} value={project._id}>
@@ -186,14 +162,14 @@ export default function OfflineTime({ act, date, id }) {
           {/* Note Change */}
           <Box sx={{ minWidth: 120, mt: 2 }}>
             <FormControl fullWidth>
-              <TextField label="Note(Optional)" multiline rows={4} value={note} onChange={handleNoteChange} />
+              <TextField label="Note" multiline rows={4} value={note} onChange={handleNoteChange} />
             </FormControl>
           </Box>
         </DialogContent>
 
         <DialogActions>
-          <Button disabled={error} onClick={handleAddOfflineTime}>
-            Add offline time
+          <Button disabled={error} onClick={handleSave}>
+            Save
           </Button>
           <Button onClick={handleCancel}>Cancel</Button>
         </DialogActions>

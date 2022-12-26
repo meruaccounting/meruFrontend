@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -48,7 +48,7 @@ function formatRole(role) {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const ud = JSON.parse(localStorage.ud);
-
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
@@ -71,7 +71,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         <Logo />
       </Box>
 
-      <Box sx={{ mb: 5, mx: 2.5 }}>
+      <Box sx={{ mb: 5, mx: 2.5 }} onClick={() => navigate('/dashboard/profile')}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
             <Avatar src={account.photoURL} alt="photoURL" />

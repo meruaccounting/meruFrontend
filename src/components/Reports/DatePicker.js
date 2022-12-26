@@ -16,7 +16,7 @@ const typoStyle = {
 };
 
 export default function DatePicker({ setdate }) {
-  const [value, setvalue] = useState([null, null]);
+  const [value, setvalue] = useState([dayjs(), dayjs()]);
   const [range, setrange] = useState('Custom');
 
   // send the changed date back to main whenever value is chcanged

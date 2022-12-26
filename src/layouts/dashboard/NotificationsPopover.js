@@ -30,7 +30,7 @@ import MenuPopover from '../../components/MenuPopover';
 
 const NOTIFICATIONS = [
   {
-    id: faker.datatype.uuid(),
+    _id: faker.datatype.uuid(),
     title: 'Your order is placed',
     description: 'waiting for shipping',
     avatar: null,
@@ -39,7 +39,7 @@ const NOTIFICATIONS = [
     isUnRead: true,
   },
   {
-    id: faker.datatype.uuid(),
+    _id: faker.datatype.uuid(),
     title: faker.name.findName(),
     description: 'answered to your comment on the Minimal',
     avatar: '/static/mock-images/avatars/avatar_2.jpg',
@@ -48,7 +48,7 @@ const NOTIFICATIONS = [
     isUnRead: true,
   },
   {
-    id: faker.datatype.uuid(),
+    _id: faker.datatype.uuid(),
     title: 'You have new message',
     description: '5 unread messages',
     avatar: null,
@@ -57,7 +57,7 @@ const NOTIFICATIONS = [
     isUnRead: false,
   },
   {
-    id: faker.datatype.uuid(),
+    _id: faker.datatype.uuid(),
     title: 'You have new mail',
     description: 'sent from Guido Padberg',
     avatar: null,
@@ -66,7 +66,7 @@ const NOTIFICATIONS = [
     isUnRead: false,
   },
   {
-    id: faker.datatype.uuid(),
+    _id: faker.datatype.uuid(),
     title: 'Delivery processing',
     description: 'Your order is being shipped',
     avatar: null,
@@ -77,9 +77,11 @@ const NOTIFICATIONS = [
 ];
 
 export default function NotificationsPopover() {
+  const ud = JSON.parse(localStorage.ud);
+  console.log(ud.notifications);
   const anchorRef = useRef(null);
 
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const [notifications, setNotifications] = useState(ud.notifications ?? []);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -150,7 +152,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification._id} notification={notification} />
             ))}
           </List>
 
@@ -163,7 +165,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification._id} notification={notification} />
             ))}
           </List>
         </Scrollbar>

@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function Calendar({ date, setdate, activities }) {
+  const ud = JSON.parse(localStorage.ud);
+  const weekStartday = ud.teamConfig.weekStartDay;
   const [value, setvalue] = useState(date.getDate());
   const [progressValues, setprogressValues] = useState([...Array(dayjs(date).daysInMonth())].fill(0));
 
@@ -61,7 +63,7 @@ export default function Calendar({ date, setdate, activities }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                borderLeft: day === 0 ? '3px solid black' : '0.5px solid black',
+                borderLeft: day === weekStartday ? '3px solid black' : '0.5px solid black',
                 flex: 1,
                 minWidth: 0,
               }}

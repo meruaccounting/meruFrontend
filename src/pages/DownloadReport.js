@@ -1,14 +1,12 @@
 import * as React from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 // mui
 import { styled } from '@mui/material/styles';
-import { Box, Container } from '@mui/material';
-
-// components
+import { Box, Button, Typography, Container } from '@mui/material';
+import ExportPdf from '../components/Reports/Export';
 import Page from '../components/Page';
-import Main from '../components/SavedReports/Main';
 
 // ----------------------------------------------------------------------
 
@@ -20,11 +18,8 @@ const RootStyle = styled(Page)(({ theme }) => ({
   paddingBottom: theme.spacing(10),
 }));
 
-// ----------------------------------------------------------------------
-
-export default function SavedReports() {
+export default function DownloadReport() {
   const { id } = useParams();
-
   const [savedReports, setsavedReports] = React.useState(null);
 
   React.useEffect(() => {
@@ -33,19 +28,23 @@ export default function SavedReports() {
     };
     axios.post('report/fetch', options).then((res) => {
       setsavedReports(res.data);
+      console.log(res.data);
     });
   }, []);
+
   return (
-    <RootStyle title="SavedReports">
-      <Container sx={{ width: '70%', mt: 2 }}>
+    <RootStyle title="Download Reports">
+      <Container sx={{ width: '70%', mt: 8 }}>
         <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            scroll: 'auto',
-          }}
+        // sx={{
+        //   height: "5rem",
+        //   mt: 2,
+        //   display: "flex",
+        //   flexDirection: "row",
+        //   scroll: "auto",
+        // }}
         >
-          <Main savedReports={savedReports} />
+          <ExportPdf savedReports={savedReports} />
         </Box>
       </Container>
     </RootStyle>

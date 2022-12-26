@@ -9,7 +9,7 @@ import { Box, Autocomplete, TextField } from '@mui/material';
 export default function SelectEmployees({ setclients }) {
   const ud = JSON.parse(localStorage.ud);
 
-  const [options, setoptions] = React.useState([]);
+  const [options, setoptions] = React.useState([{ _id: null, name: 'Without client' }]);
 
   React.useEffect(() => {
     const source = axios.CancelToken.source();
@@ -17,8 +17,8 @@ export default function SelectEmployees({ setclients }) {
     axios
       .post('/report/options')
       .then((res) => {
-        // setoptions(res.data.projectsClientsOptions[0].members);
-        setoptions(res.data.projectsClientsOptions[0].clients);
+        setoptions((prev) => [...prev, ...res.data.projectsClientsOptions[0].clients]);
+        setclients([{ _id: null, name: 'Without client' }, ...res.data.projectsClientsOptions[0].clients]);
       })
       .catch((err) => {
         if (axios.isCancel(err)) {
@@ -43,8 +43,8 @@ export default function SelectEmployees({ setclients }) {
           getOptionLabel={(option) => `${option.name}`}
           filterSelectedOptions
           onChange={(e, value) => {
-            console.log(value);
-            setclients(value);
+            if (value.length !== 0) setclients(value);
+            else setclients(options);
           }}
           renderInput={(params) => <TextField {...params} label="Select Clients" />}
         />

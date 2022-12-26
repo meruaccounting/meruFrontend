@@ -7,7 +7,7 @@ import { Box, Autocomplete, TextField } from '@mui/material';
 // ------------------------------------------------------------------
 
 export default function SelectEmployees({ setprojects }) {
-  const [options, setoptions] = React.useState([]);
+  const [options, setoptions] = React.useState([{ _id: null, name: 'Without project' }]);
 
   React.useEffect(() => {
     const source = axios.CancelToken.source();
@@ -15,8 +15,8 @@ export default function SelectEmployees({ setprojects }) {
     axios
       .post('/report/options')
       .then((res) => {
-        // setoptions(res.data.projectsClientsOptions[0].members);
-        setoptions(res.data.projectsClientsOptions[0].projects);
+        setoptions((prev) => [...prev, ...res.data.projectsClientsOptions[0].projects]);
+        setprojects([{ _id: null, name: 'Without project' }, ...res.data.projectsClientsOptions[0].projects]);
       })
       .catch((err) => {
         if (axios.isCancel(err)) {
@@ -37,10 +37,13 @@ export default function SelectEmployees({ setprojects }) {
       <Autocomplete
         multiple
         options={options}
-        getOptionLabel={(option) => `${option.name} ** ${option.client?.name} `}
+        getOptionLabel={(option) => `${option.name} ** ${option.client?.name ?? 'No Client'} `}
         filterSelectedOptions
         onChange={(e, value) => {
-          setprojects(value);
+          if (value.length !== 0) setprojects(value);
+          else setprojects(options);
+          console.log(value);
+          console.log(options);
         }}
         renderInput={(params) => <TextField {...params} label="Select Projects" />}
       />

@@ -72,9 +72,10 @@ export default function Main() {
   const [employees, setemployees] = React.useState([]);
   const [clients, setclients] = React.useState([]);
   const [projects, setprojects] = React.useState([]);
-  const [date, setdate] = React.useState([null, null]);
+  const [date, setdate] = React.useState([dayjs(), dayjs()]);
   const [group, setgroup] = React.useState(null);
   const [value, setValue] = React.useState(0);
+  const [saveReportOptions, setsaveReportOptions] = React.useState([]);
 
   console.log(reports);
 
@@ -87,9 +88,9 @@ export default function Main() {
     try {
       const dateOne = date[0] ? new Date(date[0].format('MM/DD/YYYY')) : null;
       const dateTwo = date[1] ? new Date(date[1].format('MM/DD/YYYY')) : null;
-      const userIds = employees.length ? employees : null;
-      const projectIds = projects.length ? projects : null;
-      const clientIds = clients.length ? clients : null;
+      const userIds = employees;
+      const projectIds = projects;
+      const clientIds = clients;
       let groupBy = '';
       group.forEach((g) => {
         groupBy = groupBy.concat(g.value);
@@ -102,6 +103,10 @@ export default function Main() {
         dateTwo,
         groupBy,
       };
+      console.log(options);
+
+      // to send to save report module
+      setsaveReportOptions(options);
 
       // call reports here
       console.log(dayjs(-1));
@@ -132,7 +137,7 @@ export default function Main() {
         <SelectEmployees
           setemployees={(newValue) => {
             if (!newValue) {
-              setemployees(null);
+              setemployees([]);
             } else {
               setemployees(newValue);
             }
@@ -141,8 +146,9 @@ export default function Main() {
 
         <SelectClients
           setclients={(newValue) => {
+            console.log(newValue);
             if (!newValue) {
-              setclients(null);
+              setclients([]);
             } else {
               setclients(newValue);
             }
@@ -150,8 +156,9 @@ export default function Main() {
         />
         <SelectProjects
           setprojects={(newValue) => {
+            console.log(newValue);
             if (!newValue) {
-              setprojects(null);
+              setprojects([]);
             } else {
               setprojects(newValue);
             }
@@ -167,12 +174,12 @@ export default function Main() {
             Generate Reports
           </Button>
           {!reports.loader && reports.reports[0].total.length ? (
-            <ReportsOptions reports={reports} options={[]} />
+            <ReportsOptions reports={reports} options={saveReportOptions} />
           ) : null}
         </Box>
         {!reports.loader && reports.reports[0].total.length ? (
           <>
-            <Graphs reports={reports} style={{ margin: 10 }} />
+            <Graphs date={date} reports={reports} style={{ margin: 10 }} />
             <Divider />
             {groupReports(group, reports)}
           </>

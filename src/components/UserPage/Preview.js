@@ -13,6 +13,7 @@ import {
   CardContent,
   Typography,
   Checkbox,
+  IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -54,7 +55,7 @@ export default function Preview(props) {
             .post('/activity/getActivities', {
               userId: id,
               startTime: new Date(date.getFullYear(), date.getMonth(), 1),
-              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 0),
+              endTime: new Date(date.getFullYear(), date.getMonth() + 1, 1),
             })
             .then((res) => {
               setActivities(res.data.data, false);
@@ -72,7 +73,7 @@ export default function Preview(props) {
 
   return (
     <>
-      <Card sx={{ width: 240, maxWidth: 240, m: 1.5 }}>
+      <Card sx={{ width: 240, maxWidth: 240, m: 1, ml: 0.5 }}>
         <Tooltip title={`${props.title}`} placement="top" followCursor>
           <CardContent
             sx={{

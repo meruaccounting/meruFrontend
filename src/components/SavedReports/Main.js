@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { lastIndexOf } from 'lodash';
+import dayjs from 'dayjs';
 
 // mui
 import Typography from '@mui/material/Typography';
@@ -16,9 +17,9 @@ import Graphs from './Graphs';
 // ------------------------------------------------------------------
 
 export default function Main({ savedReports }) {
+  console.log(savedReports);
   // variable for date, employees, and projects
   const [options, setOptions] = React.useState([]);
-
   React.useEffect(() => {
     setOptions(savedReports?.data[0]);
   }, [savedReports]);
@@ -28,14 +29,7 @@ export default function Main({ savedReports }) {
       {savedReports?.data[0] ? (
         <Box sx={{ width: '100%', scroll: 'visible' }}>
           {options?.user && (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                heigth: '5rem',
-                width: '100%',
-              }}
-            >
+            <Box>
               <Typography variant="h3" sx={{ color: 'color.primary' }}>
                 {options.user.firstName} {options.user.lastName}
               </Typography>
@@ -64,8 +58,8 @@ export default function Main({ savedReports }) {
                     justifyContent: 'center',
                   }}
                 >
-                  {options.options.dateOne ? `${options.options.dateOne}-` : 'Till '}
-                  {options.options.dateTwo}
+                  {`${dayjs(options.options.dateOne).format('DD/MM/YYYY')}`} -{' '}
+                  {dayjs(options.options.dateTwo).format('DD/MM/YYYY')}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}>

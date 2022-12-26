@@ -21,6 +21,7 @@ export default function SelectEmployees({ setemployees }) {
         .then((res) => {
           // setoptions(res.data.projectsClientsOptions[0].members);
           setoptions(res.data.employeesOptions[0].members);
+          setemployees(res.data.employeesOptions[0].members);
         })
         .catch((err) => {
           if (axios.isCancel(err)) {
@@ -65,7 +66,9 @@ export default function SelectEmployees({ setemployees }) {
         filterSelectedOptions
         onChange={(e, value) => {
           console.log(value);
-          setemployees(value);
+          if (value.length !== 0) setemployees(value);
+          else setemployees(options);
+          console.log(options);
         }}
         renderInput={(params) => (
           <TextField
